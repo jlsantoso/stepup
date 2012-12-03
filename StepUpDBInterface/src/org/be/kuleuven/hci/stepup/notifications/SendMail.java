@@ -28,20 +28,20 @@ public class SendMail {
 		this.text = text;
 	}
 	
-	public void send2() throws MessagingException{
+	public void send() throws MessagingException{
 		System.out.println("Sending mail...");
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
         props.setProperty("mail.host", "smtp.gmail.com");
         props.setProperty("mail.user", from);
-        props.setProperty("mail.password", "ERIKDUVAL01");
+        props.setProperty("mail.password", "*******");
         props.put("mail.smtp.port", "587");
 		props.put("mail.smtp.auth", "true");
 		props.put("mail.smtp.starttls.enable", "true");
  
 		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, "rementos01");
+				return new PasswordAuthentication(from, "*********");
 			}
 		});
 
@@ -49,11 +49,10 @@ public class SendMail {
         Transport transport = mailSession.getTransport();
 
         MimeMessage message = new MimeMessage(mailSession);
-        message.setSubject("HTML  mail with images");
+        message.setSubject(subject);
         message.setFrom(new InternetAddress(from));
         message.setContent
-          ("<h1>This is a test</h1>" 
-           + "<img src=\"http://www.rgagnon.com/images/jht.gif\">", 
+          (text, 
            "text/html");
         message.addRecipient(Message.RecipientType.TO,
              new InternetAddress(to));
@@ -64,49 +63,11 @@ public class SendMail {
         transport.close();
 	}
  
-	public void send(){
- 
-		Properties props = new Properties();
-		props.put("mail.smtp.host", "smtp.gmail.com");
-		props.put("mail.smtp.port", "587");
-		props.put("mail.smtp.auth", "true");
-		props.put("mail.smtp.starttls.enable", "true");
- 
-		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, "rementos01");
-			}
-		});
-
-		Message simpleMessage = new MimeMessage(mailSession);
- 
-		InternetAddress fromAddress = null;
-		InternetAddress toAddress = null;
-		try {
-			fromAddress = new InternetAddress(from);
-			toAddress = new InternetAddress(to);
-		} catch (AddressException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
- 
-		try {
-			simpleMessage.setFrom(fromAddress);
-			simpleMessage.setRecipient(RecipientType.TO, toAddress);
-			simpleMessage.setSubject(subject);
-			simpleMessage.setText(text);
- 
-			Transport.send(simpleMessage);
-		} catch (MessagingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws MessagingException {
 		 
-		//BlogActionClass.insertBlogs().toString();
-		//GetMUMETweets.insertAction("#chikul12");
+		SendMail sendmail = new SendMail("stepup.hci@gmail.com", "jlsantoso@gmail.com", "Prueba","Prueba");
+		sendmail.send();
+		
 	}
 }
 
