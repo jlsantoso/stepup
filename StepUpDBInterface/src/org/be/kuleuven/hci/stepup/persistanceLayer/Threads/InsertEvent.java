@@ -2,8 +2,11 @@ package org.be.kuleuven.hci.stepup.persistanceLayer.Threads;
 
 import java.text.ParseException;
 
+import javax.mail.MessagingException;
+
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.utils.JSONandEvent;
+import org.be.kuleuven.hci.stepup.notifications.SendMail;
 import org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,14 +23,27 @@ public class InsertEvent implements Runnable{
 			EventPostgreSQL.insertEvent(JSONandEvent.transformFromJsonToEvent(_event));
 			
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.persistanceLayer.Threads.InsertEvent", e.toString()).send();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.persistanceLayer.Threads.InsertEvent", e.toString()).send();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.persistanceLayer.Threads.InsertEvent", e.toString()).send();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		
 	}

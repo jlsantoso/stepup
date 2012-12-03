@@ -5,7 +5,7 @@ import java.util.*;
 
 
  
-class MyThreadPoolExecutor
+public class MyThreadPoolExecutor
 {
 	private static MyThreadPoolExecutor _myThreadPoolExecutor;
 	

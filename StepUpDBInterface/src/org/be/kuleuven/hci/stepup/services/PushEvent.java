@@ -10,7 +10,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
 import org.be.kuleuven.hci.stepup.controller.EventController;
-import org.json.JSONObject;
 
 import com.sun.jersey.spi.resource.Singleton;
 
