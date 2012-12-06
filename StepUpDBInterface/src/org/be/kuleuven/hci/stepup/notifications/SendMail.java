@@ -28,6 +28,13 @@ public class SendMail {
 		this.text = text;
 	}
 	
+	public SendMail(String subject, String text){
+		this.from = "stepup.hci@gmail.com";
+		this.to = "joseluis.santos.cs@gmail.com";
+		this.subject = subject;
+		this.text = text;
+	}
+	
 	public void send() throws MessagingException{
 		System.out.println("Sending mail...");
         Properties props = new Properties();
@@ -41,7 +48,7 @@ public class SendMail {
  
 		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, "*********");
+				return new PasswordAuthentication(from, "erikduval01");
 			}
 		});
 

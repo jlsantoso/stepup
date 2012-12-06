@@ -1,10 +1,14 @@
 package org.be.kuleuven.hci.stepup.controller;
 
+import java.text.ParseException;
+
 import javax.mail.MessagingException;
 
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.utils.JSONValidation;
+import org.be.kuleuven.hci.stepup.model.utils.JSONandEvent;
 import org.be.kuleuven.hci.stepup.notifications.SendMail;
+import org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL;
 import org.be.kuleuven.hci.stepup.persistanceLayer.Threads.InsertEvent;
 import org.be.kuleuven.hci.stepup.controller.utils.MyThreadPoolExecutor;
 import org.json.JSONException;
@@ -19,6 +23,7 @@ public class EventController {
 			if (!JSONValidation.checkJSONStarttimeAtributte(event)) return "{\"status\":\"500\", \"error\":\"JSON is not properly defined. Remember that the date format is yyyy-MM-dd hh:mm:ss ZZZZZ\"}"; 
 			if (!JSONValidation.checkJSONEndtimeAtributte(event)) return "{\"status\":\"500\", \"error\":\"JSON is not properly defined. Remember that the date format is yyyy-MM-dd hh:mm:ss ZZZZZ\"}"; 
 			MyThreadPoolExecutor.getMyThreadPoolExecutor().runTask(new InsertEvent(event));
+			
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -28,6 +33,24 @@ public class EventController {
 			}
 			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
 		}
-		return "";		
+		return "{\"status\":\"200\", \"error\":\"\"}";	
+	}
+	
+	public static String getEvents(String json){
+		try {
+			JSONObject query = new JSONObject(json);
+			if (query.has("query")&&query.has("pag")){
+				return EventPostgreSQL.getOpenDB(query.getString("query"), query.getString("pag"));
+			}
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		} catch (JSONException e) {
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		}
 	}
 }
