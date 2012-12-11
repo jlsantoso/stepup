@@ -47,7 +47,7 @@ public class AddRSSServlet extends HttpServlet {
 			url = new URL(urlString);
 			SyndFeed feed = null;
 			feed= sfi.build(new XmlReader(url));
-			System.out.println(urlString + feed.toString());
+			//System.out.println(urlString + feed.toString());
 			List<SyndEntry>	entries = feed.getEntries();
 			java.util.Date created = null;
 			Calendar cal = Calendar.getInstance();

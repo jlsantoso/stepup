@@ -27,8 +27,8 @@ import org.be.kuleuven.hci.stepup.model.TwitterHash;
 public class EventGoogleDataStore {
 	
 	public static void insertEvent(Event event){
-	    if (event.getObject().compareTo("tweet")==0) updateLastTwitterId(event);
-	    if (event.getObject().compareTo("comment")==0||event.getObject().compareTo("post")==0) updateLastUpdateRss(event.getStartTime());
+	    if (event.getVerb().compareTo("tweet")==0) updateLastTwitterId(event);
+	    if (event.getVerb().compareTo("comment")==0||event.getObject().compareTo("post")==0) updateLastUpdateRss(event.getStartTime());
 		OfyService.getOfyService().ofy().save().entity(event); 
 	}
 	
@@ -106,7 +106,7 @@ public class EventGoogleDataStore {
 	    	if (event==null){
 	    		Calendar lastUpdate = Calendar.getInstance();
 	    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
-	    		syncCache.put("lastUpdateRss", lastUpdate);
+	    		syncCache.put("lastUpdateRss", lastUpdate.getTime());
 	    		return lastUpdate.getTime();
 	    	}
 	    	syncCache.put("lastUpdateRss", event.getStartTime());
@@ -132,7 +132,6 @@ public class EventGoogleDataStore {
 	    if (syncCache.get("lastTwitterId")!=null){
 	    	if (new BigInteger(syncCache.get("lastTwitterId").toString()).compareTo(new BigInteger(event.getObject()))==-1){
 	    		syncCache.put("lastTwitterId",event.getObject());
-	    		System.out.println(syncCache.get("lastTwitterId").toString());
 	    	}
 	    }
 	}
