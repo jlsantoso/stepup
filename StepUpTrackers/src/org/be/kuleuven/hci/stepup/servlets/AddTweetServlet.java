@@ -56,7 +56,7 @@ public class AddTweetServlet extends HttpServlet {
 			JSONObject resultObj = null;
 			try {
 				resultObj = results.getJSONObject(i);
-				System.out.println(resultObj.toString());
+				//System.out.println(resultObj.toString());
 				DateTime parseDateTime = DateManager.fmt1.parseDateTime(resultObj.getString("created_at").split(", ")[1].trim());
 				JSONArray htags = resultObj.getJSONObject("entities").getJSONArray("hashtags");
 				String tags = "";

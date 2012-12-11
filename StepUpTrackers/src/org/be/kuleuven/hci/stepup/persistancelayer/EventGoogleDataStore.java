@@ -12,6 +12,7 @@ import com.google.appengine.api.memcache.ErrorHandlers;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,7 +51,7 @@ public class EventGoogleDataStore {
 	public static List<TwitterHash> getTwitterHashTags(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-	    if (syncCache.get("rssfeeds")==null){
+	    if (syncCache.get("twitterhashtags")==null){
 	    	List<TwitterHash> twitterhashtags = OfyService.getOfyService().ofy().load().type(TwitterHash.class).list();
 	    	syncCache.put("twitterhashtags", ( new ArrayList<TwitterHash>(twitterhashtags)));
 	    	return twitterhashtags;
@@ -105,6 +106,7 @@ public class EventGoogleDataStore {
 	    	if (event==null){
 	    		Calendar lastUpdate = Calendar.getInstance();
 	    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
+	    		syncCache.put("lastUpdateRss", lastUpdate);
 	    		return lastUpdate.getTime();
 	    	}
 	    	syncCache.put("lastUpdateRss", event.getStartTime());
@@ -128,8 +130,9 @@ public class EventGoogleDataStore {
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    if (syncCache.get("lastTwitterId")!=null){
-	    	if (Integer.parseInt(syncCache.get("lastTwitterId").toString())<Integer.parseInt(event.getObject())){
+	    	if (new BigInteger(syncCache.get("lastTwitterId").toString()).compareTo(new BigInteger(event.getObject()))==-1){
 	    		syncCache.put("lastTwitterId",event.getObject());
+	    		System.out.println(syncCache.get("lastTwitterId").toString());
 	    	}
 	    }
 	}
