@@ -121,7 +121,7 @@ public class EventGoogleDataStore {
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    if (syncCache.get("lastUpdateRss")!=null){
 	    	if (((Date)syncCache.get("lastUpdateRss")).compareTo(lastUpdateRss)<0){
-	    		syncCache.put("lastTwitterId",lastUpdateRss);
+	    		syncCache.put("lastUpdateRss",lastUpdateRss);
 	    	}
 	    }
 	}
