@@ -25,6 +25,7 @@ public class EventController {
 			MyThreadPoolExecutor.getMyThreadPoolExecutor().runTask(new InsertEvent(event));
 			
 		} catch (JSONException e) {
+			e.printStackTrace();
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
 			} catch (MessagingException e1) {

@@ -36,7 +36,7 @@ public class SendMail {
 	}
 	
 	public void send() throws MessagingException{
-		System.out.println("Sending mail...");
+		/*System.out.println("Sending mail...");
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
         props.setProperty("mail.host", "smtp.gmail.com");
@@ -67,7 +67,7 @@ public class SendMail {
         transport.connect();
         transport.sendMessage(message,
             message.getRecipients(Message.RecipientType.TO));
-        transport.close();
+        transport.close();*/
 	}
  
 	public static void main(String[] args) throws MessagingException {
