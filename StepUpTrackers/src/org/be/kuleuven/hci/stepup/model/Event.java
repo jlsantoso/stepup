@@ -24,6 +24,7 @@ public class Event {
 	@Index String location;
 	@Index String context;
 	@Index Date timestamp;
+	@Index boolean inserted;
 	String originalrequestString;
 	@Ignore JSONObject originalrequest;
 	
@@ -37,6 +38,7 @@ public class Event {
 		this.location=null;
 		this.context=null;
 		this.originalrequest=null;
+		this.inserted=false;
 		this.timestamp=null;
 	}
 	
@@ -74,6 +76,10 @@ public class Event {
 	
 	public void setTimeStamp(Date timestamp){
 		this.timestamp=timestamp;
+	}
+	
+	public void setInserted(boolean inserted){
+		this.inserted=inserted;
 	}
 	
 	public void setOriginalRequest(JSONObject originalrequest){
