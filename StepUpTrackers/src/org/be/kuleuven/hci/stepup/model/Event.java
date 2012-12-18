@@ -23,6 +23,7 @@ public class Event {
 	@Index String target;
 	@Index String location;
 	@Index String context;
+	@Index Date timestamp;
 	String originalrequestString;
 	@Ignore JSONObject originalrequest;
 	
@@ -36,6 +37,7 @@ public class Event {
 		this.location=null;
 		this.context=null;
 		this.originalrequest=null;
+		this.timestamp=null;
 	}
 	
 	public void setUsername(String username){
@@ -68,6 +70,10 @@ public class Event {
 	
 	public void setContext(String context){
 		this.context=context;
+	}
+	
+	public void setTimeStamp(Date timestamp){
+		this.timestamp=timestamp;
 	}
 	
 	public void setOriginalRequest(JSONObject originalrequest){

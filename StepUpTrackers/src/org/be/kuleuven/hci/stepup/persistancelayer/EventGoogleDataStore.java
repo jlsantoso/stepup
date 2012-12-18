@@ -29,6 +29,7 @@ public class EventGoogleDataStore {
 	public static void insertEvent(Event event){
 	    if (event.getVerb().compareTo("tweet")==0) updateLastTwitterId(event);
 	    if (event.getVerb().compareTo("comment")==0||event.getObject().compareTo("post")==0) updateLastUpdateRss(event.getStartTime());
+	    event.setTimeStamp(Calendar.getInstance().getTime());
 		OfyService.getOfyService().ofy().save().entity(event); 
 	}
 	
