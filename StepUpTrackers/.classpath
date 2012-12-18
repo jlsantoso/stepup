@@ -9,5 +9,9 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jdom-1.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/xml-apis.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/httpclient-4.2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/httpclient-cache-4.2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/httpcore-4.2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/httpmime-4.2.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
