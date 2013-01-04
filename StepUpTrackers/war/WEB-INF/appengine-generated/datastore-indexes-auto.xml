@@ -1,17 +1,11 @@
-<!-- Indices written at Tue, 11 Dec 2012 13:35:16 CET -->
+<!-- Indices written at Fri, 4 Jan 2013 13:50:30 CET -->
 
 <datastore-indexes>
-
-    <!-- Used 1 time in query history -->
-    <datastore-index kind="Event" ancestor="false" source="auto">
-        <property name="verb" direction="asc"/>
-        <property name="object" direction="desc"/>
-    </datastore-index>
 
     <!-- Used 2 times in query history -->
     <datastore-index kind="Event" ancestor="false" source="auto">
         <property name="verb" direction="asc"/>
-        <property name="starttime" direction="desc"/>
+        <property name="object" direction="desc"/>
     </datastore-index>
 
 </datastore-indexes>

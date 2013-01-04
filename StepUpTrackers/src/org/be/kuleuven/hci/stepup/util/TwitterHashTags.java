@@ -11,9 +11,10 @@ public class TwitterHashTags {
 	
 	public TwitterHashTags(){
 		hash = new ArrayList<String>();
-		hash.add("mume12");
-		hash.add("peno12");
-		hash.add("thesis12");
+		//hash.add("mume12");
+		//hash.add("peno12");
+		//hash.add("thesis12");
+		//hash.add("")
 		
 	}
 	

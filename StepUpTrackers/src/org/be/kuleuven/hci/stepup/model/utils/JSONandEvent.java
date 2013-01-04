@@ -28,11 +28,12 @@ public class JSONandEvent{
 	
 	public static JSONObject transformFromEvemtToJson(Event event) throws JSONException, ParseException{
 		JSONObject eventTransformed = new JSONObject();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss ZZZZZ");
 		eventTransformed.put("username", event.getUsername());
 		eventTransformed.put("verb", event.getVerb());
 		eventTransformed.put("object", event.getObject());
-		eventTransformed.put("starttime", event.getStartTime().toString());
-		if (event.getEndTime()!=null) eventTransformed.put("endtime", event.getEndTime().toString());;
+		eventTransformed.put("starttime", formatter.format(event.getStartTime()).toString());
+		if (event.getEndTime()!=null) eventTransformed.put("endtime", formatter.format(event.getEndTime()).toString());;
 		if (event.getContext()!=null) eventTransformed.put("context", event.getContext());
 		if (event.getTarget()!=null) eventTransformed.put("target", event.getTarget());
 		if (event.getLocation()!=null) eventTransformed.put("location", event.getLocation());

@@ -4,7 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -38,7 +44,7 @@ public class RestClient {
 		return read(instream);
 	}
 
-	public static String doPost(final String url, final String POSTText)
+	/*public static String doPost(final String url, final String POSTText)
 			throws URISyntaxException, HttpException, IOException {
 
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), TIMEOUT);
@@ -55,6 +61,39 @@ public class RestClient {
 		
 		InputStream instream = response.getEntity().getContent();
 		return read(instream);
+	}*/
+	
+	public static String doPost(final String urlString, final String POSTText) throws UnsupportedEncodingException{
+		String message = URLEncoder.encode(POSTText, "UTF-8");
+		BufferedReader rd  = null;
+	    StringBuilder sb = null;
+	    String line = null;
+	    try {
+	        URL url = new URL(urlString);
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestProperty("Content-Type", "application/json");
+	        connection.setDoOutput(true);
+	        connection.setRequestMethod("POST");
+
+	        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+	        writer.write(POSTText);
+	        writer.close();
+	        
+	        rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	        sb = new StringBuilder();
+	        
+	        while ((line = rd.readLine()) != null)
+	        {
+	            sb.append(line + '\n');
+	        }
+
+	        return sb.toString();
+	    } catch (MalformedURLException e) {
+	        // ...
+	    } catch (IOException e) {
+	        // ...
+	    }
+		return "";
 	}
 
 	public static boolean doPut(final String url, final String PUTText)

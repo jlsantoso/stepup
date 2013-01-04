@@ -13,5 +13,6 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/httpclient-cache-4.2.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/httpcore-4.2.1.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/httpmime-4.2.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-logging.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

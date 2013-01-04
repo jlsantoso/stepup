@@ -12,16 +12,24 @@ import com.google.appengine.api.memcache.ErrorHandlers;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
+import java.io.IOException;
 import java.math.BigInteger;
+import java.net.URISyntaxException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 
+import org.apache.http.HttpException;
+import org.be.kuleuven.hci.stepup.mailnotification.Mail;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.RssFeeds;
 import org.be.kuleuven.hci.stepup.model.TwitterHash;
+import org.be.kuleuven.hci.stepup.model.utils.JSONandEvent;
+import org.json.JSONException;
+
 
 
 public class EventGoogleDataStore {
@@ -30,6 +38,29 @@ public class EventGoogleDataStore {
 	    if (event.getVerb().compareTo("tweet")==0) updateLastTwitterId(event);
 	    if (event.getVerb().compareTo("comment")==0||event.getObject().compareTo("post")==0) updateLastUpdateRss(event.getStartTime());
 	    event.setTimeStamp(Calendar.getInstance().getTime());
+	    String result="";
+	    String eventToString = "";
+	    String exception = "";
+		try {
+			eventToString = JSONandEvent.transformFromEvemtToJson(event).toString();
+			System.out.println("Event:"+eventToString);
+			result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/pushEvent",eventToString);
+			System.out.println("Result:"+result);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			exception += e.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			exception += e.toString();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			exception += e.toString();
+		}
+		if (result.contains("200")) event.setInserted(true);
+		else{
+			event.setInserted(false);
+			Mail.sendmail("Problem pushing event", "<br/>"+result+"<br/>"+eventToString);
+		}
 		OfyService.getOfyService().ofy().save().entity(event); 
 	}
 	
