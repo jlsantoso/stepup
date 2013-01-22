@@ -8,6 +8,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Calendar;
 
 import javax.mail.MessagingException;
 import javax.naming.InitialContext;
@@ -23,6 +24,9 @@ import org.json.JSONObject;
 public class EventPostgreSQL {
 	
 	public static void insertEvent(Event event){
+		Connection conn = null;
+		Statement stmt = null;
+		String query = "";
 		try {
 			InitialContext cxt = new InitialContext();
 			if ( cxt == null ) {
@@ -32,30 +36,48 @@ public class EventPostgreSQL {
 			if ( ds == null ) {
 			   throw new Exception("Data source not found!");
 			}
-			Connection conn = ds.getConnection();
+			conn = ds.getConnection();
 			if(conn != null) 
 			{
-				Statement stmt = conn.createStatement();
-				String query = createInsertStatementEvent(event);		
+				stmt = conn.createStatement();
+				 query = createInsertStatementEvent(event);		
 				stmt.executeUpdate(query);
+				stmt.close();
 				conn.close();
 			}
 		} catch (NamingException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL", e.toString()).send();
+				try {
+					stmt.close();
+					conn.close();
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
 			} catch (MessagingException e1) {
+				
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 		} catch (Exception e) {
+			System.out.println(query);
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL", e.toString()).send();
+				try {
+					stmt.close();
+					conn.close();
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
 			} catch (MessagingException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}
+		} 
+		
 	}
 	
 	public static String getOpenDB(String query, String pagination) {
@@ -85,7 +107,10 @@ public class EventPostgreSQL {
 					}
 					events.put(jsonEvent);
 				}
-				System.out.println(events.toString());
+				rs.close();
+				stmt.close();
+				conn.close();
+				//System.out.println(events.toString());
 				return events.toString();
 			}
 			return null;
@@ -114,13 +139,14 @@ public class EventPostgreSQL {
 		} 	
 	}
 	
+	
 	public static String createInsertStatementEvent(Event event){
 		String query = "INSERT INTO event(";
 		String attributes="";
 		String values = "";
 		if (event.getUsername()!=null&&event.getVerb()!=null&&event.getObject()!=null&&event.getStartTime()!=null&&event.getOriginalRequest()!=null){
-			attributes = "username,verb,starttime,object,originalrequest";
-			values = "'"+event.getUsername()+"','"+event.getVerb()+"','"+new Timestamp(event.getStartTime().getTime())+"','"+event.getObject()+"','"+event.getOriginalRequest().toString().replaceAll("\"", "\\\"")+"'";
+			attributes = "timestamp,username,verb,starttime,object,originalrequest";
+			values = "'"+event.getUsername()+"','"+event.getVerb()+"','"+new Timestamp(event.getStartTime().getTime())+"','"+event.getObject()+"','"+event.getOriginalRequest().toString().replaceAll("\"", "\\\"").replaceAll("'", "''")+"'";
 			if (event.getEndTime()!=null){
 				attributes = attributes + ",endtime";
 				values = values +",'"+ new Timestamp(event.getEndTime().getTime())+"'";
@@ -137,7 +163,7 @@ public class EventPostgreSQL {
 				attributes = attributes + ",location";
 				values = values +",'"+ event.getLocation()+"'";
 			}
-			query = query + attributes + ") values (" + values + ")"; 
+			query = query + attributes + ") values ('"+new Timestamp(Calendar.getInstance().getTimeInMillis())+"'," + values + ")"; 
 		}
 		return query;
 	}

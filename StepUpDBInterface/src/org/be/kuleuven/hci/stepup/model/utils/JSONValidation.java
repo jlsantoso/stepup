@@ -19,7 +19,7 @@ public class JSONValidation {
 	public static boolean checkJSONStarttimeAtributte(JSONObject event){
 		
 		if (event.has("starttime")){
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss ZZZZZ");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ZZZZZ");
 			try {
 				Date dateStr = formatter.parse(event.getString("starttime"));
 			} catch (ParseException e) {
@@ -36,7 +36,7 @@ public class JSONValidation {
 	public static boolean checkJSONEndtimeAtributte(JSONObject event){
 		
 		if (event.has("endtime")){
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss ZZZZZ");
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ZZZZZ");
 			try {
 				Date dateStr = formatter.parse(event.getString("starttime"));
 			} catch (ParseException e) {

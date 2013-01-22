@@ -4,6 +4,8 @@
 package org.be.kuleuven.hci.stepup.services;
 
 
+import java.util.Calendar;
+
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -27,7 +29,8 @@ public class PushEvent {
 	@POST 
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getData(String json) {	
+	public String getData(String json) {
+		//System.out.println("Object: "+json);
 		return EventController.insertEvent(json);
 	} 
 }

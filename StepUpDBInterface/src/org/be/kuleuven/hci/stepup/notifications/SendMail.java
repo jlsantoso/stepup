@@ -36,6 +36,7 @@ public class SendMail {
 	}
 	
 	public void send() throws MessagingException{
+		System.out.println(this.text);
 		/*System.out.println("Sending mail...");
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
