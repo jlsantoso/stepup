@@ -36,9 +36,9 @@ public class InitServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		log.log(Level.INFO, "Cron job");
-		BlogsFeeds blogsFeeds = new BlogsFeeds();
+		/*BlogsFeeds blogsFeeds = new BlogsFeeds();
 		blogsFeeds.registerBlogsComments();
-		blogsFeeds.registerBlogsPosts();		
+		blogsFeeds.registerBlogsPosts();	*/	
 		TwitterHashTags twitterhash = new TwitterHashTags();
 		twitterhash.registerhashComments();
 	}

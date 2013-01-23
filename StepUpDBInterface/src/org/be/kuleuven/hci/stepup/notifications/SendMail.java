@@ -29,8 +29,8 @@ public class SendMail {
 	}
 	
 	public SendMail(String subject, String text){
-		this.from = "stepup.hci@gmail.com";
-		this.to = "joseluis.santos.cs@gmail.com";
+		this.from = "";
+		this.to = "";
 		this.subject = subject;
 		this.text = text;
 	}
@@ -49,7 +49,7 @@ public class SendMail {
  
 		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, "erikduval01");
+				return new PasswordAuthentication(from, "");
 			}
 		});
 

@@ -32,7 +32,7 @@ public class StepUpLearningAnalyticsLayerServlet extends HttpServlet {
 		int limit_pagination = 0;
 		String result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event where context='thesis12'\", \"pag\": \""+pagination+"\"}");
 		Course course = InitThesis12Course.init();
-		System.out.println("Result: "+result);
+		//System.out.println("Result: "+result);
 		try {
 			JSONArray results = new JSONArray(result);
 			for (int i=0; i<results.length();i++){
@@ -42,7 +42,7 @@ public class StepUpLearningAnalyticsLayerServlet extends HttpServlet {
 			}
 			for (pagination=1; pagination<(limit_pagination/10)+1; pagination++){
 				result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event\", \"pag\": \""+pagination+"\"}");
-				System.out.println("Result:"+result);
+				//System.out.println("Result:"+result);
 				results = new JSONArray(result);
 				for (int i=0; i<results.length();i++){
 					Event event = JSONandEvent.transformFromJsonToEvent(results.getJSONObject(i));
@@ -51,7 +51,8 @@ public class StepUpLearningAnalyticsLayerServlet extends HttpServlet {
 				}
 			}
 			
-		PersistanceLayer.saveCourse(course, "bigtablethesis12");
+			//course.printBlogPosition();
+			PersistanceLayer.saveCourse(course, "bigtablethesis12");
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

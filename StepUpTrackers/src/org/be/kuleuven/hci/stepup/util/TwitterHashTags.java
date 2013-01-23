@@ -14,7 +14,7 @@ public class TwitterHashTags {
 		//hash.add("mume12");
 		//hash.add("peno12");
 		//hash.add("thesis12");
-		//hash.add("")
+		hash.add("gesyrt12");
 		
 	}
 	

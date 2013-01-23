@@ -1,0 +1,86 @@
+
+
+table = "<table id=\"tableBlogs\" class=\"tablesorter\" width=\"80%\">";
+			table+= "<thead><tr><th>Authors</th>"; 
+			table_ext = "<table id=\"tableBlogs_ext\" class=\"tablesorter\" width=\"80%\"><thead><tr><th>Externals</th>";
+			<%//Loading blogs
+				ArrayList<Blog> blogs = course.getBlogs();
+				for (Blog b: blogs){
+					%>
+					table+="<th><a href=\"http://"+<%=b.getUrl()%>+"\">"+<%=b.getName()%>+"</a></th>";
+					table_ext+="<th><a href=\"http://"+item+"\">"+<%=b.getName()%>+"</a></th>";
+					<%
+				}
+			%>
+			table+="<th>Total</th>";
+			table_ext+="<th>Total</th>";
+			table+="<th>Toggl</th>";
+			table_ext+="<th>Toggl</th>";
+			table+="<th><a href=\"http://twitter.com\">Twitter</a></th>";
+			table_ext+="<th><a href=\"http://twitter.com\">Twitter</a></th>";
+			table+="<th>Soc. Net.</th><th>Toggl</th><tbody>";
+		    table_ext+="<th>Soc. Net.</th><th>Toggl</th><tbody>";
+		    var tableFinal = "";
+		 	<%//Loading Groups
+		 		ArrayList<Group> groups = course.getGroups();
+		 		for (Group g: groups){
+		 			ArrayList<Student> students = g.getStudents();
+		 			for (Student s : students){
+		 				ArrayList<Integer> postBlogActivity = s.getPostActivity();
+		 				ArrayList<Integer> commentBlogActivity = s.getCommentActivity();	
+		 				%>
+		 				table+="<tr><td align=\"left\" >"+<%=s.getUsername()%>+"</td>"";
+		 				<%
+		 				for (int i=0;i<postBlogActivity.size();i++){
+			 				if (g.getFirstBlog().equals(blogs.get(i))){
+			 					%>
+			 					table+="<td align=\"center\" bgcolor=\"#FFF6ED\" id=\""+<%out.print(s.getUsername()+""+i);%>+""\">"+<%=postBlogActivity.get(i)%>+"</td>";
+			 					<%
+			 				}else{
+			 					%>
+			 					table+="<td align=\"center\" bgcolor=\"#FFF6ED\" id=\""+<%out.print(s.getUsername()+""+i);%>+""\">"+<%=commentBlogActivity.get(i)%>+"</td>";
+			 					<%
+			 				}
+			 				
+		 				}%>
+		 				table+="<td/><td/><td/><td/><td/></tr>";
+		 				<%
+		 			}
+		 		}
+		 	%>
+			//table += tableFinal;
+		    table+= "</tbody>";
+			table+="</tr></thead>";
+		    table+="</table>";
+		    table_ext+="</tbody></tr></thead></table>";
+		    $("<p>").append(table).appendTo("#tables");
+
+			$("#tableBlogs").tablesorter();
+		 
+			$('#PageRefresh').click(function() {
+						_gaq.push(['_trackEvent', 'button', 'refresh', 'Thesis12']);
+						var date = new Date();
+						var month, day, seconds, minutes, hours;
+						if (date.getMonth()<9) month = "0"+ (date.getMonth()+1);
+						else month=date.getMonth()+1;
+						if (date.getDate()<10) day = "0"+ (date.getDate());
+						else day=date.getDate()+1;
+						if (date.getHours()<10) hours = "0"+ (date.getHours());
+						else hours=date.getHours();
+						if (date.getMinutes()<10) minutes = "0"+ (date.getMinutes());
+						else minutes=date.getMinutes();
+						if (date.getSeconds()<10) seconds = "0"+ (date.getSeconds());
+						else seconds=date.getSeconds();
+						var date_string = date.getFullYear()+"-"+month+"-"+day+"%20"+hours+":"+minutes+":"+seconds;
+						var source = 'back to the sorted table';
+						$.getJSON("http://ariadne.cs.kuleuven.be/stepup/rest/insertAction?url=http://ariadne.cs.kuleuven.be/stepup&username="+email+"&starttime="+date_string+"&description=test&source="+source+"&category=stepup",
+						  {},
+						  function(data) {});
+						location.reload();
+						
+			    	    
+				});
+		  });
+		  
+		  
+		  
