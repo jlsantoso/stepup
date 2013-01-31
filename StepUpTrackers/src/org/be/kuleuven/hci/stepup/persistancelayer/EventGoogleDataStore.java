@@ -130,21 +130,28 @@ public class EventGoogleDataStore {
 	public static Date getLastUpdateRss(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-	    if (syncCache.get("lastUpdateRss")==null){
-	    	ArrayList<String> verbs = new ArrayList<String>();
-	    	verbs.add("comment");
-	    	verbs.add("post");
-	    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
-	    	if (event==null){
-	    		Calendar lastUpdate = Calendar.getInstance();
-	    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
-	    		syncCache.put("lastUpdateRss", lastUpdate.getTime());
-	    		return lastUpdate.getTime();
-	    	}
-	    	syncCache.put("lastUpdateRss", event.getStartTime());
-	    	return event.getStartTime();
-	    }else{
-	    	return ((Date)syncCache.get("lastUpdateRss"));
+	    try{
+		    if (syncCache.get("lastUpdateRss")==null){
+		    	ArrayList<String> verbs = new ArrayList<String>();
+		    	verbs.add("comment");
+		    	verbs.add("post");
+		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
+		    	if (event==null){
+		    		Calendar lastUpdate = Calendar.getInstance();
+		    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
+		    		syncCache.put("lastUpdateRss", lastUpdate.getTime());
+		    		return lastUpdate.getTime();
+		    	}
+		    	syncCache.put("lastUpdateRss", event.getStartTime());
+		    	return event.getStartTime();
+		    }else{
+		    	return ((Date)syncCache.get("lastUpdateRss"));
+		    }
+	    }catch(Exception e){
+	    	Calendar lastUpdate = Calendar.getInstance();
+    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
+    		syncCache.put("lastUpdateRss", lastUpdate.getTime());
+    		return lastUpdate.getTime();
 	    }
 	}
 	

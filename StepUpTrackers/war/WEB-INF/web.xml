@@ -8,6 +8,14 @@
 		<url-pattern>/cron/addtweet</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>AddTweetServletUsers</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddTweetServletUsers</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddTweetServletUsers</servlet-name>
+		<url-pattern>/cron/addtweetusers</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>AddRSSServlet</servlet-name>
 		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddRSSServlet</servlet-class>
 	</servlet>

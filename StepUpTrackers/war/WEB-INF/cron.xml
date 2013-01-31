@@ -7,7 +7,7 @@
 	</cron>
 	<cron>
 		<url>/cron/clearcache</url>
-		<description>Tweet Fetcher</description>
+		<description>Clear Cacher</description>
 		<schedule>every 24 hours</schedule>
 	</cron>
 	<cron>

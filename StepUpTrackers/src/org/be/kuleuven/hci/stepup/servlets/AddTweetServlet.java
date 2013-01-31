@@ -21,6 +21,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import twitter4j.Paging;
+import twitter4j.ResponseList;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
@@ -48,7 +55,33 @@ public class AddTweetServlet extends HttpServlet {
 	}
 
 	private void createTweetEntitiesfromHastTag(String hashtag, String since_id) {
-
+		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
+		try {
+			//while(!finish){
+				Twitter twitter = new TwitterFactory().getInstance();
+				Paging paging = new Paging(1); 
+				paging.setSinceId(Long.parseLong(since_id));
+		        paging.setCount(200);
+		        String[] users = {"gaposx", "jlsantoso", "svencharleer", "jkofmsk", "erikduval", "samagten"};
+		        for (int i=0; i<users.length; i++){
+		        	ResponseList<Status> status = twitter.getUserTimeline(users[i],paging);
+			        System.out.println(status.size());
+			        for (int j=0;i<status.size();j++){
+			        	Event event = new Event();
+			        	event.setUsername(users[i]);
+			        	event.setVerb("tweet");
+			        	event.setObject("status.get(i).getId()");
+			        	event.setContext("openBadges");
+			        	EventGoogleDataStore.insertEvent(event);
+			        }
+		        }
+		        
+			//return _username +"ok";
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//return null;
+		}
 		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
 		TwitterSearch ts = new TwitterSearch();
 		JSONArray results = ts.getTweetsFromHashtag(hashtag, since_id);
