@@ -19,7 +19,7 @@ public class Testing {
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event\", \"pag\": \"1\"}"));
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses", "{ \"pag\": \"0\"}"));
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/thesis12", "{ \"pag\": \"0\"}"));
-		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/thesis12/gr0uch0", "{ \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/thesis12/gr0uch0", "{ \"pag\": \"0\"}"));
 	}
 
 }
