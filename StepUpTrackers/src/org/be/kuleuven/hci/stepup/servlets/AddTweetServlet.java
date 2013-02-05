@@ -47,14 +47,15 @@ public class AddTweetServlet extends HttpServlet {
 		String lastId = EventGoogleDataStore.getLastTwitterId();
 		if (lastId!=null) since_id=lastId;
 		System.out.println(since_id);
+		createTweetUsers(since_id);
 		List<TwitterHash> twitterHashTags = EventGoogleDataStore.getTwitterHashTags();
 		for (TwitterHash t : twitterHashTags){
 			createTweetEntitiesfromHastTag(t.getHash(), since_id);
 		}
 		
 	}
-
-	private void createTweetEntitiesfromHastTag(String hashtag, String since_id) {
+	
+	private void createTweetUsers(String since_id){
 		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
 		try {
 			//while(!finish){
@@ -63,14 +64,15 @@ public class AddTweetServlet extends HttpServlet {
 				paging.setSinceId(Long.parseLong(since_id));
 		        paging.setCount(200);
 		        String[] users = {"gaposx", "jlsantoso", "svencharleer", "jkofmsk", "erikduval", "samagten"};
-		        for (int i=0; i<users.length; i++){
+		        for (int i=0; i<6; i++){
 		        	ResponseList<Status> status = twitter.getUserTimeline(users[i],paging);
-			        System.out.println(status.size());
-			        for (int j=0;i<status.size();j++){
+			        System.out.println(users[i]+":"+status.size());
+			        for (int j=0;j<status.size();j++){
 			        	Event event = new Event();
 			        	event.setUsername(users[i]);
 			        	event.setVerb("tweet");
-			        	event.setObject("status.get(i).getId()");
+			        	event.setStartTime(status.get(j).getCreatedAt());
+			        	event.setObject(String.valueOf(status.get(j).getId()));
 			        	event.setContext("openBadges");
 			        	EventGoogleDataStore.insertEvent(event);
 			        }
@@ -82,6 +84,9 @@ public class AddTweetServlet extends HttpServlet {
 			e.printStackTrace();
 			//return null;
 		}
+	}
+
+	private void createTweetEntitiesfromHastTag(String hashtag, String since_id) {
 		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
 		TwitterSearch ts = new TwitterSearch();
 		JSONArray results = ts.getTweetsFromHashtag(hashtag, since_id);
