@@ -8,12 +8,12 @@
 		<url-pattern>/cron/addtweet</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>AddTweetServletUsers</servlet-name>
-		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddTweetServletUsers</servlet-class>
+		<servlet-name>AddDiigoServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddDiigoServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>AddTweetServletUsers</servlet-name>
-		<url-pattern>/cron/addtweetusers</url-pattern>
+		<servlet-name>AddDiigoServlet</servlet-name>
+		<url-pattern>/cron/adddiigo</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>AddRSSServlet</servlet-name>

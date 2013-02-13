@@ -22,8 +22,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import twitter4j.Paging;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.RateLimitStatus;
 import twitter4j.ResponseList;
 import twitter4j.Status;
+import twitter4j.Tweet;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
@@ -34,7 +38,6 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Text;
 
 public class AddTweetServlet extends HttpServlet {
@@ -43,11 +46,28 @@ public class AddTweetServlet extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 		log.log(Level.INFO, "Cron job");
+		resp.setContentType("text/plain");
+		resp.getWriter().println("Hello, world");
 		String since_id = "119719744281640960";
 		String lastId = EventGoogleDataStore.getLastTwitterId();
 		if (lastId!=null) since_id=lastId;
-		System.out.println(since_id);
-		createTweetUsers(since_id);
+		//since_id="297765593141108730";
+		resp.getWriter().println("last id:"+since_id);
+		resp.getWriter().println(createTweetUsers(since_id));
+		Twitter twitter = new TwitterFactory().getInstance();
+		RateLimitStatus rateLimitStatus;
+		try {
+			rateLimitStatus = twitter.getRateLimitStatus();
+			resp.getWriter().println("HourlyLimit: " + rateLimitStatus.getHourlyLimit());
+			resp.getWriter().println("RemainingHits: " + rateLimitStatus.getRemainingHits());
+			resp.getWriter().println("ResetTime: " + rateLimitStatus.getResetTime());
+			resp.getWriter().println("ResetTimeInSeconds: " + rateLimitStatus.getResetTimeInSeconds());
+			resp.getWriter().println("SecondsUntilReset: " + rateLimitStatus.getSecondsUntilReset());
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		List<TwitterHash> twitterHashTags = EventGoogleDataStore.getTwitterHashTags();
 		for (TwitterHash t : twitterHashTags){
 			createTweetEntitiesfromHastTag(t.getHash(), since_id);
@@ -55,8 +75,9 @@ public class AddTweetServlet extends HttpServlet {
 		
 	}
 	
-	private void createTweetUsers(String since_id){
+	private String createTweetUsers(String since_id){
 		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
+		String answer = "";
 		try {
 			//while(!finish){
 				Twitter twitter = new TwitterFactory().getInstance();
@@ -66,7 +87,8 @@ public class AddTweetServlet extends HttpServlet {
 		        String[] users = {"gaposx", "jlsantoso", "svencharleer", "jkofmsk", "erikduval", "samagten"};
 		        for (int i=0; i<6; i++){
 		        	ResponseList<Status> status = twitter.getUserTimeline(users[i],paging);
-			        System.out.println(users[i]+":"+status.size());
+		        	answer+="-"+status.size();
+		        	log.info(users[i]+":"+status.size());
 			        for (int j=0;j<status.size();j++){
 			        	Event event = new Event();
 			        	event.setUsername(users[i]);
@@ -81,12 +103,39 @@ public class AddTweetServlet extends HttpServlet {
 			//return _username +"ok";
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe(e.toString());
 			//return null;
 		}
+		return answer;
 	}
-
+	
 	private void createTweetEntitiesfromHastTag(String hashtag, String since_id) {
+		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
+		try {
+			//while(!finish){
+				Twitter twitter = new TwitterFactory().getInstance();
+				Paging paging = new Paging(1); 
+				paging.setSinceId(Long.parseLong(since_id));
+		        paging.setCount(200);
+		        Query query = new Query("%23"+hashtag);
+		        QueryResult result = twitter.search(query);
+		        for (Tweet t : result.getTweets()) {
+		        	Event event = new Event();
+		        	event.setUsername(t.getFromUserName());
+		        	event.setVerb("tweet");
+		        	event.setStartTime(t.getCreatedAt());
+		        	event.setObject(String.valueOf(t.getId()));
+		        	event.setContext(hashtag);
+		        	if (t.getToUser()!=null) event.setTarget(t.getToUser());
+		        	EventGoogleDataStore.insertEvent(event);
+		        }
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			log.severe(e.toString());
+			//return null;
+		}       
+	}
+	/*private void createTweetEntitiesfromHastTag(String hashtag, String since_id) {
 		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
 		TwitterSearch ts = new TwitterSearch();
 		JSONArray results = ts.getTweetsFromHashtag(hashtag, since_id);
@@ -121,7 +170,7 @@ public class AddTweetServlet extends HttpServlet {
 				log.log(Level.SEVERE, "Json parse exception. Json=" + resultObj, e);
 			}
 		}
-	}
+	}*/
 
 	@Override
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

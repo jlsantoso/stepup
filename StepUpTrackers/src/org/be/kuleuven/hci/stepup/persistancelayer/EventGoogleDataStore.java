@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpException;
 import org.be.kuleuven.hci.stepup.mailnotification.Mail;
@@ -32,7 +33,10 @@ import org.json.JSONException;
 
 
 
+
 public class EventGoogleDataStore {
+	
+	private static final Logger log = Logger.getLogger(EventGoogleDataStore.class.getName());
 	
 	public static void insertEvent(Event event){
 	    if (event.getVerb().compareTo("tweet")==0) updateLastTwitterId(event);
@@ -92,6 +96,18 @@ public class EventGoogleDataStore {
 	    }
 	}
 	
+	public static List<RssFeeds> getDiigoFeeds(){
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    if (syncCache.get("rssfeeds")==null){
+	    	List<RssFeeds> rssFeeds = OfyService.getOfyService().ofy().load().type(RssFeeds.class).list();
+	    	syncCache.put("rssfeeds", new ArrayList<RssFeeds>(rssFeeds));
+	    	return rssFeeds;
+	    }else{
+	    	return ((List<RssFeeds>)syncCache.get("rssfeeds"));
+	    }
+	}
+	
 	public static List<RssFeeds> getRssFeeds(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
@@ -132,11 +148,13 @@ public class EventGoogleDataStore {
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    try{
 		    if (syncCache.get("lastUpdateRss")==null){
+		    	log.info("No access to the cache");
 		    	ArrayList<String> verbs = new ArrayList<String>();
 		    	verbs.add("comment");
 		    	verbs.add("post");
 		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
 		    	if (event==null){
+		    		log.info("No RSS feed in the database");
 		    		Calendar lastUpdate = Calendar.getInstance();
 		    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
 		    		syncCache.put("lastUpdateRss", lastUpdate.getTime());
@@ -151,6 +169,35 @@ public class EventGoogleDataStore {
 	    	Calendar lastUpdate = Calendar.getInstance();
     		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
     		syncCache.put("lastUpdateRss", lastUpdate.getTime());
+    		return lastUpdate.getTime();
+	    }
+	}
+	
+	public static Date getLastUpdateDiigo(){
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    try{
+		    if (syncCache.get("lastUpdateDiigo")==null){
+		    	log.info("No access to the cache");
+		    	ArrayList<String> verbs = new ArrayList<String>();
+		    	verbs.add("bookmark");
+		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
+		    	if (event==null){
+		    		log.info("No RSS feed in the database");
+		    		Calendar lastUpdate = Calendar.getInstance();
+		    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
+		    		syncCache.put("lastUpdateDiigo", lastUpdate.getTime());
+		    		return lastUpdate.getTime();
+		    	}
+		    	syncCache.put("lastUpdateDiigo", event.getStartTime());
+		    	return event.getStartTime();
+		    }else{
+		    	return ((Date)syncCache.get("lastUpdateDiigo"));
+		    }
+	    }catch(Exception e){
+	    	Calendar lastUpdate = Calendar.getInstance();
+    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
+    		syncCache.put("lastUpdateDiigo", lastUpdate.getTime());
     		return lastUpdate.getTime();
 	    }
 	}
