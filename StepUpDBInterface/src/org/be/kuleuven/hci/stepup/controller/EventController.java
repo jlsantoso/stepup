@@ -56,6 +56,8 @@ public class EventController {
 		}
 	}
 	
+	
+	
 	public static String getCourses(String json){
 		try {
 			JSONObject additional_info = new JSONObject(json);
@@ -121,6 +123,36 @@ public class EventController {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
 				String query = "select * from event where context=\'"+course+"' and username='"+username+"'";
+				if (additional_info.has("startdate")||additional_info.has("enddate")){
+					query += " and";
+				}
+				if (additional_info.has("startdate")){
+					query += " starttime>"+additional_info.getString("startdate");
+				}
+				if (additional_info.has("enddate")){
+					if (additional_info.has("startdate")) query += " and";
+					query += " endtime>"+additional_info.getString("enddate");
+				}
+				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
+			}
+			
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		} catch (JSONException e) {
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		}
+	}
+	
+	public static String getStudent(String course , String username, String verb, String json){
+		try {
+			JSONObject additional_info = new JSONObject(json);
+			if (additional_info.has("pag")){
+				String query = "select * from event where context=\'"+course+"' and username='"+username+"' and verb='"+verb+"'";
 				if (additional_info.has("startdate")||additional_info.has("enddate")){
 					query += " and";
 				}

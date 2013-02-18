@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.notifications.SendMail;
+import org.be.kuleuven.hci.stepup.utils.StepUpDBConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -94,7 +95,7 @@ public class EventPostgreSQL {
 			if(conn != null) 
 			{
 				Statement stmt = conn.createStatement();
-				String querytxt=query.replace("from", ",count(*) OVER() AS full_count from") + " limit "+(10)+" OFFSET "+(Integer.parseInt(pagination)*10);
+				String querytxt=query.replace("from", ",count(*) OVER() AS full_count from") + " limit "+(StepUpDBConstants.LIMIT)+" OFFSET "+(Integer.parseInt(pagination)*10);
 				System.out.println(querytxt);
 				ResultSet rs = stmt.executeQuery(querytxt);
 				JSONArray events = new JSONArray();

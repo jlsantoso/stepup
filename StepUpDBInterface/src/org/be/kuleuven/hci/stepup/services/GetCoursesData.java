@@ -42,5 +42,14 @@ public class GetCoursesData {
 	@Produces(MediaType.APPLICATION_JSON)	
 	public String getStudentsInfo(@PathParam("course") String course, @PathParam("student") String student, String json) {	
 		return EventController.getStudent(course, student, json);
-	}	
+	}
+	
+	@POST @Path("/{course}/{student}/{verb}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)	
+	public String getStudentsInfo(@PathParam("course") String course, @PathParam("student") String student, @PathParam("verb") String verb, String json) {	
+		return EventController.getStudent(course, student, verb, json);
+	}
+	
+	
 }
