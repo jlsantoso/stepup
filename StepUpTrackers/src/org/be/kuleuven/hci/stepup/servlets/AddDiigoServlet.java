@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.be.kuleuven.hci.stepup.model.ActivityStream;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.RssFeeds;
 import org.be.kuleuven.hci.stepup.persistancelayer.EventGoogleDataStore;
+import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
@@ -62,10 +64,16 @@ public class AddDiigoServlet extends HttpServlet {
 					event.setUsername(entry.getAuthor());
 					event.setStartTime(entry.getPublishedDate());
 					event.setObject(entry.getLink());
-					event.setVerb("bookmark");
+					event.setVerb(StepUpConstants.DIIGOVERB);
 					event.setContext("openBadges");
 					event.setOriginalRequest(new JSONObject().put("description",entry.getDescription()));
 					EventGoogleDataStore.insertEvent(event);
+					ActivityStream as = new ActivityStream();
+					as.setActor(entry.getAuthor());
+					as.setVerb(StepUpConstants.DIIGOVERB);
+					as.setPublishedDate(entry.getPublishedDate());
+					as.setObject("<a href=\""+entry.getLink()+"\">"+entry.getDescription().getValue()+"</a>");
+					
 				}
 			}
 		} catch (IllegalArgumentException e) {

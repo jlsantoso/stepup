@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.be.kuleuven.hci.stepup.model.ActivityStream;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.RssFeeds;
 import org.be.kuleuven.hci.stepup.persistancelayer.EventGoogleDataStore;
+import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.json.JSONException;
 import org.json.XML;
 
@@ -62,6 +64,12 @@ public class AddRSSServlet extends HttpServlet {
 					if (urlString.contains("comment")) event.setVerb("comment");
 					else event.setVerb("post");
 					event.setOriginalRequest(XML.toJSONObject(entry.toString()));
+					ActivityStream as = new ActivityStream();
+					as.setActor(entry.getAuthor());
+					if (urlString.contains("comment")) as.setVerb(StepUpConstants.BLOGCOMMENT);
+					else as.setVerb(StepUpConstants.BLOGPOST);
+					as.setPublishedDate(entry.getPublishedDate());
+					as.setObject("<a href=\""+entry.getLink()+"\">"+entry.getDescription().getValue()+"</a>");
 					EventGoogleDataStore.insertEvent(event);
 				}
 			}

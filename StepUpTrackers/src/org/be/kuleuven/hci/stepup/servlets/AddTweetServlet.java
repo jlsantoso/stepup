@@ -11,10 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.be.kuleuven.hci.stepup.model.ActivityStream;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.TwitterHash;
 import org.be.kuleuven.hci.stepup.persistancelayer.EventGoogleDataStore;
 import org.be.kuleuven.hci.stepup.util.DateManager;
+import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.be.kuleuven.hci.stepup.util.TwitterSearch;
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -127,7 +129,15 @@ public class AddTweetServlet extends HttpServlet {
 		        	event.setObject(String.valueOf(t.getId()));
 		        	event.setContext(hashtag);
 		        	if (t.getToUser()!=null) event.setTarget(t.getToUser());
+		        	ActivityStream as = new ActivityStream();
+		        	as.setActor(t.getFromUserName(), t.getProfileImageUrl());
+		        	as.setVerb(StepUpConstants.TWITTER);
+		        	as.setObject("<a href=\"http://twitter.com/"+t.getFromUserName()+"/status/"+t.getId()+"\">"+t.getText()+"</a>");
+		        	as.setPublishedDate(t.getCreatedAt());
+		        	if (t.getInReplyToStatusId()>-1) as.setTarget("<a href=\"http://twitter.com/"+t.getFromUserName()+"/status/"+t.getInReplyToStatusId()+"\">Tweet</a>", "Tweet", "Tweet");
+		        	//as.setTarget(objectURL, objectType, displayName)
 		        	EventGoogleDataStore.insertEvent(event);
+		        	
 		        }
 		} catch (TwitterException e) {
 			// TODO Auto-generated catch block
