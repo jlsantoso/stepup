@@ -29,6 +29,7 @@ import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.RssFeeds;
 import org.be.kuleuven.hci.stepup.model.TwitterHash;
 import org.be.kuleuven.hci.stepup.model.utils.JSONandEvent;
+import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.json.JSONException;
 
 
@@ -39,8 +40,10 @@ public class EventGoogleDataStore {
 	private static final Logger log = Logger.getLogger(EventGoogleDataStore.class.getName());
 	
 	public static void insertEvent(Event event){
-	    if (event.getVerb().compareTo("tweet")==0) updateLastTwitterId(event);
-	    if (event.getVerb().compareTo("comment")==0||event.getObject().compareTo("post")==0) updateLastUpdateRss(event.getStartTime());
+		System.out.println("[VERB]"+event.getVerb());
+	    if (event.getVerb().compareTo(StepUpConstants.TWITTER)==0) updateLastTwitterId(event);
+	    if (event.getVerb().compareTo(StepUpConstants.BLOGCOMMENT)==0||event.getVerb().compareTo(StepUpConstants.BLOGPOST)==0) updateLastUpdateRss(event.getStartTime());
+	    if (event.getVerb().compareTo(StepUpConstants.DIIGOVERB)==0) updateLastUpdateDiigo(event.getStartTime());
 	    event.setTimeStamp(Calendar.getInstance().getTime());
 	    String result="";
 	    String eventToString = "";
@@ -125,7 +128,7 @@ public class EventGoogleDataStore {
 			MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 		    if (syncCache.get("lastTwitterId")==null){
-		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-object").filter("verb", "tweet").first().get();
+		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-object").filter("verb", StepUpConstants.TWITTER).first().get();
 		    	if (event==null){
 		    		syncCache.put("lastTwitterId","119719744281640960");
 		    		return "119719744281640960";
@@ -149,12 +152,14 @@ public class EventGoogleDataStore {
 	    try{
 		    if (syncCache.get("lastUpdateRss")==null){
 		    	log.info("No access to the cache");
+		    	System.out.println("No access to the cache");
 		    	ArrayList<String> verbs = new ArrayList<String>();
-		    	verbs.add("comment");
-		    	verbs.add("post");
+		    	verbs.add(StepUpConstants.BLOGCOMMENT);
+		    	verbs.add(StepUpConstants.BLOGPOST);
 		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
 		    	if (event==null){
 		    		log.info("No RSS feed in the database");
+		    		System.out.println("No RSS feed in the database");
 		    		Calendar lastUpdate = Calendar.getInstance();
 		    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
 		    		syncCache.put("lastUpdateRss", lastUpdate.getTime());
@@ -166,6 +171,8 @@ public class EventGoogleDataStore {
 		    	return ((Date)syncCache.get("lastUpdateRss"));
 		    }
 	    }catch(Exception e){
+	    	log.warning(e.toString());
+	    	System.out.println(e.toString());
 	    	Calendar lastUpdate = Calendar.getInstance();
     		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
     		syncCache.put("lastUpdateRss", lastUpdate.getTime());
@@ -180,7 +187,7 @@ public class EventGoogleDataStore {
 		    if (syncCache.get("lastUpdateDiigo")==null){
 		    	log.info("No access to the cache");
 		    	ArrayList<String> verbs = new ArrayList<String>();
-		    	verbs.add("bookmark");
+		    	verbs.add(StepUpConstants.DIIGOVERB);
 		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
 		    	if (event==null){
 		    		log.info("No RSS feed in the database");
@@ -202,11 +209,23 @@ public class EventGoogleDataStore {
 	    }
 	}
 	
+	public static void updateLastUpdateDiigo(Date lastUpdateDiigo){
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    if (syncCache.get("lastUpdateDiigo")!=null){
+	    	if (((Date)syncCache.get("lastUpdateDiigo")).compareTo(lastUpdateDiigo)<0){
+	    		syncCache.put("lastUpdateDiigo",lastUpdateDiigo);
+	    	}
+	    }
+	}
+	
 	public static void updateLastUpdateRss(Date lastUpdateRss){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    if (syncCache.get("lastUpdateRss")!=null){
+	    	System.out.println("[UPDATE]"+((Date)syncCache.get("lastUpdateRss")).toString()+"="+((Date)syncCache.get("lastUpdateRss")).toString());
 	    	if (((Date)syncCache.get("lastUpdateRss")).compareTo(lastUpdateRss)<0){
+	    		System.out.println("Updating..."+lastUpdateRss.toString());
 	    		syncCache.put("lastUpdateRss",lastUpdateRss);
 	    	}
 	    }
@@ -220,5 +239,9 @@ public class EventGoogleDataStore {
 	    		syncCache.put("lastTwitterId",event.getObject());
 	    	}
 	    }
+	}
+	
+	public static void sendEventToTiNYARM(){
+		
 	}
 }

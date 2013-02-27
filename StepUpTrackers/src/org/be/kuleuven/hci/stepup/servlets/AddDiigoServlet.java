@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,11 +19,16 @@ import org.be.kuleuven.hci.stepup.model.ActivityStream;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.RssFeeds;
 import org.be.kuleuven.hci.stepup.persistancelayer.EventGoogleDataStore;
+import org.be.kuleuven.hci.stepup.persistancelayer.RestClient;
+import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheet;
 import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 
+import com.google.appengine.api.memcache.ErrorHandlers;
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.io.FeedException;
@@ -33,18 +40,37 @@ public class AddDiigoServlet extends HttpServlet {
 	private static final Logger log = Logger.getLogger(AddDiigoServlet.class.getName());
 
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 		log.log(Level.INFO, "Cron job");
 		Date lastUpdate = EventGoogleDataStore.getLastUpdateDiigo();
+		if (syncCache.get("diigofeeds")==null){
+			ReadGoogleSpreadSheet.read();
+		}
+		Hashtable<String,String> feeds = (Hashtable<String, String>) syncCache.get("diigofeeds");
+		Enumeration e = feeds.keys();
+		int i = 0;
+		while( e.hasMoreElements()) {
+			i++;
+			  String key = (String)e.nextElement();
+			  System.out.println("URL feed: "+key);
+			  getDiigoFeeds(key, lastUpdate);
+		}
 		/*List<RssFeeds> rssFeeds = EventGoogleDataStore.getRssFeeds();
 		for (RssFeeds r : rssFeeds){
 			getRssFeeds(r.getURL(), lastUpdate);
 		}*/
-		getDiigoFeeds("https://www.diigo.com/rss/user/erikduval", lastUpdate);
 		
 	}
 
 	private void getDiigoFeeds(String urlString, Date lastUpdate){
-
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    if (syncCache.get("matchingusernames")==null){
+			ReadGoogleSpreadSheet.read();
+		}
+	    Hashtable<String,String> matchingusernames = (Hashtable<String,String>)syncCache.get("matchingusernames");
+		
 		SyndFeedInput sfi=new SyndFeedInput();
 		URL url;
 		try {
@@ -60,20 +86,28 @@ public class AddDiigoServlet extends HttpServlet {
 				//created = entry.getPublishedDate();
 				System.out.println("Date:"+entry.getPublishedDate()+"-"+lastUpdate); 
 				if (entry.getPublishedDate().compareTo(lastUpdate)>0){
+					String username = urlString.replaceAll("https://www.diigo.com/rss/user/", "");
+					
+					if (matchingusernames.containsKey(username)){
+						username = matchingusernames.get(username);
+					}
 					Event event = new Event();
-					event.setUsername(entry.getAuthor());
+					event.setUsername(username);
 					event.setStartTime(entry.getPublishedDate());
 					event.setObject(entry.getLink());
 					event.setVerb(StepUpConstants.DIIGOVERB);
-					event.setContext("openBadges");
-					event.setOriginalRequest(new JSONObject().put("description",entry.getDescription()));
-					EventGoogleDataStore.insertEvent(event);
+					event.setContext("chikul13");
+					event.setOriginalRequest(new JSONObject().put("description",entry.getDescription().getValue()));
+					//EventGoogleDataStore.insertEvent(event);
 					ActivityStream as = new ActivityStream();
-					as.setActor(entry.getAuthor());
+					as.setActor(username);
 					as.setVerb(StepUpConstants.DIIGOVERB);
 					as.setPublishedDate(entry.getPublishedDate());
-					as.setObject("<a href=\""+entry.getLink()+"\">"+entry.getDescription().getValue()+"</a>");
-					
+					as.setObject(entry.getLink(),entry.getDescription().getValue());
+					System.out.println(lastUpdate.toString());
+					System.out.println(as.getActivityStream().toString());
+					log.warning(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
+		        	EventGoogleDataStore.insertEvent(event);
 				}
 			}
 		} catch (IllegalArgumentException e) {

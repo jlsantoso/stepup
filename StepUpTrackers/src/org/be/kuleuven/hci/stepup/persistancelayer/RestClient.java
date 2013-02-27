@@ -11,6 +11,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.logging.Logger;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpException;
@@ -25,13 +26,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
+import org.be.kuleuven.hci.stepup.servlets.AddTweetServlet;
 
 public class RestClient {
 	public static final int HTTP_OK = 200;
 	public static final int TIMEOUT = 20000;
 
 	final static HttpClient httpClient = new DefaultHttpClient();
-	
+	private static final Logger log = Logger.getLogger(AddTweetServlet.class.getName());
 	public static String doGet(final String url) throws HttpException,
 			IOException, URISyntaxException {
 
@@ -89,9 +91,11 @@ public class RestClient {
 
 	        return sb.toString();
 	    } catch (MalformedURLException e) {
-	        // ...
+	        System.out.println(e.toString()+POSTText);
+	        log.severe(e.toString()+"-"+POSTText);
 	    } catch (IOException e) {
-	        // ...
+	    	System.out.println(e.toString()+POSTText);
+	    	log.severe(e.toString()+"-"+POSTText);
 	    }
 		return "";
 	}

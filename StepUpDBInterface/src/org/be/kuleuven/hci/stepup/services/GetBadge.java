@@ -21,7 +21,7 @@ import org.json.JSONObject;
 import com.sun.jersey.spi.resource.Singleton;
 
 @Singleton
-@Path("/getBadge")
+@Path("/getChiBadges")
 
 
 public class GetBadge {
@@ -29,7 +29,8 @@ public class GetBadge {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getData(String json) {	
-		return "{\"recipient\":\"joseluis.santos.cs@gmail.com\",\"badge\":{\"version\":\"1.0\",\"name\":\"[Badge] Heating\",\"image\":\"/wespot-dev-ws/img/mindergiebadge_heating.png\",\"description\":\"Knows why and how to save gas.\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://ariadne.cs.kuleuven.be\",\"name\":\"hci-kuleuven\"}}}";
+		//return "{\"recipient\":\"joseluis.santos.cs@gmail.com\",\"badge\":{\"version\":\"1.0\",\"name\":\"[Badge] Heating\",\"image\":\"/wespot-dev-ws/img/mindergiebadge_heating.png\",\"description\":\"Knows why and how to save gas.\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://ariadne.cs.kuleuven.be\",\"name\":\"hci-kuleuven\"}}}";
+		return EventController.getChiBadges();
 	} 
 }
 

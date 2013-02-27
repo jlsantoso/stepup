@@ -4,12 +4,7 @@
 		<url>/cron/addtweet</url>
 		<description>Tweet Fetcher</description>
 		<schedule>every 20 minutes</schedule>
-	</cron>
-	<cron>
-		<url>/cron/clearcache</url>
-		<description>Clear Cacher</description>
-		<schedule>every 24 hours</schedule>
-	</cron>
+	</cron>	
 	<cron>
 		<url>/cron/addrss</url>
 		<description>RssFeed Fetcher</description>
@@ -20,4 +15,14 @@
 		<description>DiigoFeed Fetcher</description>
 		<schedule>every 15 minutes</schedule>
 	</cron>
+	<cron>
+		<url>/cron/updateusernames</url>
+		<description>Update Names Fetcher</description>
+		<schedule>every 2 minutes</schedule>
+	</cron>
+	<!--  cron>
+		<url>/cron/clearcache</url>
+		<description>Clear Cacher</description>
+		<schedule>every 24 hours</schedule>
+	</cron-->
 </cronentries>

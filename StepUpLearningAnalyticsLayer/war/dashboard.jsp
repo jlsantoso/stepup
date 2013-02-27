@@ -36,7 +36,7 @@
    		var email = '<%=twitter.getScreenName()%>';
 		<%
 		//Loading course info
-		Course course = PersistanceLayer.getCourse("bigtablethesis12");
+		Course course = PersistanceLayer.getCourse("bigtablechikul13");
 		if (course!=null){
 		%>
 			table = "<table id=\"tableBlogs\" class=\"tablesorter\" width=\"80%\">";
@@ -53,30 +53,44 @@
 			%>
 			table+="<th>Total</th>";
 			table_ext+="<th>Total</th>";
-			table+="<th>Toggl</th>";
-			table_ext+="<th>Toggl</th>";
 			table+="<th><a href=\"http://twitter.com\">Twitter</a></th>";
 			table_ext+="<th><a href=\"http://twitter.com\">Twitter</a></th>";
-			table+="<th>Soc. Net.</th><th>Toggl</th><tbody>";
-		    table_ext+="<th>Soc. Net.</th><th>Toggl</th><tbody>";
+			table+="<th>Soc. Net.</th><tbody>";
+		    table_ext+="<th>Soc. Net.</th><tbody>";
 		    var tableFinal = "";
 		 	<%//Loading Groups
 		 		ArrayList<Group> groups = course.getGroups();
+		 		int groupNumber = 0;
 		 		for (Group g: groups){
+		 			String colorGroup ="#FAFAFA";
+		 			//String redColor = "#FFF6ED";
+		 			String redColor = "#FAFAFA";
+		 			String tweetColor = "#EBFFFB";
+		 			String postColor = "#FFEBD5";
+		 			String commentsColor = "EBF9FF";
+		 			if (groupNumber % 2 ==1){
+		 				colorGroup="#E6E6E6";
+		 				//redColor = "#FFD8D8";
+		 				redColor = "#E6E6E6";
+		 				tweetColor = "#D4FFF7";
+		 				postColor = "#FFDFBD";
+		 				commentsColor = "CAF0FF";
+		 			}
+		 			groupNumber++;
 		 			ArrayList<Student> students = g.getStudents();
 		 			for (Student s : students){
 		 				ArrayList<Integer> postBlogActivity = s.getPostActivity();
 		 				ArrayList<Integer> commentBlogActivity = s.getCommentActivity();	
 		 				%>
-		 				table+="<tr><td align=\"left\" ><%=s.getUsername()%></td>";
+		 				table+="<tr bgcolor=\"<%=colorGroup%>\"><td align=\"left\" ><%=s.getUsername()%></td>";
 		 				<%
 		 				int commentsTotal = 0;
 		 				String color = "";
 		 				for (int i=0;i<postBlogActivity.size();i++){		 					
 			 				if (g.getFirstBlog().equals(blogs.get(i))){
 			 				// POSTS OF THE USER
-			 					if (postBlogActivity.get(i)==0) color = "#FFF6ED";
-			 					else color = "#EBFFED";
+			 					if (postBlogActivity.get(i)==0) color = redColor;
+			 					else color = postColor;
 			 					commentsTotal+=commentBlogActivity.get(i); //Total comments also includes the comments done in their own blog
 			 					%>
 			 					table+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+""+i);%>\"><%=postBlogActivity.get(i)%></td>";
@@ -84,8 +98,8 @@
 			 				}else{
 			 				// COMMENTS OF THE USER
 			 					commentsTotal+=commentBlogActivity.get(i);
-			 					if (commentBlogActivity.get(i)==0) color = "#FFF6ED";
-			 					else color = "#EBF9FF";
+			 					if (commentBlogActivity.get(i)==0) color = redColor;
+			 					else color = commentsColor;
 			 					%>
 			 					table+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+""+i);%>\"><%=commentBlogActivity.get(i)%></td>";
 			 					<%
@@ -93,26 +107,14 @@
 			 				
 		 				}
 		 				// TOTAL COMMENTS OF THE USER
-		 				if (commentsTotal==0) color = "#FFF6ED";
-	 					else color = "#EBF9FF";
+		 				if (commentsTotal==0) color = redColor;
+	 					else color = commentsColor;
 		 				%>
 		 					table+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+"Total");%>\"><%=commentsTotal%></td>";
-		 				<%
-		 				// TOTAL SPENT TIME ON THE COURSE
-		 				int timeSpent = s.getTimeSpentByActivities();
-		 				%>
-		 				var time=<%=timeSpent%>/3600;
-						var time_spent=Math.floor(<%=timeSpent%>/3600);
-						var min=(<%=timeSpent%>/60)%60;
-						var hour = time_spent.toFixed(0);
-						if (hour<10) hour = '0'+hour;
-						if (hour<100) hour = '0'+hour;
-						//time_spent=time_spent-min;
-						//alert(toggl);
-						table+="<td align=\"center\" bgcolor=\"#EFFBF2\" id=\"<%out.print(s.getUsername()+"toggl");%>\">"+hour+" h "+min.toFixed(0)+" m"+"</td>";
+		 				
 		 				<%int tweets = s.getTweetActivity();
-		 				if (tweets==0) color = "#FFF6ED";
-	 					else color = "#EBFFFB";%>
+		 				if (tweets==0) color = redColor;
+	 					else color = tweetColor;%>
 	 					table+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+"twitter");%>\"><%=tweets%></td>";
 	 					
 	 					
@@ -129,27 +131,10 @@
 	 						out.print("table+="+sum+"+\",\";");
 	 					}
 	 					int sum = tweetsweeks.get(tweetsweeks.size()-1)+commentsweeks.get(tweetsweeks.size()-1)+postsweeks.get(tweetsweeks.size()-1);
- 						out.print(sum+";");
+ 						out.print("table+="+sum+";");
  						%>
  						table+="</td>";
- 						table+="<td id =\"sparkline<%out.print(s.getUsername()+"toggl");%>\">";
- 						<%
- 						//PRINT SPARKLINE REGARDING SOCIAL NETWORK
- 						ArrayList<Activity> activities = s.getListTimeSpentByActivity();
-	 					for (int i=0;i<tweetsweeks.size()-1;i++){ 
-	 						sum = 0;
- 							for (Activity a: activities){
-	 							sum += a.getActivityWeek().get(i);
-	 						}
- 							out.print("table+="+sum+"+\",\";");
-	 					}
-	 					sum = 0;
-						for (Activity a: activities){
- 							sum += a.getActivityWeek().get(tweetsweeks.size()-1);
- 						}
-						out.print("table+="+sum+"+\",\";");
-	 					%>
-	 					table+="</td>";
+ 						
 						table+="</tr>";
 		 				<%
 		 			}
@@ -160,17 +145,79 @@
 		    table+= "</tbody>";
 			table+="</tr></thead>";
 		    table+="</table>";
+		    
+		    
+		    <%//Loading Groups
+	 		
+	 			ArrayList<Student> externals = course.getExternals();
+	 			for (Student s : externals){
+	 				ArrayList<Integer> postBlogActivity = s.getPostActivity();
+	 				ArrayList<Integer> commentBlogActivity = s.getCommentActivity();	
+	 				%>
+	 				table_ext+="<tr><td align=\"left\" ><%=s.getUsername()%></td>";
+	 				<%
+	 				int commentsTotal = 0;
+	 				String color = "";
+	 				for (int i=0;i<postBlogActivity.size();i++){		 					
+		 					// COMMENTS OF THE USER
+		 					commentsTotal+=commentBlogActivity.get(i);
+		 					if (commentBlogActivity.get(i)==0) color = "#FFF6ED";
+		 					else color = "#EBF9FF";
+		 					%>
+		 					table_ext+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+""+i);%>\"><%=commentBlogActivity.get(i)%></td>";
+		 					<%
+		 						 				
+	 				}
+	 				// TOTAL COMMENTS OF THE USER
+	 				if (commentsTotal==0) color = "#FFF6ED";
+ 					else color = "#EBF9FF";
+	 				%>
+	 					table_ext+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+"Total");%>\"><%=commentsTotal%></td>";
+	 				
+	 				<%int tweets = s.getTweetActivity();
+	 				if (tweets==0) color = "#FFF6ED";
+ 					else color = "#EBFFFB";%>
+ 					table_ext+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+"twitter");%>\"><%=tweets%></td>";
+ 					
+ 					
+ 					<%
+ 					//PRINT SPARKLINE REGARDING SOCIAL NETWORK
+ 					ArrayList<Integer> postsweeks = s.getPostsActivityPerWeek();
+ 					ArrayList<Integer> commentsweeks = s.getCommentsActivityPerWeek();
+ 					ArrayList<Integer> tweetsweeks = s.getTweetsActivityPerWeek();
+ 					%>
+ 					table_ext+="<td id =\"sparkline<%out.print(s.getUsername()+"social");%>\">";
+ 					<%
+ 					for (int i=0;i<tweetsweeks.size()-1;i++){
+ 						int sum = tweetsweeks.get(i)+commentsweeks.get(i)+postsweeks.get(i);
+ 						out.print("table_ext+="+sum+"+\",\";");
+ 					}
+ 					int sum = tweetsweeks.get(tweetsweeks.size()-1)+commentsweeks.get(tweetsweeks.size()-1)+postsweeks.get(tweetsweeks.size()-1);
+						out.print("table_ext+="+sum+";");
+						%>
+						table_ext+="</td>";
+						
+					table_ext+="</tr>";
+	 				<%
+	 			}
+	 		%>
 		    table_ext+="</tbody></tr></thead></table>";
 		    
 		    $(document).ready(function() {
 			    $("<p>").append(table).appendTo("#tables");
-		
+			    $("<p>").append(table_ext).appendTo("#tables_ext");
 				$("#tableBlogs").tablesorter();
+				$("#tableBlogs_ext").tablesorter();
 				<%
 				ArrayList<Student> students = course.getStudents();
 				for (Student s:students){
 					%>
-					$('#sparkline<%=s.getUsername()%>toggl').sparkline();
+					$('#sparkline<%=s.getUsername()%>social').sparkline();
+					<%
+				}
+				students = course.getExternals();
+				for (Student s:students){
+					%>
 					$('#sparkline<%=s.getUsername()%>social').sparkline();
 					<%
 				}

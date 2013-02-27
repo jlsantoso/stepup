@@ -81,6 +81,65 @@ public class EventPostgreSQL {
 		
 	}
 	
+	public static void updateEvent(String json){
+		Connection conn = null;
+		Statement stmt = null;
+		String query = "";
+		
+		try {
+			JSONObject usernames = new JSONObject(json);
+			InitialContext cxt = new InitialContext();
+			if ( cxt == null ) {
+			   throw new Exception("Uh oh -- no context!");
+			}
+			DataSource ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/postgres" );
+			if ( ds == null ) {
+			   throw new Exception("Data source not found!");
+			}
+			conn = ds.getConnection();
+			if(conn != null) 
+			{
+				stmt = conn.createStatement();
+				 query = "UPDATE event SET username='"+usernames.getString("username")+"' WHERE username='"+usernames.getString("matchedusername")+"'";	
+				stmt.executeUpdate(query);
+				stmt.close();
+				conn.close();
+			}
+		} catch (NamingException e) {
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL", e.toString()).send();
+				try {
+					stmt.close();
+					conn.close();
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			} catch (MessagingException e1) {
+				
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+		} catch (Exception e) {
+			System.out.println(query);
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL", e.toString()).send();
+				try {
+					stmt.close();
+					conn.close();
+				} catch (SQLException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} 
+		
+	}
+	
 	public static String getOpenDB(String query, String pagination) {
 		try {
 			InitialContext cxt = new InitialContext();
@@ -95,7 +154,7 @@ public class EventPostgreSQL {
 			if(conn != null) 
 			{
 				Statement stmt = conn.createStatement();
-				String querytxt=query.replace("from", ",count(*) OVER() AS full_count from") + " limit "+(StepUpDBConstants.LIMIT)+" OFFSET "+(Integer.parseInt(pagination)*10);
+				String querytxt=query.replace("from", ",count(*) OVER() AS full_count from") + " limit "+(StepUpDBConstants.LIMIT)+" OFFSET "+(Integer.parseInt(pagination)*StepUpDBConstants.LIMIT);
 				System.out.println(querytxt);
 				ResultSet rs = stmt.executeQuery(querytxt);
 				JSONArray events = new JSONArray();

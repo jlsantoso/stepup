@@ -9,6 +9,7 @@ import java.util.Hashtable;
 
 import javax.jdo.annotations.Index;
 
+import org.be.kuleuven.hci.aggregationlayer.StepUpConstants;
 import org.be.kuleuven.hci.stepup.model.Event;
 
 import com.googlecode.objectify.annotation.Entity;
@@ -120,7 +121,8 @@ public class Course implements Serializable {
 	}
 	
 	public void addExternal(String username){
-		if (!this.externalsPosition.contains(username.toLowerCase())){
+		if (!this.externalsPosition.containsKey(username.toLowerCase())){
+			if (username.toLowerCase().compareTo("erikduval")==0) System.out.println("Creando Erik como externo");
 			int size = this.externals.size();
 			this.externalsPosition.put(username.toLowerCase(), size);
 			Student s = new Student();
@@ -128,6 +130,10 @@ public class Course implements Serializable {
 			s.initProfile(this.blogs.size(), this.weeks.size(), getNumberActivities());
 			this.externals.add(s);
 		}
+	}
+	
+	public ArrayList<Student> getExternals(){
+		return this.externals;
 	}
 	
 	public void addStudent(Student s){
@@ -157,15 +163,16 @@ public class Course implements Serializable {
 			s = externals.get(externalsPosition.get(e.getUsername().toLowerCase().replaceAll("\\.", "")));
 		}
 		if (getWeekPosition(e.getStartTime())<0) e.setStartTime(this.startcourse);
-		if (e.getVerb().compareTo("comment")==0){
+		if (e.getVerb().compareTo(StepUpConstants.BLOGCOMMENT)==0){
 			String url = e.getObject();
 			url = url.substring(0, url.substring(8,url.length()).indexOf("/")+8).replaceAll("\\.", "").replaceAll("http:","").replaceAll("/", "");
 			s.addCommentBlog(blogPosition.get(url), getWeekPosition(e.getStartTime()));
-		}else if (e.getVerb().compareTo("post")==0){
+		}else if (e.getVerb().compareTo(StepUpConstants.BLOGPOST)==0){
 			String url = e.getObject();
 			url = url.substring(0, url.substring(8,url.length()).indexOf("/")+8).replaceAll("\\.", "").replaceAll("http:","").replaceAll("/", "");
 			s.addPostBlog(blogPosition.get(url), getWeekPosition(e.getStartTime()));
-		}else if (e.getVerb().compareTo("tweet")==0){
+		}else if (e.getVerb().compareTo(StepUpConstants.TWITTER)==0){
+			
 			s.addTweet(getWeekPosition(e.getStartTime()));
 		}else if (e.getVerb().compareTo("spend")==0){
 			int duration = (int)((e.getEndTime().getTime()-e.getStartTime().getTime())/1000);

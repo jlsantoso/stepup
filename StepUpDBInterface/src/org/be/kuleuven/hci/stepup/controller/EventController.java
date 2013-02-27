@@ -92,7 +92,7 @@ public class EventController {
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
-				String query = "select distinct username from event where context=\'"+course+"'";
+				String query = "select distinct lower(username) as username from event where context=\'"+course+"'";
 				if (additional_info.has("startdate")||additional_info.has("enddate")){
 					query += " and";
 				}
@@ -118,11 +118,18 @@ public class EventController {
 		}
 	}
 	
+	
+	public static String getChiBadges(){
+			
+				String query = "select * from event where context='chikul13' and verb='awarded'";
+				return EventPostgreSQL.getOpenDB(query, "0");
+	}
+	
 	public static String getStudent(String course , String username, String json){
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
-				String query = "select * from event where context=\'"+course+"' and username='"+username+"'";
+				String query = "select * from event where context=\'"+course+"' and lower(username)='"+username.toLowerCase()+"'";
 				if (additional_info.has("startdate")||additional_info.has("enddate")){
 					query += " and";
 				}

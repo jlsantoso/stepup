@@ -16,6 +16,14 @@
 	    </init-param>
 	    <load-on-startup>1</load-on-startup>
   </servlet>
+  <servlet>
+		<servlet-name>CommentsOnOtherBlogsServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.openbadges.CommentsOnOtherBlogsServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>TweetsServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.openbadges.TweetsServlet</servlet-class>
+	</servlet>
   <servlet-mapping>
     <servlet-name>BadgesService</servlet-name>
     <url-pattern>/rest/*</url-pattern>
@@ -27,6 +35,14 @@
 	<servlet-mapping>
 		<servlet-name>StepUpOpenBadges</servlet-name>
 		<url-pattern>/stepupopenbadges</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>CommentsOnOtherBlogsServlet</servlet-name>
+		<url-pattern>/commentsonotherblogsservlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>TweetsServlet</servlet-name>
+		<url-pattern>/tweetsservlet</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

@@ -16,12 +16,8 @@ public class ActivityStream {
 		activityStream = new JSONObject();
 	}
 	
-	public  void setAuthor(String username){
-		
-	}
-	
 	public void setPublishedDate(Date publishedDate){
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ZZZZZ");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 		try {
 			this.activityStream.put("published",formatter.format(publishedDate));
 		} catch (JSONException e) {
@@ -49,7 +45,11 @@ public class ActivityStream {
 		try {
 			actor.put("objectType", "person");
 			actor.put("id", username);
-			actor.put("image", new JSONObject().put("url", urlImage));
+			JSONObject image = new JSONObject();
+			image.put("url", urlImage);
+			image.put("width", 72);
+			image.put("height", 72);
+			actor.put("image",image);
 			this.activityStream.put("actor", actor);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -66,11 +66,12 @@ public class ActivityStream {
 		}
 	}
 	
-	public void setObject(String objectURL){
+	public void setObject(String objectURL, String displayName){
 		JSONObject object = new JSONObject();
 		try {
 			object.put("id", "generated");
 			object.put("url", objectURL);
+			object.put("displayName", displayName);
 			this.activityStream.put("object",object);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -83,12 +84,18 @@ public class ActivityStream {
 		try {
 			target.put("url", objectURL);
 			target.put("objectType", objectType);
+			target.put("displayName", displayName);
 			target.put("id", "generated");
+			this.activityStream.put("target",target);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public JSONObject getActivityStream(){
+		return this.activityStream;
 	}
 /*
     "target" : { (optativo)

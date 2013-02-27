@@ -21,10 +21,12 @@ public class Testing {
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses", "{ \"pag\": \"0\"}"));
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/thesis12", "{ \"pag\": \"0\"}"));
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/thesis12/gr0uch0", "{ \"pag\": \"0\"}"));
-		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses", "{ \"pag\": \"0\"}"));
-		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/openBadges", "{ \"pag\": \"0\"}"));
-		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/openBadges/erik.duval@cs.kuleuven.be", "{ \"pag\": \"0\"}"));
-		
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses", "{ \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/openBadges", "{ \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/openBadges/erik.duval@cs.kuleuven.be", "{ \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select count(*) from event where verb ='tweet' and username='jlsantoso' and context='openBadges'\", \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/chi13", "{ \"pag\": \"0\"}"));
+		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event where context='chikul13'\", \"pag\": \"1\"}"));
 	}
 
 }

@@ -18,6 +18,17 @@ public class InitThesis12Course {
 	/**
 	 * @param args
 	 */
+	public static Course chikul13(){
+		Course course = new Course();
+		int blogs = 9;
+		course.setName("chikul12");
+		Calendar startCourse = Calendar.getInstance();
+		startCourse.set(2013, 1, 19, 00, 00, 00);
+		course.setStartCourse(startCourse.getTime());
+		
+		return course;
+	}
+	
 	public static Course init(){
 		//Init course
 		Course course = new Course();

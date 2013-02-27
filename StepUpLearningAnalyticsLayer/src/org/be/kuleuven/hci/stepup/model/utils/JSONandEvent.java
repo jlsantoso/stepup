@@ -13,7 +13,7 @@ public class JSONandEvent{
 	
 	public static Event transformFromJsonToEvent(JSONObject event) throws JSONException, ParseException{
 		Event eventTransformed = new Event();
-		eventTransformed.setUsername(event.getString("username"));
+		eventTransformed.setUsername(event.getString("username").toLowerCase());
 		eventTransformed.setVerb(event.getString("verb"));
 		eventTransformed.setObject(event.getString("object"));
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZZ");
