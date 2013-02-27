@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import org.be.kuleuven.hci.openbadges.badges.Badge;
 import org.be.kuleuven.hci.openbadges.badges.Badges;
+import org.be.kuleuven.hci.openbadges.utils.ActivityStream;
 import org.be.kuleuven.hci.openbadges.utils.Event;
 import org.be.kuleuven.hci.openbadges.utils.JSONandEvent;
 import org.be.kuleuven.hci.openbadges.utils.StepUpConstants;
@@ -39,16 +40,23 @@ public class PersistanceLayer {
 	public static String sendBadgeAsEvent(String username, String badge){
 		String result = "";
 		Event e = new Event();
-		e.setContext("openBadges");
+		e.setContext("chikul13");
 		e.setVerb("awarded");
 		e.setStartTime(Calendar.getInstance().getTime());
 		e.setUsername(username);
+		
 		try {
 			JSONObject badgeJson = new JSONObject(badge);			
 			e.setObject(badgeJson.getJSONObject("badge").getString("name"));
 			e.setOriginalRequest(badgeJson);
 			result += JSONandEvent.transformFromEvemtToJson(e).toString();
 			result += RestClient.doPost(StepUpConstants.URLPUSHEVENT, JSONandEvent.transformFromEvemtToJson(e).toString());
+			ActivityStream as = new ActivityStream();
+	    	as.setActor(username);
+	    	as.setVerb("awarded");
+	    	as.setObject("http://navi-hci.appspot.com/badgeboard?username="+username, "has earned a new badge:" +badgeJson.getJSONObject("badge").getString("description"));
+	    	as.setPublishedDate(Calendar.getInstance().getTime());
+	    	log.warning(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
 			return result;
 		} catch (JSONException e2) {
 			// TODO Auto-generated catch block
