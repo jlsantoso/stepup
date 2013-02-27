@@ -174,7 +174,7 @@ public class ChiCourseBadgesRules {
 					Badge badge = new Badge();
 					badge.setDescription(ChiCourse.createBiWeekly5Tweets(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, getStartDate(), getEndDate()));
 					if (!PersistanceLayer.existBadge(badge)){
-						System.out.println(badge.getDescription());
+						System.out.println(students.getJSONObject(j).getString("username")+"-"+badge.getDescription());
 						PersistanceLayer.saveBadge(badge);
 						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+students.getJSONObject(j).getString("username"), twitterEmailNotification.get(students.getJSONObject(j).getString("username")));
 						PersistanceLayer.sendBadgeAsEvent(students.getJSONObject(j).getString("username"), badge.getDescription());
