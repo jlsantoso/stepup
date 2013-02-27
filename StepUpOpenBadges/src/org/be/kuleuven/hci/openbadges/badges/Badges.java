@@ -22,7 +22,11 @@ public class Badges {
 		return "{\"recipient\":\""+username+"\",\"badge\":{\"version\":\"1.0\",\"name\":\"Twenty tweets\",\"image\":\"/img/badge20.png\",\"description\":\"Done! You reached the maximum level! You are the king of the HCI beach!\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://openbadges-hci.appspot.com\",\"name\":\"hci-kuleuven\"}}}";
 	}
 	
-	public static String openBadgeFormat(String username, String version, String name, String description, String pathImg){
-		return "{\"recipient\":\""+username+"\",\"badge\":{\"version\":\"1.0\",\"name\":\""+name+"-"+version+"\",\"image\":\""+pathImg+"\",\"description\":\""+description+"\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://openbadges-hci.appspot.com\",\"name\":\"hci-kuleuven\"}}}";
+	public static String openBadgeFormat(String username, String version, String name, String description, String pathImg, String type, String connotation){
+		return "{\"type\":\""+type+"\",\"connotation\":\""+connotation+"\",\"recipient\":\""+username+"\",\"badge\":{\"version\":\"1.0\",\"name\":\""+name+"-"+version+"\",\"image\":\""+pathImg+"\",\"description\":\""+description+"\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://openbadges-hci.appspot.com\",\"name\":\"hci-kuleuven\"}}}";
+	}
+	
+	public static String openBadgeFormat(String username, String version, String name, String description, String pathImg, String type, String connotation, String startdate, String enddate){
+		return "{\"startdate\":\""+startdate+"\",\"enddate\":\""+enddate+"\",\"type\":\""+type+"\",\"connotation\":\""+connotation+"\",\"recipient\":\""+username+"\",\"badge\":{\"version\":\"1.0\",\"name\":\""+name+"-"+version+"\",\"image\":\""+pathImg+"\",\"description\":\""+description+"\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://openbadges-hci.appspot.com\",\"name\":\"hci-kuleuven\"}}}";
 	}
 }
