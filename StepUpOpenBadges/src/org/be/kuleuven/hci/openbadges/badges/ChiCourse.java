@@ -71,7 +71,7 @@ public class ChiCourse {
 //Comments on others blogs
 	public static String createBiWeeklyGoldCommentsOnOthersBlogs(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_commentpercent_gold";
-		return Badges.openBadgeFormat(username, week, "Commenter Gold medal", "Well done! You have commented on 33% others blogs (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive" , startdate, enddate);		
+		return Badges.openBadgeFormat(username, week, "Commenter Gold medal", "Well done! You have commented on 100% others blogs (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive" , startdate, enddate);		
 	}	
 	
 	public static String createBiWeeklySilverCommentsOnOthersBlogs(String username, String week, String startdate, String enddate){
@@ -80,8 +80,8 @@ public class ChiCourse {
 	}
 	
 	public static String createBiWeeklyBronzeCommentsOnOthersBlogs(String username, String week, String startdate, String enddate){
-		String badgeName = "pos_commentpercent_gold";
-		return Badges.openBadgeFormat(username, week, "Commenter Bronze medal", "Well done! You have commented on 100% others blogs (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
+		String badgeName = "pos_commentpercent_bronze";
+		return Badges.openBadgeFormat(username, week, "Commenter Bronze medal", "Well done! You have commented on 33% others blogs (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
 //Earlier on publish results
 	public static String createEarlierOnPublishResults(String username, String iteration){
