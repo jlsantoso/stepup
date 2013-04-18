@@ -38,13 +38,16 @@ public class ReadGoogleSpreadSheet {
 	      Hashtable<String,String> blogsfeeds = new Hashtable<String,String>();
 	      Hashtable<String,String> diigofeeds = new Hashtable<String,String>();
 	      Hashtable<String,String> membersGroup = new Hashtable<String,String>();
+	      Hashtable<String,String> membersURL = new Hashtable<String,String>();
 	      Hashtable<String,String> twitterEmailNotification = new Hashtable<String,String>();
 	      Hashtable<String,String> twitterOpenBadges = new Hashtable<String,String>();
 	      Hashtable<String,String> twitterusernames = new Hashtable<String,String>();
+	      Hashtable<String,String> usernamesUrl = new Hashtable<String,String>();
 	      int i = 0;
 	      for (ListEntry entry : feed.getEntries()) {
 	    	if (checkingCells(entry)){	    	
 		        CustomElementCollection elements = entry.getCustomElements();
+		        
 		        String twitter = elements.getValue("twitter").toLowerCase();
 		        String name = elements.getValue("studentname").toLowerCase();
 		        String groupname = elements.getValue("groupname").toLowerCase();
@@ -52,8 +55,21 @@ public class ReadGoogleSpreadSheet {
 		        	String members = membersGroup.get(groupname);
 		        	members += twitter+";";
 		        	membersGroup.put(groupname,members);
+		        }else{
+		        	String members = twitter+";";
+		        	membersGroup.put(groupname,members);
 		        }
 		        String wordpressblogurl = elements.getValue("wordpressblogurl").toLowerCase();
+		        String urlstripped = wordpressblogurl.replaceAll("http:", "").replaceAll("/", "");
+		        if (membersURL.containsKey(urlstripped)){
+		        	String members = membersURL.get(urlstripped);
+		        	members += twitter+";";
+		        	membersURL.put(urlstripped,members);
+		        }else{
+		        	String members = twitter+";";
+		        	membersURL.put(urlstripped,members);
+		        }
+		        usernamesUrl.put(twitter,wordpressblogurl);
 		        String wordpresspostrssfeed = elements.getValue("wordpresspostrssfeed").toLowerCase();
 		        blogsfeeds.put(wordpresspostrssfeed, groupname);
 		        String wordpresscommentrssfeed = elements.getValue("wordpresscommentrssfeed").toLowerCase();
@@ -78,6 +94,8 @@ public class ReadGoogleSpreadSheet {
 	      syncCache.put("twitterEmailNotification", twitterEmailNotification);
 	      syncCache.put("twitterOpenBadges", twitterOpenBadges);
 	      syncCache.put("twitterusernames", twitterusernames);
+	      syncCache.put("usernamesUrl", usernamesUrl);
+	      syncCache.put("membersURL", membersURL);
 	      
 	    } catch (IOException e) {
 	      e.printStackTrace();

@@ -7,9 +7,10 @@ import java.util.Hashtable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.be.kuleuven.hci.openbadges.TweetsServlet;
+import org.be.kuleuven.hci.openbadges.PeriodicBadgesServlet;
 import org.be.kuleuven.hci.openbadges.badges.Badge;
 import org.be.kuleuven.hci.openbadges.badges.ChiCourse;
+import org.be.kuleuven.hci.openbadges.badges.rules.utils.Dates;
 import org.be.kuleuven.hci.openbadges.mailnotification.Mail;
 import org.be.kuleuven.hci.openbadges.persistanlayer.PersistanceLayer;
 import org.be.kuleuven.hci.openbadges.utils.ReadGoogleSpreadSheet;
@@ -27,60 +28,10 @@ public class ChiCourseBadgesRules {
 	
 	private static final Logger log = Logger.getLogger(ChiCourseBadgesRules.class.getName());
 	
-	static Calendar startCourse(){
-		Calendar startCourse = Calendar.getInstance();
-		startCourse.set(2013, 1, 19);
-		return startCourse;
-	}
-	
-	static Calendar endCourse(){
-		Calendar endCourse = Calendar.getInstance();
-		endCourse.set(2013, 4, 28);
-		return endCourse;
-	}
-	
-	public static int getCurrentBiWeekOfTheCourse(){
-		Calendar today = Calendar.getInstance();
-		int biweek = 0;
-		today.add(Calendar.DAY_OF_MONTH, -14);
-		while (today.after(startCourse())){
-			biweek++;
-			today.add(Calendar.DAY_OF_MONTH, -14);			
-		}		
-		return biweek;
-	}
-	
-	public static String getQueryBetweenDates(){
-		int week = getCurrentBiWeekOfTheCourse();
-		Calendar start = startCourse();
-		start.add(Calendar.DAY_OF_MONTH, week*14);
-		String query = " and starttime>'"+start.get(Calendar.YEAR)+"-"+(start.get(Calendar.MONTH)+1)+"-"+start.get(Calendar.DAY_OF_MONTH)+"' ";
-		start.add(Calendar.DAY_OF_MONTH, 14);
-		query = query+" and starttime<'"+start.get(Calendar.YEAR)+"-"+(start.get(Calendar.MONTH)+1)+"-"+start.get(Calendar.DAY_OF_MONTH)+"' ";
-		return query;
-	}
-	
-	public static String getStartDate(){
-		int week = getCurrentBiWeekOfTheCourse();
-		Calendar start = startCourse();
-		start.add(Calendar.DAY_OF_MONTH, week*14);
-		String query = start.get(Calendar.YEAR)+"-"+(start.get(Calendar.MONTH)+1)+"-"+start.get(Calendar.DAY_OF_MONTH);
-		return query;
-	}
-	
-	public static String getEndDate(){
-		int week = getCurrentBiWeekOfTheCourse();
-		Calendar start = startCourse();
-		start.add(Calendar.DAY_OF_MONTH, week*14);
-		start.add(Calendar.DAY_OF_MONTH, 14);
-		String query = start.get(Calendar.YEAR)+"-"+(start.get(Calendar.MONTH)+1)+"-"+start.get(Calendar.DAY_OF_MONTH);
-		return query;
-	}
-	
 	public static void commentsOnOtherBlogs(int totalBlogs){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-		int current_week=getCurrentBiWeekOfTheCourse();
+		int current_week=Dates.getCurrentBiWeekOfTheCourse();
 		int pagination = 0;
 		try {
 			if (syncCache.get("membersGroup")==null) ReadGoogleSpreadSheet.read();
@@ -101,7 +52,7 @@ public class ChiCourseBadgesRules {
 				//System.out.println(queryusernames);
 				//select distinct substring(object,8, position('/' in substring(object,8))-1) from event where verb ='comment';
 				//System.out.println("{ \"query\": \"select distinct substring(object,8, position('/' in substring(object,8))-1) as url from event where url not like '%"+usernamesUrl.get(usernames[0])+"%' and verb ='"+StepUpConstants.BLOGCOMMENT+"' "+queryusernames+" and context='chikul13'"+getQueryBetweenDates()+"\", \"pag\": \""+pagination+"\"}");
-				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select distinct substring(object,8, position('/' in substring(object,8))-1) as url from event where object not like '%"+usernamesUrl.get(usernames[0])+"%' and verb ='"+StepUpConstants.BLOGCOMMENT+"' "+queryusernames+" and context='chikul13'"+getQueryBetweenDates()+"\", \"pag\": \""+pagination+"\"}");
+				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select distinct substring(object,8, position('/' in substring(object,8))-1) as url from event where object not like '%"+usernamesUrl.get(usernames[0])+"%' and verb ='"+StepUpConstants.BLOGCOMMENT+"' "+queryusernames+" and context='chikul13'"+Dates.getQueryBetweenDates()+"\", \"pag\": \""+pagination+"\"}");
 				
 				JSONArray query	 = new JSONArray(queryresult);
 				System.out.println(query.length()*100/totalBlogs+"-"+queryresult);
@@ -110,7 +61,7 @@ public class ChiCourseBadgesRules {
 					System.out.println(usernames.length+":SIZE");
 					for (int i=0;i<usernames.length;i++){
 						Badge badge = new Badge();
-						badge.setDescription(ChiCourse.createBiWeeklyBronzeCommentsOnOthersBlogs(twitterOpenBadges.get(usernames[i]), ""+current_week, getStartDate(), getEndDate()));
+						badge.setDescription(ChiCourse.createBiWeeklyBronzeCommentsOnOthersBlogs(twitterOpenBadges.get(usernames[i]), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 						if (!PersistanceLayer.existBadge(badge)){
 							System.out.println(badge.getDescription());
 							PersistanceLayer.saveBadge(badge);
@@ -124,7 +75,7 @@ public class ChiCourseBadgesRules {
 					String urlBase = "http://openbadges-hci.appspot.com";
 					for (int i=0;i<usernames.length;i++){
 						Badge badge = new Badge();
-						badge.setDescription(ChiCourse.createBiWeeklySilverCommentsOnOthersBlogs(twitterOpenBadges.get(usernames[i]), ""+current_week, getStartDate(), getEndDate()));
+						badge.setDescription(ChiCourse.createBiWeeklySilverCommentsOnOthersBlogs(twitterOpenBadges.get(usernames[i]), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 						if (!PersistanceLayer.existBadge(badge)){
 							System.out.println(badge.getDescription());
 							PersistanceLayer.saveBadge(badge);
@@ -137,7 +88,7 @@ public class ChiCourseBadgesRules {
 					String urlBase = "http://openbadges-hci.appspot.com";
 					for (int i=0;i<usernames.length;i++){
 						Badge badge = new Badge();
-						badge.setDescription(ChiCourse.createBiWeeklyGoldCommentsOnOthersBlogs(twitterOpenBadges.get(usernames[i]), ""+current_week, getStartDate(), getEndDate()));
+						badge.setDescription(ChiCourse.createBiWeeklyGoldCommentsOnOthersBlogs(twitterOpenBadges.get(usernames[i]), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 						if (!PersistanceLayer.existBadge(badge)){
 							System.out.println(badge.getDescription());
 							PersistanceLayer.saveBadge(badge);
@@ -159,7 +110,7 @@ public class ChiCourseBadgesRules {
 	public static void tweets(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-		int current_week=getCurrentBiWeekOfTheCourse();
+		int current_week=Dates.getCurrentBiWeekOfTheCourse();
 		int pagination = 0;
 		try {
 			if (syncCache.get("membersGroup")==null) ReadGoogleSpreadSheet.read();
@@ -174,15 +125,14 @@ public class ChiCourseBadgesRules {
 			JSONArray students = new JSONArray(result);
 			for(int j=0;j<students.length();j++){
 				//select distinct substring(object,8, position('/' in substring(object,8))-1) from event where verb ='comment';
-				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select count(*) from event where verb ='"+StepUpConstants.TWITTER+"' and username='"+students.getJSONObject(j).getString("username")+"' and context='chikul13'"+getQueryBetweenDates()+"\", \"pag\": \"0\"}");
-				log.severe(queryresult+"\n-"+"{ \"query\": \"select count(*) from event where verb ='tweet' and username='"+students.getJSONObject(j).getString("username")+"' and context='chikul13'"+getQueryBetweenDates());
-				System.out.println(queryresult+"\n-"+"{ \"query\": \"select count(*) from event where verb ='tweet' and username='"+students.getJSONObject(j).getString("username")+"' and context='chi13'"+getQueryBetweenDates());
+				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select count(*) from event where verb ='"+StepUpConstants.TWITTER+"' and username='"+students.getJSONObject(j).getString("username")+"' and context='chikul13'"+Dates.getQueryBetweenDates()+"\", \"pag\": \"0\"}");
+
 				JSONArray query	 = new JSONArray(queryresult);
 				if (Integer.parseInt(query.getJSONObject(0).getString("count"))>=5){
 					String urlBase = "http://openbadges-hci.appspot.com";
 					Badge badge = new Badge();
-					badge.setDescription(ChiCourse.createBiWeekly5Tweets(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, getStartDate(), getEndDate()));
-					if (!PersistanceLayer.existBadge(badge)){
+					badge.setDescription(ChiCourse.createBiWeekly5Tweets(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
+					if (!PersistanceLayer.existBadge(badge)&&twitterEmailNotification.containsKey(students.getJSONObject(j).getString("username"))){
 						System.out.println(students.getJSONObject(j).getString("username")+"-"+badge.getDescription());
 						PersistanceLayer.saveBadge(badge);
 						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+students.getJSONObject(j).getString("username"), twitterEmailNotification.get(students.getJSONObject(j).getString("username")));
@@ -192,8 +142,8 @@ public class ChiCourseBadgesRules {
 				if (Integer.parseInt(query.getJSONObject(0).getString("count"))>=10){
 					String urlBase = "http://openbadges-hci.appspot.com";
 					Badge badge = new Badge();
-					badge.setDescription(ChiCourse.createBiWeekly10Tweets(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, getStartDate(), getEndDate()));
-					if (!PersistanceLayer.existBadge(badge)){
+					badge.setDescription(ChiCourse.createBiWeekly10Tweets(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
+					if (!PersistanceLayer.existBadge(badge)&&twitterEmailNotification.containsKey(students.getJSONObject(j).getString("username"))){
 						System.out.println(badge.getDescription());
 						PersistanceLayer.saveBadge(badge);
 						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+students.getJSONObject(j).getString("username"), twitterEmailNotification.get(students.getJSONObject(j).getString("username")));
@@ -203,8 +153,8 @@ public class ChiCourseBadgesRules {
 				if (Integer.parseInt(query.getJSONObject(0).getString("count"))>=15){
 					String urlBase = "http://openbadges-hci.appspot.com";
 					Badge badge = new Badge();
-					badge.setDescription(ChiCourse.createBiWeekly15Tweets(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, getStartDate(), getEndDate()));
-					if (!PersistanceLayer.existBadge(badge)){
+					badge.setDescription(ChiCourse.createBiWeekly15Tweets(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
+					if (!PersistanceLayer.existBadge(badge)&&twitterEmailNotification.containsKey(students.getJSONObject(j).getString("username"))){
 						System.out.println(badge.getDescription());
 						PersistanceLayer.saveBadge(badge);
 						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+students.getJSONObject(j).getString("username"), twitterEmailNotification.get(students.getJSONObject(j).getString("username")));
@@ -224,7 +174,7 @@ public class ChiCourseBadgesRules {
 	public static void diigo(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-		int current_week=getCurrentBiWeekOfTheCourse();
+		int current_week=Dates.getCurrentBiWeekOfTheCourse();
 		int pagination = 0;
 		try {
 			if (syncCache.get("membersGroup")==null) ReadGoogleSpreadSheet.read();
@@ -238,12 +188,12 @@ public class ChiCourseBadgesRules {
 			JSONArray students = new JSONArray(result);
 			for(int j=0;j<students.length();j++){
 				//select distinct substring(object,8, position('/' in substring(object,8))-1) from event where verb ='comment';
-				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select count(*) from event where verb ='"+StepUpConstants.DIIGOVERB+"' and username='"+students.getJSONObject(j).getString("username")+"' and context='chikul13'"+getQueryBetweenDates()+"\", \"pag\": \"0\"}");
+				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select count(*) from event where verb ='"+StepUpConstants.DIIGOVERB+"' and username='"+students.getJSONObject(j).getString("username")+"' and context='chikul13'"+Dates.getQueryBetweenDates()+"\", \"pag\": \"0\"}");
 				JSONArray query	 = new JSONArray(queryresult);
 				if (Integer.parseInt(query.getJSONObject(0).getString("count"))>=5){
 					String urlBase = "http://openbadges-hci.appspot.com";
 					Badge badge = new Badge();
-					badge.setDescription(ChiCourse.createBiWeekly5Diigo(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, getStartDate(), getEndDate()));
+					badge.setDescription(ChiCourse.createBiWeekly5Diigo(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 					if (!PersistanceLayer.existBadge(badge)){
 						PersistanceLayer.saveBadge(badge);
 						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+students.getJSONObject(j).getString("username"), twitterEmailNotification.get(students.getJSONObject(j).getString("username")));
@@ -253,7 +203,7 @@ public class ChiCourseBadgesRules {
 				if (Integer.parseInt(query.getJSONObject(0).getString("count"))>=10){
 					String urlBase = "http://openbadges-hci.appspot.com";
 					Badge badge = new Badge();
-					badge.setDescription(ChiCourse.createBiWeekly10Diigo(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, getStartDate(), getEndDate()));
+					badge.setDescription(ChiCourse.createBiWeekly10Diigo(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 					if (!PersistanceLayer.existBadge(badge)){
 						PersistanceLayer.saveBadge(badge);
 						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+students.getJSONObject(j).getString("username"), twitterEmailNotification.get(students.getJSONObject(j).getString("username")));
@@ -263,7 +213,7 @@ public class ChiCourseBadgesRules {
 				if (Integer.parseInt(query.getJSONObject(0).getString("count"))>=15){
 					String urlBase = "http://openbadges-hci.appspot.com";
 					Badge badge = new Badge();
-					badge.setDescription(ChiCourse.createBiWeekly15Diigo(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, getStartDate(), getEndDate()));
+					badge.setDescription(ChiCourse.createBiWeekly15Diigo(twitterOpenBadges.get(students.getJSONObject(j).getString("username")), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 					if (!PersistanceLayer.existBadge(badge)){
 						PersistanceLayer.saveBadge(badge);
 						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+students.getJSONObject(j).getString("username"), twitterEmailNotification.get(students.getJSONObject(j).getString("username")));
@@ -283,7 +233,7 @@ public class ChiCourseBadgesRules {
 	public static void commentsOnOwnBlogs(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-		int current_week=getCurrentBiWeekOfTheCourse();
+		int current_week=Dates.getCurrentBiWeekOfTheCourse();
 		int pagination = 0;
 		try {
 			if (syncCache.get("membersGroup")==null) ReadGoogleSpreadSheet.read();
@@ -300,14 +250,16 @@ public class ChiCourseBadgesRules {
 				String queryusernames = "";
 				for (int i=0;i<usernames.length;i++) queryusernames += " and username!='"+usernames[i]+"'";
 				//select distinct substring(object,8, position('/' in substring(object,8))-1) from event where verb ='comment';
-				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select substring(object,8, position('/' in substring(object,8))-1) as url from event where url like '%"+usernamesUrl.get(usernames[0])+"%' and verb ='comment' "+queryusernames+" and context='chikul13'"+getQueryBetweenDates()+"\", \"pag\": \""+pagination+"\"}");
+				String queryresult = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select substring(object,8, position('/' in substring(object,8))-1) as url from event where object like '%"+usernamesUrl.get(usernames[0])+"%' and verb ='commented' "+queryusernames+" and context='chikul13'"+Dates.getQueryBetweenDates()+"\", \"pag\": \""+pagination+"\"}");
+				System.out.println("{ \"query\": \"select substring(object,8, position('/' in substring(object,8))-1) as url from event where object like '%"+usernamesUrl.get(usernames[0])+"%' and verb ='commented' "+queryusernames+" and context='chikul13'"+Dates.getQueryBetweenDates()+"\", \"pag\": \""+pagination+"\"}");
 				JSONArray query	 = new JSONArray(queryresult);
 				if (query.length()>=5){
 					String urlBase = "http://openbadges-hci.appspot.com";
 					for (int i=0;i<usernames.length;i++){
 						Badge badge = new Badge();
-						badge.setDescription(ChiCourse.createBiWeekly5CommentsOnYourBlog(twitterOpenBadges.get(usernames[i]), ""+current_week, getStartDate(), getEndDate()));
+						badge.setDescription(ChiCourse.createBiWeekly5CommentsOnYourBlog(twitterOpenBadges.get(usernames[i]), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 						if (!PersistanceLayer.existBadge(badge)){
+							System.out.println(badge.getDescription());
 							PersistanceLayer.saveBadge(badge);
 							Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+usernames[i], twitterEmailNotification.get(usernames[i]));
 							PersistanceLayer.sendBadgeAsEvent(usernames[i], badge.getDescription());
@@ -319,11 +271,12 @@ public class ChiCourseBadgesRules {
 					String urlBase = "http://openbadges-hci.appspot.com";
 					for (int i=0;i<usernames.length;i++){
 						Badge badge = new Badge();
-						badge.setDescription(ChiCourse.createBiWeekly10CommentsOnYourBlog(twitterOpenBadges.get(usernames[i]), ""+current_week, getStartDate(), getEndDate()));
+						badge.setDescription(ChiCourse.createBiWeekly10CommentsOnYourBlog(twitterOpenBadges.get(usernames[i]), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 						if (!PersistanceLayer.existBadge(badge)){
+							System.out.println(badge.getDescription());
 							PersistanceLayer.saveBadge(badge);
 							Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+usernames[i], twitterEmailNotification.get(usernames[i]));
-							PersistanceLayer.sendBadgeAsEvent(usernames[i], badge.getDescription());		
+							PersistanceLayer.sendBadgeAsEvent(usernames[i], badge.getDescription());
 						}
 					}
 				}
@@ -331,8 +284,9 @@ public class ChiCourseBadgesRules {
 					String urlBase = "http://openbadges-hci.appspot.com";
 					for (int i=0;i<usernames.length;i++){
 						Badge badge = new Badge();
-						badge.setDescription(ChiCourse.createBiWeekly15CommentsOnYourBlog(twitterOpenBadges.get(usernames[i]), ""+current_week, getStartDate(), getEndDate()));
+						badge.setDescription(ChiCourse.createBiWeekly15CommentsOnYourBlog(twitterOpenBadges.get(usernames[i]), ""+current_week, Dates.getStartDate(), Dates.getEndDate()));
 						if (!PersistanceLayer.existBadge(badge)){
+							System.out.println(badge.getDescription());
 							PersistanceLayer.saveBadge(badge);
 							Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+usernames[i], twitterEmailNotification.get(usernames[i]));
 							PersistanceLayer.sendBadgeAsEvent(usernames[i], badge.getDescription());

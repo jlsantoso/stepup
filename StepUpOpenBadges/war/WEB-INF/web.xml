@@ -21,8 +21,12 @@
 		<servlet-class>org.be.kuleuven.hci.openbadges.CommentsOnOtherBlogsServlet</servlet-class>
 	</servlet>
 	<servlet>
-		<servlet-name>TweetsServlet</servlet-name>
-		<servlet-class>org.be.kuleuven.hci.openbadges.TweetsServlet</servlet-class>
+		<servlet-name>PeriodicBadgesServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.openbadges.PeriodicBadgesServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>OnceXWeekBadgesServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.openbadges.OnceXWeekBadgesServlet</servlet-class>
 	</servlet>
   <servlet-mapping>
     <servlet-name>BadgesService</servlet-name>
@@ -41,8 +45,12 @@
 		<url-pattern>/commentsonotherblogsservlet</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>TweetsServlet</servlet-name>
-		<url-pattern>/tweetsservlet</url-pattern>
+		<servlet-name>PeriodicBadgesServlet</servlet-name>
+		<url-pattern>/periodicbadgesservlet</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>OnceXWeekBadgesServlet</servlet-name>
+		<url-pattern>/oncexweekservlet</url-pattern>
 	</servlet-mapping>
 	<welcome-file-list>
 		<welcome-file>index.jsp</welcome-file>

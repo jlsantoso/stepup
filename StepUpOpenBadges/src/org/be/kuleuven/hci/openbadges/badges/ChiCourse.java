@@ -8,64 +8,64 @@ public class ChiCourse {
 
 //Linguistic badges
 	//Challenge
-	public static String createBiWeeklyGoldLinguisticChallenge(String username, String week){
+	public static String createBiWeeklyGoldLinguisticChallenge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_challenger_gold";
 		return Badges.openBadgeFormat(username, week, "The Linguistic Challenger Gold medal", "Well done! You are the student who has used more challenging key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
 	}	
 	
-	public static String createBiWeeklySilverLinguisticChallenge(String username, String week){
+	public static String createBiWeeklySilverLinguisticChallenge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_challenger_silver";
 		return Badges.openBadgeFormat(username, week, "The Linguistic Challenger Silver medal", "Well done! You are the second student who has used more challenging key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
 	}
 	
-	public static String createBiWeeklyBronzeLinguisticChallenge(String username, String week){
+	public static String createBiWeeklyBronzeLinguisticChallenge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_challenger_bronze";
 		return Badges.openBadgeFormat(username, week, "The Linguistic Challenger Bronze medal", "Well done! You are the third student who has used more challenging key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
 	}
 	//Evaluation
-	public static String createBiWeeklyGoldLinguisticEvaluation(String username, String week){
+	public static String createBiWeeklyGoldLinguisticEvaluation(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_evaluator_gold";
 		return Badges.openBadgeFormat(username, week, "The Linguistic Evaluator Gold medal", "Well done! You are the student who has used more evaluation key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
 	}	
 	
-	public static String createBiWeeklySilverLinguisticEvaluation(String username, String week){
+	public static String createBiWeeklySilverLinguisticEvaluation(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_evaluator_silver";
 		return Badges.openBadgeFormat(username, week, "The Linguistic Evaluator Silver medal", "Well done! You are the second student who has used more evaluation key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
 	}
 	
-	public static String createBiWeeklyBronzeLinguisticEvaluation(String username, String week){
+	public static String createBiWeeklyBronzeLinguisticEvaluation(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_evaluator_bronze";
-		return Badges.openBadgeFormat(username, week, "The Linguistic Evaluator Bronze medal", "Well done! You are the second student who has used more evaluation key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "The Linguistic Evaluator Bronze medal", "Well done! You are the third student who has used more evaluation key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
 	}
 	//Extension
-	public static String createBiWeeklyGoldLinguisticExtension(String username, String week){
+	public static String createBiWeeklyGoldLinguisticExtension(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_extender_gold";
-		return Badges.openBadgeFormat(username, week, "The Linguistic Extender Gold medal", "Well done! You are the student who has used more extension key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "The Linguistic Extender Gold medal", "Well done! You are the student who has used more extension key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive", startdate, enddate);		
 	}	
 	
-	public static String createBiWeeklySilverLinguisticExtension(String username, String week){
+	public static String createBiWeeklySilverLinguisticExtension(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_extender_silver";
-		return Badges.openBadgeFormat(username, week, "The Linguistic Extender Silver medal", "Well done! You are the second student who has used more extension key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "The Linguistic Extender Silver medal", "Well done! You are the second student who has used more extension key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive", startdate, enddate);		
 	}
 	
-	public static String createBiWeeklyBronzeLinguisticExtension(String username, String week){
+	public static String createBiWeeklyBronzeLinguisticExtension(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_extender_bronze";
-		return Badges.openBadgeFormat(username, week, "The Linguistic Extender Bronze medal", "Well done! You are the second student who has used more extension key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "The Linguistic Extender Bronze medal", "Well done! You are the third student who has used more extension key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive", startdate, enddate);		
 	}
 	//Reasoning
-	public static String createBiWeeklyGoldLinguisticReasoning(String username, String week){
+	public static String createBiWeeklyGoldLinguisticReasoning(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_reasoner_gold";
-		return Badges.openBadgeFormat(username, week, "The Linguistic Reasoner Gold medal", "Well done! You are the student who has used more reasoning key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "The Linguistic Reasoner Gold medal", "Well done! You are the student who has used more reasoning key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive" , startdate, enddate);		
 	}	
 	
-	public static String createBiWeeklySilverLinguisticReasoning(String username, String week){
+	public static String createBiWeeklySilverLinguisticReasoning(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_reasoner_silver";
-		return Badges.openBadgeFormat(username, week, "The Linguistic Reasoner Silver medal", "Well done! You are the second student who has used more reasoning key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "The Linguistic Reasoner Silver medal", "Well done! You are the second student who has used more reasoning key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive" , startdate, enddate);		
 	}
 	
-	public static String createBiWeeklyBronzeLinguisticReasoning(String username, String week){
+	public static String createBiWeeklyBronzeLinguisticReasoning(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_linguistic_reasoner_bronze";
-		return Badges.openBadgeFormat(username, week, "The Linguistic Reasoner Bronze medal", "Well done! You are the second student who has used more reasoning key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "The Linguistic Reasoner Bronze medal", "Well done! You are the third student who has used more reasoning key sentences in your constructive comments (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive" , startdate, enddate);		
 	}
 
 //Comments on others blogs
@@ -83,19 +83,19 @@ public class ChiCourse {
 		String badgeName = "pos_commentpercent_bronze";
 		return Badges.openBadgeFormat(username, week, "Commenter Bronze medal", "Well done! You have commented on 33% others blogs (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
-//Earlier on publish results
-	public static String createEarlierOnPublishResults(String username, String iteration){
+//Earlier on publish a post after a lesson
+	public static String createEarlierOnPostingAfterLesson(String username, String iteration, String startdate, String enddate){
 		String badgeName = "neutral_cheetah";
-		return Badges.openBadgeFormat(username, iteration, "Cheetah badge", "Well done! You have been the fastest on publish the results (This badge is assigned per iteration and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
+		return Badges.openBadgeFormat(username, iteration, "Cheetah badge", "Well done! You have been the fastest on posting after the lesson (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "neutral", startdate, enddate);		
 	}	
 //Earlier on getting a comment on your results
-	public static String createEarlierOnGetAComment(String username, String iteration){
+	public static String createEarlierOnGetAComment(String username, String iteration, String startdate, String enddate){
 		String badgeName = "pos_obama_badge";
-		return Badges.openBadgeFormat(username, iteration, "Obama badge", "Well done! You have been the fastest on getting a comment on the results (This badge is assigned per iteration and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
+		return Badges.openBadgeFormat(username, iteration, "Obama badge", "Well done! You have been the fastest on getting a comment on the results (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
 //Quality assurance blog
 	public static String createBiWeekly5CommentsOnYourBlog(String username, String week, String startdate, String enddate){
-		String badgeName = "pos_nice_gold";
+		String badgeName = "pos_nice_bronze";
 		return Badges.openBadgeFormat(username, week, "5 comments on your blog badge", "Well done! You got 5 comments on your blog. (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}	
 	
@@ -105,7 +105,7 @@ public class ChiCourse {
 	}
 	
 	public static String createBiWeekly15CommentsOnYourBlog(String username, String week, String startdate, String enddate){
-		String badgeName = "pos_nice_bronze";
+		String badgeName = "pos_nice_gold";
 		return Badges.openBadgeFormat(username, week, "15 comments on your blog", "Well done! You got 15 comments on your blog (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
 //Quality assurance evaluations
@@ -124,19 +124,19 @@ public class ChiCourse {
 		return Badges.openBadgeFormat(username, iteration, "SUS gold medal", "Well done! You got 15 people involved in your evaluation. (This badge is assigned per iteration and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
 	}		
 //Groupie badge
-	public static String createBiWeeklyGroupieBadge(String username, String iteration){
+	public static String createBiWeeklyGroupieBadge(String username, String iteration, String startdate, String enddate){
 		String badgeName = "pos_groupie";
-		return Badges.openBadgeFormat(username, iteration, "Groupie badge", "Well done! You are part of the group which got more comments! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
+		return Badges.openBadgeFormat(username, iteration, "Groupie badge", "Well done! You are part of the group which got more comments! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
 //Prolix post badge
-	public static String createBiWeeklyProlixPostBadge(String username, String week){
+	public static String createBiWeeklyProlixPostBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "neutral_prolix_post";
-		return Badges.openBadgeFormat(username, week, "Prolix Post badge", "Well done! You did the longest post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "neutral");		
+		return Badges.openBadgeFormat(username, week, "Prolix Post badge", "Well done! You did the longest post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "neutral", startdate, enddate);		
 	}
 //Prolix comment badge
-	public static String createBiWeeklyProlixCommentBadge(String username, String week){
+	public static String createBiWeeklyProlixCommentBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "neutral_prolix_comments";
-		return Badges.openBadgeFormat(username, week, "Prolix Comment badge", "Well done! You did the longest comment! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "neutral");		
+		return Badges.openBadgeFormat(username, week, "Prolix Comment badge", "Well done! You did the longest comment! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "neutral",  startdate, enddate);		
 	}
 //Improvement SUS
 	public static String createSUSimprovementBadge(String username, String iteration){
@@ -144,9 +144,9 @@ public class ChiCourse {
 		return Badges.openBadgeFormat(username, iteration, "Improved SUS badge", "Well done! You have improved the usability of your prototype! (This badge is assigned per iteration and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
 	}
 //The participative one
-	public static String createBiWeeklyParticipativeBadge(String username, String week){
+	public static String createBiWeeklyParticipativeBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_participation";
-		return Badges.openBadgeFormat(username, week, "Participation badge", "Well done! You have been the more active commenting on others blog! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "Participation badge", "Well done! You have been the more active commenting on others blog! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive",  startdate, enddate);		
 	}
 //Troll comment
 	public static String createBiWeeklyTrollBadge(String username, String week){
@@ -154,37 +154,37 @@ public class ChiCourse {
 		return Badges.openBadgeFormat(username, week, "Troll badge", "Negative point! Try to be more constructive on your comments! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "negative");		
 	}
 //No comment on any blog
-	public static String createBiWeeklyNoCommentOnAnyBlogBadge(String username, String week){
+	public static String createBiWeeklyNoCommentOnAnyBlogBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "neg_asocial";
-		return Badges.openBadgeFormat(username, week, "I don't want to talk to you no more badge", "Negative point! You haven't commented on any blog! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "negative");		
+		return Badges.openBadgeFormat(username, week, "I don''t want to talk to you no more badge", "Negative point! You haven''t commented on any blog! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "negative", startdate, enddate);		
 	}
 //No received comment on your blog
-	public static String createBiWeeklyNoCommentOnYourBlogBadge(String username, String week){
+	public static String createBiWeeklyNoCommentOnYourBlogBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "neg_sadkeanu";
-		return Badges.openBadgeFormat(username, week, "Sad Keanu badge", "Take a look to other blogs! Maybe you can make your posts more interesting for your peers! (This badge is assigned biweekly)", StepUpConstants.IMGPATH+badgeName+extension, "group", "negative");		
+		return Badges.openBadgeFormat(username, week, "Sad Keanu badge", "Take a look to other blogs! Maybe you can make your posts more interesting for your peers! (This badge is assigned biweekly)", StepUpConstants.IMGPATH+badgeName+extension, "group", "negative", startdate, enddate);		
 	}
 //Popular post
-	public static String createBiWeeklyBlogPostBadge(String username, String week){
+	public static String createBiWeeklyBlogPostBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_fonzie";
-		return Badges.openBadgeFormat(username, week, "Fonzie badge", "Well done! You did the most commented post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
+		return Badges.openBadgeFormat(username, week, "Fonzie badge", "Well done! You did the most commented post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
 //Illustrative post
-	public static String createBiWeeklyMostIllustrativePostBadge(String username, String week){
+	public static String createBiWeeklyMostIllustrativePostBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "neutral_illustrative";
-		return Badges.openBadgeFormat(username, week, "Most illustrative post badge", "Well done! You did the most illustrative post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "neutral");		
+		return Badges.openBadgeFormat(username, week, "Most illustrative post badge", "Well done! You did the most illustrative post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "neutral", startdate, enddate);		
 	}
 //Linking post
-	public static String createBiWeekly2LinksOnPostBadge(String username, String week){
+	public static String createBiWeekly2LinksOnPostBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_link_bronze";
-		return Badges.openBadgeFormat(username, week, "+2 link post badge", "Well done! You included 2 external links on your post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
+		return Badges.openBadgeFormat(username, week, "+2 link post badge", "Well done! You included 2 external links on your post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
-	public static String createBiWeekly5LinksOnPostBadge(String username, String week){
+	public static String createBiWeekly5LinksOnPostBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_link_silver";
-		return Badges.openBadgeFormat(username, week, "+5 link post badge", "Well done! You included 5 external links on your post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
+		return Badges.openBadgeFormat(username, week, "+5 link post badge", "Well done! You included 5 external links on your post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
-	public static String createBiWeekly8LinksOnPostBadge(String username, String week){
+	public static String createBiWeekly8LinksOnPostBadge(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_link_gold";
-		return Badges.openBadgeFormat(username, week, "+8 link post badge", "Well done! You included 8 external links on your post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive");		
+		return Badges.openBadgeFormat(username, week, "+8 link post badge", "Well done! You included 8 external links on your post! (This badge is assigned biweekly and per group)", StepUpConstants.IMGPATH+badgeName+extension, "group", "positive", startdate, enddate);		
 	}
 //Most usable prototype
 	public static String createBiWeeklyMostUsablePrototype(String username, String week){
@@ -205,17 +205,17 @@ public class ChiCourse {
 		return Badges.openBadgeFormat(username, week, "+15 tweets badge", "Well done! You have done 15 tweets! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive", startdate, enddate);		
 	}
 //QA tweets
-	public static String createBiWeekly5QATweets(String username, String week){
+	public static String createBiWeekly5QATweets(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_retweets_bronze";
-		return Badges.openBadgeFormat(username, week, "+5 QA tweets badge", "Well done! You got 5 retweets/replies_to/mentions! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "+5 QA tweets badge", "Well done! You got 5 replies_to/mentions! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive", startdate, enddate);		
 	}
-	public static String createBiWeekly10QATweets(String username, String week){
+	public static String createBiWeekly10QATweets(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_retweets_silver";
-		return Badges.openBadgeFormat(username, week, "+10 QAtweets badge", "Well done! You have done 10 retweets/replies_to/mentions! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "+10 QAtweets badge", "Well done! You got 10 replies_to/mentions! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive", startdate, enddate);		
 	}
-	public static String createBiWeekly15QATweets(String username, String week){
+	public static String createBiWeekly15QATweets(String username, String week, String startdate, String enddate){
 		String badgeName = "pos_retweets_gold";
-		return Badges.openBadgeFormat(username, week, "+15 QA tweets badge", "Well done! You have done 15 retweets/replies_to/mentions! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive");		
+		return Badges.openBadgeFormat(username, week, "+15 QA tweets badge", "Well done! You got 15 replies_to/mentions! (This badge is assigned biweekly and individually)", StepUpConstants.IMGPATH+badgeName+extension, "individual", "positive", startdate, enddate);		
 	}
 //Bookmarking
 	public static String createBiWeekly5Diigo(String username, String week, String startdate, String enddate){

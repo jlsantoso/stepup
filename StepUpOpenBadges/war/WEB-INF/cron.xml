@@ -6,8 +6,23 @@
 		<schedule>every 5 minutes</schedule>
 	</cron-->
 	<cron>
-		<url>/tweetsservlet</url>
+		<url>/periodicbadgesservlet</url>
 		<description>Check Badges</description>
 		<schedule>every 5 minutes</schedule>
+	</cron>
+	<cron>
+		<url>/oncexweekservlet</url>
+		<description>Biweekly Badges</description>
+		<schedule>third mon of march 22:00</schedule>
+	</cron>
+	<cron>
+		<url>/oncexweekservlet</url>
+		<description>Biweekly Badges</description>
+		<schedule>first,third,fifth mon of april 22:00</schedule>
+	</cron>
+	<cron>
+		<url>/oncexweekservlet</url>
+		<description>Biweekly Badges</description>
+		<schedule>second,fourth mon of may 22:00</schedule>
 	</cron>
 </cronentries>

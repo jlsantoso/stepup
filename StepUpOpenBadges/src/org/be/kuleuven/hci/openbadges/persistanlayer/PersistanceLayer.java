@@ -9,9 +9,11 @@ import java.util.logging.Logger;
 
 import org.be.kuleuven.hci.openbadges.badges.Badge;
 import org.be.kuleuven.hci.openbadges.badges.Badges;
+import org.be.kuleuven.hci.openbadges.badges.rules.utils.Dates;
 import org.be.kuleuven.hci.openbadges.utils.ActivityStream;
 import org.be.kuleuven.hci.openbadges.utils.Event;
 import org.be.kuleuven.hci.openbadges.utils.JSONandEvent;
+import org.be.kuleuven.hci.openbadges.utils.RestClient;
 import org.be.kuleuven.hci.openbadges.utils.StepUpConstants;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,10 +33,43 @@ public class PersistanceLayer {
 	private static final Logger log = Logger.getLogger(PersistanceLayer.class.getName());
 
 	public static void saveBadge(Badge badge){
+		String description = "";
+		if (badge.getDescription().length()>=500){
+			description = badge.getDescription();
+			badge.setDescription(badge.getDescription().substring(0, 500));
+		}
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    syncCache.put(badge, true);
 	    OfyService.getOfyService().ofy().save().entity(badge).now(); 	    
+	    if (description.length()>0) badge.setDescription(description);
+	}
+	
+	public static boolean existBadge(Badge badge){
+		String description = "";
+		if (badge.getDescription().length()>=500){
+			description = badge.getDescription();
+			badge.setDescription(badge.getDescription().substring(0, 500));
+		}
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    if (syncCache.get(badge)!=null){
+	    	if (description.length()>0) badge.setDescription(description);
+	    	return true;	  
+	    	
+	    }else{
+	    	System.out.println("access db");
+	    	try{
+	    		Badge badges = OfyService.getOfyService().ofy().load().type(Badge.class).filter("description", badge.getDescription()).first().get();
+	    		if (description.length()>0) badge.setDescription(description);
+	    		if (badges!=null) return true;
+		    	return false;   	
+	    	}catch(Exception e){
+	    		return false;
+	    	}
+	    	
+	    }
+	    
 	}
 	
 	public static String sendBadgeAsEvent(String username, String badge){
@@ -50,13 +85,15 @@ public class PersistanceLayer {
 			e.setObject(badgeJson.getJSONObject("badge").getString("name"));
 			e.setOriginalRequest(badgeJson);
 			result += JSONandEvent.transformFromEvemtToJson(e).toString();
-			result += RestClient.doPost(StepUpConstants.URLPUSHEVENT, JSONandEvent.transformFromEvemtToJson(e).toString());
+			String queryresult = RestClient.doPost(StepUpConstants.URLPUSHEVENT, JSONandEvent.transformFromEvemtToJson(e).toString());
+			result += queryresult;
+			log.warning("Sending an event to the data store: "+queryresult);
 			ActivityStream as = new ActivityStream();
 	    	as.setActor(username);
 	    	as.setVerb("awarded");
 	    	as.setObject("http://navi-hci.appspot.com/badgeboard?username="+username, "has earned a new badge:" +badgeJson.getJSONObject("badge").getString("description"));
 	    	as.setPublishedDate(Calendar.getInstance().getTime());
-	    	log.warning(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
+	    	log.warning("Sending an event to TinyARM: "+RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
 			return result;
 		} catch (JSONException e2) {
 			// TODO Auto-generated catch block
@@ -70,24 +107,7 @@ public class PersistanceLayer {
 		return "ERROR";
 	}
 	
-	public static boolean existBadge(Badge badge){
-		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
-	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-	    if (syncCache.get(badge)!=null){
-	    	return true;	  
-	    	
-	    }else{
-	    	System.out.println("access db");
-	    	try{
-	    		Badge badges = OfyService.getOfyService().ofy().load().type(Badge.class).filter("description", badge.getDescription()).first().get();
-		    	if (badges!=null) return true;
-		    	return false;   	
-	    	}catch(Exception e){
-	    		return false;
-	    	}
-	    	
-	    }
-	}
+	
 	
 	//Still to implement cache service
 	

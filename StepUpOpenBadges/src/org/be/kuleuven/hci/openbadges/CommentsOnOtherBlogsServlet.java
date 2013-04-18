@@ -10,8 +10,8 @@ import javax.servlet.http.*;
 
 import org.be.kuleuven.hci.openbadges.badges.Badge;
 import org.be.kuleuven.hci.openbadges.badges.Badges;
-import org.be.kuleuven.hci.openbadges.badges.ChiCourseBadgesRules;
 import org.be.kuleuven.hci.openbadges.badges.GiveBadges;
+import org.be.kuleuven.hci.openbadges.badges.rules.ChiCourseBadgesRules;
 import org.be.kuleuven.hci.openbadges.persistanlayer.PersistanceLayer;
 import org.be.kuleuven.hci.openbadges.utils.Event;
 import org.be.kuleuven.hci.openbadges.utils.JSONandEvent;

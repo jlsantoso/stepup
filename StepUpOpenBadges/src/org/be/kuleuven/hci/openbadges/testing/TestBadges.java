@@ -1,6 +1,7 @@
 package org.be.kuleuven.hci.openbadges.testing;
 
-import org.be.kuleuven.hci.openbadges.badges.ChiCourseBadgesRules;
+import org.be.kuleuven.hci.openbadges.badges.rules.ChiCourseBadgesRules;
+import org.be.kuleuven.hci.openbadges.badges.rules.utils.Dates;
 
 public class TestBadges {
 
@@ -9,8 +10,8 @@ public class TestBadges {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-	    System.out.println(ChiCourseBadgesRules.getCurrentBiWeekOfTheCourse());
-	    System.out.println(ChiCourseBadgesRules.getQueryBetweenDates());
+	    System.out.println(Dates.getCurrentBiWeekOfTheCourse());
+	    System.out.println(Dates.getQueryBetweenDates());
 	}
 
 }
