@@ -2,6 +2,7 @@ package org.be.kuleuven.hci.stepup.util;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.logging.Level;
 
@@ -41,6 +42,7 @@ public class ReadGoogleSpreadSheet {
 	      Hashtable<String,String> twitterEmailNotification = new Hashtable<String,String>();
 	      Hashtable<String,String> twitterOpenBadges = new Hashtable<String,String>();
 	      Hashtable<String,String> twitterusernames = new Hashtable<String,String>();
+	      ArrayList<String> urlsBlogs = new ArrayList<String>();
 	      int i = 0;
 	      for (ListEntry entry : feed.getEntries()) {
 	    	if (checkingCells(entry)){	    	
@@ -54,6 +56,7 @@ public class ReadGoogleSpreadSheet {
 		        	membersGroup.put(groupname,members);
 		        }
 		        String wordpressblogurl = elements.getValue("wordpressblogurl").toLowerCase();
+		        if (!checingIfAURLExists(urlsBlogs,wordpressblogurl.replaceAll("http:", "").replaceAll("/", ""))) urlsBlogs.add(wordpressblogurl.replaceAll("http:", "").replaceAll("/", ""));
 		        String wordpresspostrssfeed = elements.getValue("wordpresspostrssfeed").toLowerCase();
 		        blogsfeeds.put(wordpresspostrssfeed, groupname);
 		        String wordpresscommentrssfeed = elements.getValue("wordpresscommentrssfeed").toLowerCase();
@@ -78,12 +81,19 @@ public class ReadGoogleSpreadSheet {
 	      syncCache.put("twitterEmailNotification", twitterEmailNotification);
 	      syncCache.put("twitterOpenBadges", twitterOpenBadges);
 	      syncCache.put("twitterusernames", twitterusernames);
-	      
+	      syncCache.put("urlsBlogs", urlsBlogs);
 	    } catch (IOException e) {
 	      e.printStackTrace();
 	    } catch (ServiceException e) {
 	      e.printStackTrace();
 	    }
+	}
+	
+	static boolean checingIfAURLExists(ArrayList<String> urlsBlogs, String url){
+		for (String iURL : urlsBlogs){
+			if (iURL.compareTo(url)==0) return true;
+		}
+		return false;		
 	}
 	
 	static boolean checkingCells(ListEntry entry){
