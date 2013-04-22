@@ -61,8 +61,8 @@ public class AddTweetServlet extends HttpServlet {
 		String since_id = "119719744281640960";
 		String lastId = EventGoogleDataStore.getLastTwitterId();
 		if (lastId!=null) since_id=lastId;
-		//since_id="297765593141108730";
-		log.warning("Ids"+lastId+"-"+since_id);
+		//since_id="309057833792581634";
+		//log.warning("Ids"+lastId+"-"+since_id);
 		System.out.println("Ids"+lastId+"-"+since_id);
 		Twitter twitter = new TwitterFactory().getInstance();
 		createTweetEntitiesfromHastTag("chikul13", since_id);
@@ -71,6 +71,7 @@ public class AddTweetServlet extends HttpServlet {
 	
 	private void createTweetEntitiesfromHastTag(String hashtag, String since_id) {
 		log.log(Level.INFO, "createTweetEntitiesfromHastTag");
+		String username = "";
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    if (syncCache.get("twitterusernames")==null){
@@ -78,34 +79,43 @@ public class AddTweetServlet extends HttpServlet {
 		}
 	    Hashtable<String,String> twitterusernames = (Hashtable<String,String>)syncCache.get("twitterusernames");
 		
-		try {
-			//while(!finish){
-				Twitter twitter = new TwitterFactory().getInstance();
-		        Query query = new Query("%23"+hashtag);
-		        query.setSinceId(Long.parseLong(since_id));
-		        QueryResult result = twitter.search(query);
-		        for (Status s : result.getTweets()) {
-		        	if (!twitterusernames.containsKey(s.getUser().getScreenName().toLowerCase())) processStatus(s,hashtag);
-		        }
-		        Paging paging = new Paging(1); 
-				paging.setSinceId(Long.parseLong(since_id));
-		        paging.setCount(200);
-		        Enumeration e = twitterusernames.keys();
-				while( e.hasMoreElements()) {
-					  String key = (String)e.nextElement();
-					  ResponseList<Status> status = twitter.getUserTimeline(key,paging);
-					  for (Status s:status) processStatus(s, hashtag);
 
-				}
-		}catch (TwitterException e) {
+			//while(!finish){
+		Twitter twitter = new TwitterFactory().getInstance();
+        Query query = new Query("%23"+hashtag);
+        query.setSinceId(Long.parseLong(since_id));
+        try{
+        	QueryResult result = twitter.search(query);
+	        for (Status s : result.getTweets()) {
+	        	if (!twitterusernames.containsKey(s.getUser().getScreenName().toLowerCase())) processStatus(s,hashtag);
+	        }
+        }catch (TwitterException e) {
 			// TODO Auto-generated catch block
 			log.severe(e.toString());
 			//return null;
-		}  
+		} 
+        System.out.println("=======================================================");
+        Paging paging = new Paging(1); 
+		paging.setSinceId(Long.parseLong(since_id));
+		//paging.setMaxId(Long.parseLong("309605046696439808"));
+        paging.setCount(200);
+        Enumeration e = twitterusernames.keys();
+		while( e.hasMoreElements()) {
+			  String key = (String)e.nextElement();
+			  try{
+				  ResponseList<Status> status = twitter.getUserTimeline(key,paging);
+				  for (Status s:status) processStatus(s, hashtag);
+			  }catch (TwitterException er) {
+					// TODO Auto-generated catch block
+					log.severe("USERNAME WITH PROBLEMS:"+key+"-"+er.toString());
+					//return null;
+			  }
+		}
+		
 	}
 
 	public void processStatus(Status s, String hashtag){
-		if (s.getText().contains(hashtag)){
+		if (s.getText().toLowerCase().contains(hashtag)){
 			try{
 				Event event = new Event();
 	        	event.setUsername(s.getUser().getScreenName().toLowerCase());

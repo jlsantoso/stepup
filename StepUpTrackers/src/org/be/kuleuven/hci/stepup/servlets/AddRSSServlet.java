@@ -55,6 +55,7 @@ public class AddRSSServlet extends HttpServlet {
 			  System.out.println("URL feed: "+key);
 			  getRssFeeds(key, lastUpdate);
 		}
+		//getRssFeeds("http://teamtgv.wordpress.com/comments/feed/", lastUpdate);
 		/*List<RssFeeds> rssFeeds = EventGoogleDataStore.getRssFeeds();
 		for (RssFeeds r : rssFeeds){
 			getRssFeeds(r.getURL(), lastUpdate);
@@ -63,6 +64,8 @@ public class AddRSSServlet extends HttpServlet {
 	}
 
 	private void getRssFeeds(String urlString, Date lastUpdate){
+		
+		System.out.println(lastUpdate.toString());
 		
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
