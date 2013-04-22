@@ -34,7 +34,7 @@ public class RestClient {
 
 	final static HttpClient httpClient = new DefaultHttpClient();
 	private static final Logger log = Logger.getLogger(AddTweetServlet.class.getName());
-	public static String doGet(final String url) throws HttpException,
+	/*public static String doGet(final String url) throws HttpException,
 			IOException, URISyntaxException {
 
 		HttpConnectionParams.setConnectionTimeout(httpClient.getParams(), TIMEOUT);
@@ -44,6 +44,36 @@ public class RestClient {
 		HttpEntity entity = response.getEntity();
 		InputStream instream = entity.getContent();
 		return read(instream);
+	}*/
+	
+	public static String doGet(final String urlString) throws UnsupportedEncodingException{
+		BufferedReader rd  = null;
+	    StringBuilder sb = null;
+	    String line = null;
+	    try {
+	        URL url = new URL(urlString);
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestProperty("Content-Type", "application/json");
+	        connection.setDoOutput(true);
+	        connection.setRequestMethod("GET");
+     
+	        rd  = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	        sb = new StringBuilder();
+	        
+	        while ((line = rd.readLine()) != null)
+	        {
+	            sb.append(line + '\n');
+	        }
+
+	        return sb.toString();
+	    } catch (MalformedURLException e) {
+	        System.out.println(e.toString());
+	        log.severe(e.toString());
+	    } catch (IOException e) {
+	    	System.out.println(e.toString());
+	    	log.severe(e.toString());
+	    }
+		return "";
 	}
 
 	/*public static String doPost(final String url, final String POSTText)
