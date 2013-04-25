@@ -44,8 +44,8 @@ public class SigninServlet extends HttpServlet {
     private static final long serialVersionUID = -6205814293093350242L;
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	String consumerKey = "TJZ5N7Q9wt7pDybnVooniw";
-    	String cosumerSecretKey = "kvI1bW7wiJYM2MVRFYflBVFmeEkEQcPDJNYpJzM";
+    	String consumerKey = "*************";
+    	String cosumerSecretKey = "*********************";
     	ConfigurationBuilder conbuild = new ConfigurationBuilder(); 
         //conbuild.setHttpProxyHost("oauthproxy.cs.kuleuven.be"); 
         //conbuild.setHttpProxyPort(8008);
