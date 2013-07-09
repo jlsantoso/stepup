@@ -13,7 +13,8 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
- 
+//Used when something goes wrong. An email is sent.
+
 public class SendMail {
  
 	private String from;
@@ -30,14 +31,14 @@ public class SendMail {
 	
 	public SendMail(String subject, String text){
 		this.from = "stepup.hci@gmail.com";
-		this.to = "joseluis.santos.cs@gmail.com";
+		this.to = "";
 		this.subject = subject;
 		this.text = text;
 	}
 	
 	public void send() throws MessagingException{
 		System.out.println(this.text);
-		/*System.out.println("Sending mail...");
+		System.out.println("Sending mail...");
         Properties props = new Properties();
         props.setProperty("mail.transport.protocol", "smtp");
         props.setProperty("mail.host", "smtp.gmail.com");
@@ -49,7 +50,7 @@ public class SendMail {
  
 		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, "erikduval01");
+				return new PasswordAuthentication(from, "**********");
 			}
 		});
 
@@ -68,14 +69,7 @@ public class SendMail {
         transport.connect();
         transport.sendMessage(message,
             message.getRecipients(Message.RecipientType.TO));
-        transport.close();*/
-	}
- 
-	public static void main(String[] args) throws MessagingException {
-		 
-		SendMail sendmail = new SendMail("stepup.hci@gmail.com", "jlsantoso@gmail.com", "Prueba","Prueba");
-		sendmail.send();
-		
+        transport.close();
 	}
 }
 
