@@ -20,6 +20,7 @@ import org.json.JSONObject;
 
 import com.sun.jersey.spi.resource.Singleton;
 
+//Services described at http://145.20.132.46/wiki/StepUpService
 @Singleton
 @Path("/getCourses")
 public class GetCoursesData {
@@ -42,6 +43,13 @@ public class GetCoursesData {
 	@Produces(MediaType.APPLICATION_JSON)	
 	public String getStudentsInfo(@PathParam("course") String course, @PathParam("student") String student, String json) {	
 		return EventController.getStudent(course, student, json);
+	}
+	
+	@POST @Path("/{course}/verb/{verb}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)	
+	public String getStudentsInfoPerVerb(@PathParam("course") String course, @PathParam("verb") String verb, String json) {	
+		return EventController.getStudentPerVerb(course, verb, json);
 	}
 	
 	@POST @Path("/{course}/{student}/{verb}")
