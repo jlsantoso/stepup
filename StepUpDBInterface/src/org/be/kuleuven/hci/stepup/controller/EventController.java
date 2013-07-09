@@ -10,7 +10,9 @@ import org.be.kuleuven.hci.stepup.model.utils.JSONandEvent;
 import org.be.kuleuven.hci.stepup.notifications.SendMail;
 import org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL;
 import org.be.kuleuven.hci.stepup.persistanceLayer.Threads.InsertEvent;
+import org.be.kuleuven.hci.stepup.utils.RestClient;
 import org.be.kuleuven.hci.stepup.controller.utils.MyThreadPoolExecutor;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -92,7 +94,7 @@ public class EventController {
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
-				String query = "select distinct lower(username) as username from event where context=\'"+course+"'";
+				String query = "select distinct lower(username) as username from event where context like \'%"+course+"%'";
 				if (additional_info.has("startdate")||additional_info.has("enddate")){
 					query += " and";
 				}
@@ -122,14 +124,45 @@ public class EventController {
 	public static String getChiBadges(){
 			
 				String query = "select * from event where context='chikul13' and verb='awarded'";
-				return EventPostgreSQL.getOpenDB(query, "0");
+				return EventPostgreSQL.getOpenDB(query);
 	}
 	
 	public static String getStudent(String course , String username, String json){
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
-				String query = "select * from event where context=\'"+course+"' and lower(username)='"+username.toLowerCase()+"'";
+				String query = "select * from event where context like \'%"+course+"%' and lower(username)='"+username.toLowerCase()+"'";
+				if (additional_info.has("startdate")||additional_info.has("enddate")){
+					query += " and";
+				}
+				if (additional_info.has("startdate")){
+					query += " starttime>"+additional_info.getString("startdate");
+				}
+				if (additional_info.has("enddate")){
+					if (additional_info.has("startdate")) query += " and";
+					query += " endtime>"+additional_info.getString("enddate");
+				}
+				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
+			}
+			
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		} catch (JSONException e) {
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		}
+	}
+	
+	public static String getStudentPerVerb(String course , String verb, String json){
+		
+		try {
+			JSONObject additional_info = new JSONObject(json);
+			if (additional_info.has("pag")){
+				String query = "select distinct lower(username) as username from event where context like \'%"+course+"%' and verb='"+verb+"'";
 				if (additional_info.has("startdate")||additional_info.has("enddate")){
 					query += " and";
 				}
@@ -159,7 +192,7 @@ public class EventController {
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
-				String query = "select * from event where context=\'"+course+"' and username='"+username+"' and verb='"+verb+"'";
+				String query = "select * from event where context like \'%"+course+"%' and username='"+username+"' and verb='"+verb+"'";
 				if (additional_info.has("startdate")||additional_info.has("enddate")){
 					query += " and";
 				}
@@ -184,6 +217,40 @@ public class EventController {
 			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
 		}
 	}
-	
+
+	public static String getActivityRelated(String json) {
+		Event event;
+		try {
+			event = JSONandEvent.transformFromJsonToEvent(new JSONObject(json));
+			String username = event.getUsername();
+			JSONObject originalrequest = event.getOriginalRequest();
+			System.out.println("Original request "+originalrequest.toString());
+			//System.out.println("{ \"query\": \"select * from event where context='chikul13' and DATE(starttime)>='"+originalrequest.getString("startdate")+"' and DATE(starttime)<='"+originalrequest.getString("enddate")+"'\", \"pag\": \"0\"}");
+			String query = "select * from event where context='chikul13' and lower(username)='"+username+"' and DATE(starttime)>='"+originalrequest.getString("startdate")+"' and DATE(starttime)<='"+originalrequest.getString("enddate")+"'";
+			System.out.println(query);
+			String results = EventPostgreSQL.getOpenDB(query);
+			JSONArray activity = new JSONArray(results);
+			JSONArray result = new JSONArray();
+			int max = 0;
+			if (json.contains(" 5 tweets")){
+				max = 5;
+			}else if (json.contains("10 tweets")){
+				max = 10;
+			}else if (json.contains("15 tweets")){
+				max = 15;
+			}
+			for (int i=0;i<max;i++){
+				result.put(activity.get(i));
+			}
+			return result.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}	
 	
 }
