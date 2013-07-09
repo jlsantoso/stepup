@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JSONValidation {
+	
+	//Validation of the differents possible attributes in the Event format.
 
 	public static boolean checkJSONMandatoryAtributtes(JSONObject event){
 		if (event.has("username")&&event.has("verb")&&event.has("starttime")&&event.has("object")){
