@@ -24,6 +24,8 @@ import org.json.JSONObject;
 
 public class EventPostgreSQL {
 	
+	//Connection with the Postgresql database. Used Tomcat pool connection.
+	
 	public static void insertEvent(Event event){
 		Connection conn = null;
 		Statement stmt = null;
@@ -138,6 +140,65 @@ public class EventPostgreSQL {
 			}
 		} 
 		
+	}
+	
+	public static String getOpenDB(String query) {
+		try {
+			InitialContext cxt = new InitialContext();
+			if ( cxt == null ) {
+			   throw new Exception("Uh oh -- no context!");
+			}
+			DataSource ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/postgres" );
+			if ( ds == null ) {
+			   throw new Exception("Data source not found!");
+			}
+			Connection conn = ds.getConnection();
+			if(conn != null) 
+			{
+				Statement stmt = conn.createStatement();
+				//String querytxt=query.replace("from", ",count(*) OVER() AS full_count from") + " limit "+(StepUpDBConstants.LIMIT)+" OFFSET "+(Integer.parseInt(pagination)*StepUpDBConstants.LIMIT);
+				System.out.println(query);
+				ResultSet rs = stmt.executeQuery(query);
+				JSONArray events = new JSONArray();
+				ResultSetMetaData md = rs.getMetaData();
+				int columns = md.getColumnCount();
+				while (rs.next()){
+					JSONObject jsonEvent = new JSONObject();
+					for (int i=1;i<=columns;i++){
+						jsonEvent.put(md.getColumnLabel(i), rs.getString(i));
+					}
+					events.put(jsonEvent);
+				}
+				rs.close();
+				stmt.close();
+				conn.close();
+				//System.out.println(events.toString());
+				return events.toString();
+			}
+			return null;
+		    //return timestampmax;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} //load the driver
+		catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		} 	
 	}
 	
 	public static String getOpenDB(String query, String pagination) {
