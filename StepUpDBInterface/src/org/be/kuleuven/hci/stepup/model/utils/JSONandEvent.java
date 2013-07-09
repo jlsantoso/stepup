@@ -11,6 +11,8 @@ import org.json.JSONObject;
 
 public class JSONandEvent{
 	
+	//Functions in order to help to do the transformation from Events to JSON and the opposite
+	
 	public static Event transformFromJsonToEvent(JSONObject event) throws JSONException, ParseException{
 		Event eventTransformed = new Event();
 		eventTransformed.setUsername(event.getString("username"));
