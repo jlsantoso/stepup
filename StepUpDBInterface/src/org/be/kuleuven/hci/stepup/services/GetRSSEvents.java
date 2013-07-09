@@ -6,6 +6,8 @@ package org.be.kuleuven.hci.stepup.services;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -40,7 +42,7 @@ import com.sun.syndication.io.SyndFeedOutput;
 @Singleton
 @Path("/getRSSEvents")
 
-
+//It is a service that allows to subscribe via RSS so far nobody consumes this service.
 public class GetRSSEvents {
 	@GET @Path("/{context}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -56,14 +58,15 @@ public class GetRSSEvents {
 		try {
 			SyndEntry entry;
 			SyndContent description;
-			JSONArray results = new JSONArray(EventPostgreSQL.getOpenDB("select * from event where context='"+context+"'", "0"));
+			JSONArray results = new JSONArray(EventPostgreSQL.getOpenDB("select * from event where context like '%"+context+"%' order by starttime DESC", "0"));
 			for (int i=0; i<results.length();i++){
 				JSONObject json = results.getJSONObject(i);
 				entry = new SyndEntryImpl();
 				entry.setTitle("The student "+json.getString("username")+" "+json.getString("verb"));
 				entry.setAuthor(json.getString("username"));
 				entry.setLink("http://twitter.com/"+json.getString("username")+"/statuses/"+json.getString("object"));
-				entry.setPublishedDate(Calendar.getInstance().getTime());
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZZ");
+				entry.setPublishedDate(formatter.parse(json.getString("starttime")+"00"));
 				description = new SyndContentImpl();
 				description.setType("text/html");
 				description.setValue("http://twitter.com/"+json.getString("username")+"/statuses/"+json.getString("object"));
@@ -81,6 +84,9 @@ public class GetRSSEvents {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (FeedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
