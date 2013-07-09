@@ -24,6 +24,7 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 @Path("/updateusernames")
 
+//Service used to match different usernames from the same person.
 
 public class UpdateUsernames {
 	@POST 

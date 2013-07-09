@@ -24,7 +24,7 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 @Path("/pushEvent")
 
-
+//Trackers use this service to push events.
 public class PushEvent {
 	@POST 
 	@Consumes(MediaType.APPLICATION_JSON)
