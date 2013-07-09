@@ -23,13 +23,13 @@ import com.sun.jersey.spi.resource.Singleton;
 @Singleton
 @Path("/getChiBadges")
 
+//Specific service for a specific course
 
 public class GetBadge {
 	@GET 
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getData(String json) {	
-		//return "{\"recipient\":\"joseluis.santos.cs@gmail.com\",\"badge\":{\"version\":\"1.0\",\"name\":\"[Badge] Heating\",\"image\":\"/wespot-dev-ws/img/mindergiebadge_heating.png\",\"description\":\"Knows why and how to save gas.\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://ariadne.cs.kuleuven.be\",\"name\":\"hci-kuleuven\"}}}";
 		return EventController.getChiBadges();
 	} 
 }
