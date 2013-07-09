@@ -18,6 +18,9 @@ import org.json.JSONObject;
 
 public class EventController {
 	
+	
+	//Insert the event in the data store. First it checks if the data is correct. 
+	//Once that the event is validated, it creates a thread for the insertion.
 	public static String insertEvent(String json){
 		try {
 			JSONObject event = new JSONObject(json);
@@ -40,6 +43,7 @@ public class EventController {
 		return "{\"status\":\"200\", \"error\":\"\"}";	
 	}
 	
+	//This function allows whatever kind of query you can do to the database.	
 	public static String getEvents(String json){
 		try {
 			JSONObject query = new JSONObject(json);
@@ -59,7 +63,9 @@ public class EventController {
 	}
 	
 	
-	
+	// From here onwards, are specific queries that give support to the REST services 
+	//implemented at package org.be.kuleuven.hci.stepup.services;
+	//Some of them are specific for one course. This is something that should change.
 	public static String getCourses(String json){
 		try {
 			JSONObject additional_info = new JSONObject(json);
