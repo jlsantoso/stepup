@@ -22,7 +22,8 @@ public class JSONandEvent{
 		if (event.has("context")) eventTransformed.setContext(event.getString("context"));
 		if (event.has("target")) eventTransformed.setTarget(event.getString("target"));
 		if (event.has("location")) eventTransformed.setLocation(event.getString("location"));
-		eventTransformed.setOriginalRequest(event);
+		if (event.has("originalrequest")) eventTransformed.setOriginalRequest(event.getJSONObject("originalrequest"));
+		else eventTransformed.setOriginalRequest(event);
 		return eventTransformed;
 	}
 	
