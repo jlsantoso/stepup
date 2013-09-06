@@ -114,8 +114,6 @@
 		 				if (tweets==0) color = "#FFF6ED";
 	 					else color = "#EBFFFB";%>
 	 					table+="<td align=\"center\" bgcolor=\"<%=color%>\" id=\"<%out.print(s.getUsername()+"twitter");%>\"><%=tweets%></td>";
-	 					
-	 					
 	 					<%
 	 					//PRINT SPARKLINE REGARDING SOCIAL NETWORK
 	 					ArrayList<Integer> postsweeks = s.getPostsActivityPerWeek();
