@@ -110,7 +110,7 @@ public class InitChiKul13Course {
 		s2.setUsername("mercelis");
 		s2.initProfile(blogs, course.getWeeks().size(), 0);
 		Student s3 = new Student();
-		s3.setUsername("djfudow");
+		s3.setUsername("srousseeuw");
 		s3.initProfile(blogs, course.getWeeks().size(), 0);
 
 		Group group = new Group();

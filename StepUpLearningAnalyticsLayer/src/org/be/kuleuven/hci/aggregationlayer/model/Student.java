@@ -15,10 +15,12 @@ public class Student implements Serializable {
 	String togglKey;
 	ArrayList<Integer> postsActivityPerBlog;
 	ArrayList<Integer> commentsActivityPerBlog;
-	int tweetActivity;
 	ArrayList<Integer> postsActivityPerWeek;
 	ArrayList<Integer> commentsActivityPerWeek;
+	int tweetActivity;
 	ArrayList<Integer> tweetActivityPerWeek;
+	int badgesActivity;
+	ArrayList<Integer> badgesActivityPerWeek;
 	int duration;
 	ArrayList<Activity> timeSpentByActivities;
 	int timeSpent;
@@ -30,6 +32,7 @@ public class Student implements Serializable {
 		postsActivityPerWeek = new ArrayList<Integer>();
 		commentsActivityPerWeek = new ArrayList<Integer>();
 		tweetActivityPerWeek = new ArrayList<Integer>(); 
+		badgesActivityPerWeek = new ArrayList<Integer>();
 		timeSpentByActivities = new ArrayList<Activity>();
 		timeSpent = 0;
 	}
@@ -43,6 +46,7 @@ public class Student implements Serializable {
 			postsActivityPerWeek.add(0);
 			commentsActivityPerWeek.add(0);
 			tweetActivityPerWeek.add(0);
+			badgesActivityPerWeek.add(0);
 		}
 		for (int i=0; i<activities; i++){
 			Activity a = new Activity();
@@ -71,6 +75,9 @@ public class Student implements Serializable {
 	public int getTweetActivity(){
 		return this.tweetActivity;
 	}
+	public int getBadgeActivity(){
+		return this.badgesActivity;
+	}
 	
 	/*ArrayList<Integer> postsActivityPerWeek;
 	ArrayList<Integer> commentsActivityPerWeek;
@@ -81,6 +88,9 @@ public class Student implements Serializable {
 	
 	public ArrayList<Integer> getTweetsActivityPerWeek(){
 		return this.tweetActivityPerWeek;
+	}
+	public ArrayList<Integer> getBadgeActivityPerWeek(){
+		return this.badgesActivityPerWeek;
 	}
 	
 	public ArrayList<Integer> getCommentsActivityPerWeek(){
@@ -104,6 +114,10 @@ public class Student implements Serializable {
 	public void addTweet(int week){
 		tweetActivity++;
 		tweetActivityPerWeek.set(week, tweetActivityPerWeek.get(week)+1);
+	}
+	public void addBadge(int week){
+		this.badgesActivity++;
+		badgesActivityPerWeek.set(week, badgesActivityPerWeek.get(week)+1);
 	}
 	
 	public void addTimeSpentByActivity(int week, int activityPosition, int duration){

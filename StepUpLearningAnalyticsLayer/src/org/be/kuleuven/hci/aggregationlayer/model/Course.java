@@ -171,9 +171,10 @@ public class Course implements Serializable {
 			String url = e.getObject();
 			url = url.substring(0, url.substring(8,url.length()).indexOf("/")+8).replaceAll("\\.", "").replaceAll("http:","").replaceAll("/", "");
 			s.addPostBlog(blogPosition.get(url), getWeekPosition(e.getStartTime()));
-		}else if (e.getVerb().compareTo(StepUpConstants.TWITTER)==0){
-			
+		}else if (e.getVerb().compareTo(StepUpConstants.TWITTER)==0){			
 			s.addTweet(getWeekPosition(e.getStartTime()));
+		}else if (e.getVerb().compareTo(StepUpConstants.BADGES)==0){			
+			s.addBadge(getWeekPosition(e.getStartTime()));
 		}else if (e.getVerb().compareTo("spend")==0){
 			int duration = (int)((e.getEndTime().getTime()-e.getStartTime().getTime())/1000);
 			if (s.getUsername().compareTo("stijnadams")==0&&e.getEndTime().compareTo(e.getStartTime())<0) System.out.println(e.getUsername()+"-"+e.getStartTime()+"-"+e.getEndTime()+"-"+e.getObject());

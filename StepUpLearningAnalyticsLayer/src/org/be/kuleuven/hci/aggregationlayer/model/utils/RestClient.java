@@ -17,6 +17,29 @@ public class RestClient {
 	public static final int TIMEOUT = 20000;
 
 
+	public static String doGet(final String urlString) throws UnsupportedEncodingException{
+		BufferedReader rd  = null;
+	    StringBuilder sb = null;
+	    String line = null;
+	    try {
+	        URL url = new URL(urlString);
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestProperty("Content-Type", "application/json");
+	        connection.setDoOutput(true);
+	        connection.setRequestMethod("GET");
+
+	        /*OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+	        writer.write(POSTText);
+	        writer.close();*/
+	        
+	        return read(connection.getInputStream());
+	    } catch (MalformedURLException e) {
+	        // ...
+	    } catch (IOException e) {
+	        // ...
+	    }
+		return "";
+	}
 	
 	public static String doPost(final String urlString, final String POSTText) throws UnsupportedEncodingException{
 		String message = URLEncoder.encode(POSTText, "UTF-8");
