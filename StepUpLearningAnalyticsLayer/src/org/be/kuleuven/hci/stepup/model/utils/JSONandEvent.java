@@ -31,7 +31,8 @@ public class JSONandEvent{
 		eventTransformed.put("username", event.getUsername());
 		eventTransformed.put("verb", event.getVerb());
 		eventTransformed.put("object", event.getObject());
-		eventTransformed.put("starttime", event.getStartTime().toString());
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss ZZZZZ");
+		eventTransformed.put("starttime", formatter.format(event.getStartTime()));
 		if (event.getEndTime()!=null) eventTransformed.put("endtime", event.getEndTime().toString());;
 		if (event.getContext()!=null) eventTransformed.put("context", event.getContext());
 		if (event.getTarget()!=null) eventTransformed.put("target", event.getTarget());
