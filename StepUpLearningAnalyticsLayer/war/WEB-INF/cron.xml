@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
 	<cron>
-		<url>/cron/init</url>
+		<url>/cron/initwespot</url>
 		<description>Tweet Fetcher</description>
-		<schedule>every 20 minutes</schedule>
+		<schedule>every 10 minutes</schedule>
 	</cron>	
 </cronentries>

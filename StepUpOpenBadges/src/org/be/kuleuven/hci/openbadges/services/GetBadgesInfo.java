@@ -1,5 +1,6 @@
 package org.be.kuleuven.hci.openbadges.services;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -9,11 +10,15 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.SecurityContext;
 
 import org.be.kuleuven.hci.openbadges.badges.Badges;
 import org.be.kuleuven.hci.openbadges.badges.ChiCourse;
+import org.be.kuleuven.hci.openbadges.badges.WeSPOTCourse;
 import org.be.kuleuven.hci.openbadges.persistanlayer.PersistanceLayer;
+import org.be.kuleuven.hci.openbadges.utils.SessionIdentifierGenerator;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +47,46 @@ public class GetBadgesInfo {
 			badge = new JSONObject(Badges.fourthBadge(""));
 			badges.put(badge);
 			badge = new JSONObject(Badges.fifthBadge(""));
+			badges.put(badge);
+			return badges.toString();
+			
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	} 
+	@GET 
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/wespotbadges")
+	public String getBadgesWeSPOTList() {	
+		JSONArray badges = new JSONArray();
+		try {
+			/*JSONObject badge = new JSONObject(WeSPOTCourse.createFirstPhaseBadge("", ""));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createSecondPhaseBadge("", ""));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createThirdPhaseBadge("", ""));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createFourthPhaseBadge("", ""));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createFifthPhaseBadge("", ""));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createSixthPhaseBadge("", ""));
+			badges.put(badge);*/
+			JSONObject badge = new JSONObject(WeSPOTCourse.createPassedPhaseBadge("", "", "1", "X"));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createPassedPhaseBadge("", "", "2", "X"));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createPassedPhaseBadge("", "", "3", "X"));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createPassedPhaseBadge("", "", "4", "X"));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createPassedPhaseBadge("", "", "5", "X"));
+			badges.put(badge);
+			badge = new JSONObject(WeSPOTCourse.createPassedPhaseBadge("", "", "6", "X"));
 			badges.put(badge);
 			return badges.toString();
 			
@@ -178,6 +223,17 @@ public class GetBadgesInfo {
 	@Path("/id/{badgeId}")
 	public String getBadge(@PathParam("badgeId") String badge) {	
 		return PersistanceLayer.badgeId(Long.valueOf(badge));
+	} 
+	
+	@GET 
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/getKey")
+	public String getKey(@Context HttpServletRequest requestContext) {	
+		String yourIP = requestContext.getRemoteAddr().toString();
+		SessionIdentifierGenerator sessid = new SessionIdentifierGenerator();
+		//System.out.println();
+		return sessid.nextSessionId()+"-"+yourIP;
 	} 
 	
 }

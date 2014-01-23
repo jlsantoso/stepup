@@ -47,6 +47,7 @@ public class AddRSSServlet extends HttpServlet {
 		if (syncCache.get("blogsfeed")==null){
 			ReadGoogleSpreadSheet.read();
 		}
+		log.warning("last update of blogs:"+lastUpdate.toString());
 		Hashtable<String,String> feeds = (Hashtable<String, String>) syncCache.get("blogsfeed");
 		Enumeration e = feeds.keys();
 
@@ -109,21 +110,21 @@ public class AddRSSServlet extends HttpServlet {
 						as.setObject(entry.getLink(),entry.getDescription().getValue().substring(0, 144));
 					else as.setObject(entry.getLink(),entry.getDescription().getValue());
 					System.out.println(as.getActivityStream().toString());
-					System.out.println(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
+					//System.out.println(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
 					EventGoogleDataStore.insertEvent(event);
 				}
 			}
 		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
+			log.severe(e.toString());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe(e.toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe(e.toString());
 		} catch (FeedException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe(e.toString());
 		}		
 	}
 

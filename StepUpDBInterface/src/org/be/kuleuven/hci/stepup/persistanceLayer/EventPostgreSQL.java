@@ -15,6 +15,9 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+import org.be.kuleuven.hci.stepup.controller.EventController;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.notifications.SendMail;
 import org.be.kuleuven.hci.stepup.utils.StepUpDBConstants;
@@ -22,11 +25,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class EventPostgreSQL {
+public class EventPostgreSQL{
+
+	static final Logger logger = Logger.getLogger(EventPostgreSQL.class);
 	
 	//Connection with the Postgresql database. Used Tomcat pool connection.
 	
 	public static void insertEvent(Event event){
+		BasicConfigurator.configure();
+		logger.warn(event.getOriginalRequest().toString());
 		Connection conn = null;
 		Statement stmt = null;
 		String query = "";
@@ -43,7 +50,9 @@ public class EventPostgreSQL {
 			if(conn != null) 
 			{
 				stmt = conn.createStatement();
-				 query = createInsertStatementEvent(event);		
+				
+				query = createInsertStatementEvent(event);	
+				logger.warn(query);
 				stmt.executeUpdate(query);
 				stmt.close();
 				conn.close();
@@ -222,6 +231,7 @@ public class EventPostgreSQL {
 				ResultSetMetaData md = rs.getMetaData();
 				int columns = md.getColumnCount();
 				while (rs.next()){
+					
 					JSONObject jsonEvent = new JSONObject();
 					for (int i=1;i<=columns;i++){
 						jsonEvent.put(md.getColumnLabel(i), rs.getString(i));
@@ -231,7 +241,6 @@ public class EventPostgreSQL {
 				rs.close();
 				stmt.close();
 				conn.close();
-				//System.out.println(events.toString());
 				return events.toString();
 			}
 			return null;
@@ -267,7 +276,10 @@ public class EventPostgreSQL {
 		String values = "";
 		if (event.getUsername()!=null&&event.getVerb()!=null&&event.getObject()!=null&&event.getStartTime()!=null&&event.getOriginalRequest()!=null){
 			attributes = "timestamp,username,verb,starttime,object,originalrequest";
-			values = "'"+event.getUsername()+"','"+event.getVerb()+"','"+new Timestamp(event.getStartTime().getTime())+"','"+event.getObject()+"','"+event.getOriginalRequest().toString().replaceAll("\"", "\\\"").replaceAll("'", "''")+"'";
+			if (!event.getContext().contains("ARLearn"))
+				values = "'"+event.getUsername()+"','"+event.getVerb()+"','"+new Timestamp(event.getStartTime().getTime())+"','"+event.getObject()+"','"+event.getOriginalRequest().toString().replaceAll("\\\\\"", "\\\\\\\\\"").replaceAll("'", "''")+"'";
+			else 
+				values = "'"+event.getUsername()+"','"+event.getVerb()+"','"+new Timestamp(event.getStartTime().getTime())+"','"+event.getObject()+"','"+event.getOriginalRequest().toString().replaceAll("'", "''")+"'";
 			if (event.getEndTime()!=null){
 				attributes = attributes + ",endtime";
 				values = values +",'"+ new Timestamp(event.getEndTime().getTime())+"'";

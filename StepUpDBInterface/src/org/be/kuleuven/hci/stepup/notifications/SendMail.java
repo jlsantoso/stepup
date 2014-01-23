@@ -14,7 +14,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 //Used when something goes wrong. An email is sent.
-
 public class SendMail {
  
 	private String from;
@@ -31,7 +30,7 @@ public class SendMail {
 	
 	public SendMail(String subject, String text){
 		this.from = "stepup.hci@gmail.com";
-		this.to = "";
+		this.to = "joseluis.santos.cs@gmail.com";
 		this.subject = subject;
 		this.text = text;
 	}
@@ -50,7 +49,7 @@ public class SendMail {
  
 		Session mailSession = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(from, "**********");
+				return new PasswordAuthentication(from, "erikduval01");
 			}
 		});
 
@@ -70,6 +69,13 @@ public class SendMail {
         transport.sendMessage(message,
             message.getRecipients(Message.RecipientType.TO));
         transport.close();
+	}
+ 
+	public static void main(String[] args) throws MessagingException {
+		 
+		SendMail sendmail = new SendMail("stepup.hci@gmail.com", "jlsantoso@gmail.com", "Prueba","Prueba");
+		sendmail.send();
+		
 	}
 }
 

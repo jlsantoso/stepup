@@ -11,17 +11,19 @@ public class TwitterHashTags {
 	
 	public TwitterHashTags(){
 		hash = new ArrayList<String>();
-		hash.add("mume12");
-		hash.add("peno12");
-		hash.add("thesis12");
-		hash.add("gesyrt12");
+		//hash.add("mume12");
+		//hash.add("peno12");
+		//hash.add("thesis12");
+		//hash.add("gesyrt12");
+		hash.add("thesis13");
+		hash.add("mume13");
 		
 	}
 	
 	public void registerhashComments(){
-		for (int i=0;i<3;i++){
+		for (String hashtag:hash){
 			TwitterHash hashTag = new TwitterHash();
-			hashTag.setHash(this.hash.get(i));
+			hashTag.setHash(hashtag);
 			EventGoogleDataStore.insertHashTag(hashTag);
 		}		
 	}

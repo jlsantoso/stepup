@@ -88,12 +88,48 @@ public class PersistanceLayer {
 			String queryresult = RestClient.doPost(StepUpConstants.URLPUSHEVENT, JSONandEvent.transformFromEvemtToJson(e).toString());
 			result += queryresult;
 			log.warning("Sending an event to the data store: "+queryresult);
-			ActivityStream as = new ActivityStream();
+			/*ActivityStream as = new ActivityStream();
 	    	as.setActor(username);
 	    	as.setVerb("awarded");
 	    	as.setObject("http://navi-hci.appspot.com/badgeboard?username="+username, "has earned a new badge:" +badgeJson.getJSONObject("badge").getString("description"));
 	    	as.setPublishedDate(Calendar.getInstance().getTime());
-	    	log.warning("Sending an event to TinyARM: "+RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
+	    	log.warning("Sending an event to TinyARM: "+RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));*/
+			return result;
+		} catch (JSONException e2) {
+			// TODO Auto-generated catch block
+			log.severe(e2.toString());
+		} catch (UnsupportedEncodingException e1) {
+			log.severe(e1.toString());
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			log.severe(e1.toString());
+		}
+		return "ERROR";
+	}
+	
+		
+	public static String sendBadgeAsEvent(String username, String badge, String course){
+		String result = "";
+		Event e = new Event();
+		e.setContext(course);
+		e.setVerb("awarded");
+		e.setStartTime(Calendar.getInstance().getTime());
+		e.setUsername(username);
+		
+		try {
+			//System.out.println(e+badge);
+			JSONObject badgeJson = new JSONObject(badge);		
+			//System.out.println(e);
+			e.setObject(badgeJson.getJSONObject("badge").getString("name"));
+			//System.out.println(e);
+			e.setOriginalRequest(badgeJson);
+			//System.out.println(e);
+			result += JSONandEvent.transformFromEvemtToJson(e).toString();
+			
+			
+			String queryresult = RestClient.doPost(StepUpConstants.URLPUSHEVENT, JSONandEvent.transformFromEvemtToJson(e).toString());
+			result += queryresult;
+			log.warning("Sending an event to the data store: "+queryresult);
 			return result;
 		} catch (JSONException e2) {
 			// TODO Auto-generated catch block

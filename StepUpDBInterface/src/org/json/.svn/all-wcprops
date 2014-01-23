@@ -1,0 +1,47 @@
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json
+END
+JSONTokener.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json/JSONTokener.java
+END
+JSONWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json/JSONWriter.java
+END
+JSONString.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json/JSONString.java
+END
+JSONException.java
+K 25
+svn:wc:ra_dav:version-url
+V 98
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json/JSONException.java
+END
+JSONObject.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json/JSONObject.java
+END
+JSONStringer.java
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json/JSONStringer.java
+END
+JSONArray.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svnroot/role-project/!svn/ver/1102/trunk/tools/CAMDashboard/trunk/src/org/json/JSONArray.java
+END

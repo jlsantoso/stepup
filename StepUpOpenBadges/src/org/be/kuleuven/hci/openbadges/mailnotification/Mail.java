@@ -20,9 +20,9 @@ public class Mail {
             msg.setFrom(new InternetAddress("joseluis.santos.cs@gmail.com", "StepUp Notifications"));
             msg.addRecipient(Message.RecipientType.TO,
                              new InternetAddress(destination, destination));
-            msg.addRecipient(Message.RecipientType.BCC, new InternetAddress("joseluis.santos.cs@gmail.com", "StepUp Notifications"));
+            //msg.addRecipient(Message.RecipientType.BCC, new InternetAddress("joseluis.santos.cs@gmail.com", "StepUp Notifications"));
             msg.setSubject(subject);
-            msg.setText(message);
+            msg.setText(message+"\n Are you interested who earned the last awarded badges? Check them out at: http://chi13course.appspot.com/#awarded");
             Transport.send(msg);
 
         } catch (AddressException e) {

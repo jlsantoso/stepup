@@ -11,6 +11,11 @@
 		<schedule>every 5 minutes</schedule>
 	</cron>
 	<cron>
+		<url>/wespotopenbadges</url>
+		<description>Check Badges</description>
+		<schedule>every 1 minutes</schedule>
+	</cron>
+	<cron>
 		<url>/oncexweekservlet</url>
 		<description>Biweekly Badges</description>
 		<schedule>third mon of march 22:00</schedule>

@@ -40,7 +40,7 @@ public class EventGoogleDataStore {
 	private static final Logger log = Logger.getLogger(EventGoogleDataStore.class.getName());
 	
 	public static void insertEvent(Event event){
-		System.out.println("[VERB]"+event.getVerb());
+		//System.out.println("[VERB]"+event.getVerb());
 	    if (event.getVerb().compareTo(StepUpConstants.TWITTER)==0) updateLastTwitterId(event);
 	    if (event.getVerb().compareTo(StepUpConstants.BLOGCOMMENT)==0||event.getVerb().compareTo(StepUpConstants.BLOGPOST)==0) updateLastUpdateRss(event.getStartTime());
 	    if (event.getVerb().compareTo(StepUpConstants.DIIGOVERB)==0) updateLastUpdateDiigo(event.getStartTime());
@@ -50,7 +50,7 @@ public class EventGoogleDataStore {
 	    String exception = "";
 		try {
 			eventToString = JSONandEvent.transformFromEvemtToJson(event).toString();
-			System.out.println("Event:"+eventToString);
+			//System.out.println("Event:"+eventToString);
 			result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/pushEvent",eventToString);
 			System.out.println("Result:"+result);
 		} catch (IOException e) {
@@ -180,6 +180,43 @@ public class EventGoogleDataStore {
 	    }
 	}
 	
+	public static Date getLastUpdateARLearn(){
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    try{
+		    //if (syncCache.get("lastUpdateARLearn")==null){
+		    	log.info("No access to the cache");
+		    	System.out.println("No access to the cache");
+		    	ArrayList<String> verbs = new ArrayList<String>();
+		    	verbs.add("answer_given");
+		    	verbs.add("read");
+		    	verbs.add("startRun");
+		    	verbs.add("response");
+		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
+		    	if (event==null){
+		    		log.info("No ARLearn actions in the database");
+		    		//System.out.println("No RSS feed in the database");
+		    		Calendar lastUpdate = Calendar.getInstance();
+		    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
+		    		syncCache.put("lastUpdateARLearn", lastUpdate.getTime());
+		    		return lastUpdate.getTime();
+		    	}
+		    	Date lastUpdateARLearn = new Date(event.getStartTime().getTime()+1000);
+		    	syncCache.put("lastUpdateARLearn", lastUpdateARLearn);
+		    	return lastUpdateARLearn;
+		    //}else{
+		    	//return ((Date)syncCache.get("lastUpdateARLearn"));
+		    //}
+	    }catch(Exception e){
+	    	log.warning(e.toString());
+	    	System.out.println(e.toString());
+	    	Calendar lastUpdate = Calendar.getInstance();
+    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
+    		syncCache.put("lastUpdateARLearn", lastUpdate.getTime());
+    		return lastUpdate.getTime();
+	    }
+	}
+
 	public static Date getLastUpdateDiigo(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));

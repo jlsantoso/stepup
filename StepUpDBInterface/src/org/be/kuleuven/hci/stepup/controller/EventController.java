@@ -4,12 +4,15 @@ import java.text.ParseException;
 
 import javax.mail.MessagingException;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.be.kuleuven.hci.stepup.model.utils.JSONValidation;
 import org.be.kuleuven.hci.stepup.model.utils.JSONandEvent;
 import org.be.kuleuven.hci.stepup.notifications.SendMail;
 import org.be.kuleuven.hci.stepup.persistanceLayer.EventPostgreSQL;
 import org.be.kuleuven.hci.stepup.persistanceLayer.Threads.InsertEvent;
+import org.be.kuleuven.hci.stepup.services.PushEvent;
 import org.be.kuleuven.hci.stepup.utils.RestClient;
 import org.be.kuleuven.hci.stepup.controller.utils.MyThreadPoolExecutor;
 import org.json.JSONArray;
@@ -17,7 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EventController {
-	
+	static final Logger logger = Logger.getLogger(EventController.class);
 	
 	//Insert the event in the data store. First it checks if the data is correct. 
 	//Once that the event is validated, it creates a thread for the insertion.
@@ -27,7 +30,10 @@ public class EventController {
 			if (!JSONValidation.checkJSONMandatoryAtributtes(event)) return "{\"status\":\"500\", \"error\":\"JSON is not properly defined. Remember that username, verb, starrtime and object are mandatory\"}"; 
 			if (!JSONValidation.checkJSONStarttimeAtributte(event)) return "{\"status\":\"500\", \"error\":\"JSON is not properly defined. Remember that the date format is yyyy-MM-dd hh:mm:ss ZZZZZ\"}"; 
 			if (!JSONValidation.checkJSONEndtimeAtributte(event)) return "{\"status\":\"500\", \"error\":\"JSON is not properly defined. Remember that the date format is yyyy-MM-dd hh:mm:ss ZZZZZ\"}"; 
+			if (!JSONValidation.checkJSONOriginalrequestJSONFormatAtributte(event)) return "{\"status\":\"500\", \"error\":\"JSON is not properly defined. Check Original Request field\"}"; 
 			//MyThreadPoolExecutor.getMyThreadPoolExecutor().runTask(new InsertEvent(event));
+			BasicConfigurator.configure();
+			logger.warn("InsertEvent: "+event.toString());
 			new InsertEvent(event).run();
 			
 		} catch (JSONException e) {
@@ -125,7 +131,6 @@ public class EventController {
 			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
 		}
 	}
-	
 	
 	public static String getChiBadges(){
 			
@@ -257,6 +262,56 @@ public class EventController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public static String getBadges(String useridentifier, String from, String until, int pag) {
+		if (pag>=0){
+				String query = "select * from event where context like '%reinforcement%' and username='"+useridentifier+"'";
+				if (from!=null||until!=null){
+					query += " and";
+				}
+				if (from!=null){
+					query += " starttime>'"+from+"'";
+				}
+				if (until!=null){
+					if (from!=null) query += " and";
+					query += " starttime<'"+until+"'";
+				}
+				return EventPostgreSQL.getOpenDB(query, Integer.toString(pag));
+			}
+			
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+
+	}
+
+	public static String getEventsByInquiryId(String inquiryid, String json) {
+		try {
+			JSONObject additional_info = new JSONObject(json);
+			if (additional_info.has("pag")){
+				String query = "select * from event where context like '%"+inquiryid+"%'";
+				if (additional_info.has("startdate")||additional_info.has("enddate")){
+					query += " and";
+				}
+				if (additional_info.has("startdate")){
+					query += " starttime>"+additional_info.getString("startdate");
+				}
+				if (additional_info.has("enddate")){
+					if (additional_info.has("startdate")) query += " and";
+					query += " endtime>"+additional_info.getString("enddate");
+				}
+				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
+			}
+			
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		} catch (JSONException e) {
+			try {
+				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
+			} catch (MessagingException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+		} 
 	}	
 	
 }

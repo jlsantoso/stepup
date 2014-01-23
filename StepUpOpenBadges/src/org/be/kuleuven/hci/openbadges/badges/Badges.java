@@ -30,3 +30,4 @@ public class Badges {
 		return "{\"startdate\":\""+startdate+"\",\"enddate\":\""+enddate+"\",\"type\":\""+type+"\",\"connotation\":\""+connotation+"\",\"recipient\":\""+username+"\",\"badge\":{\"version\":\"1.0\",\"name\":\""+name+"-"+version+"\",\"image\":\""+pathImg+"\",\"description\":\""+description+"\",\"criteria\":\"/badges/html5-basic\",\"issuer\":{\"origin\":\"http://openbadges-hci.appspot.com\",\"name\":\"hci-kuleuven\"}}}";
 	}
 }
+

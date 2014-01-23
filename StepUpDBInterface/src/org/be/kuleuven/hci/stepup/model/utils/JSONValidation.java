@@ -54,6 +54,17 @@ public class JSONValidation {
 		return false;
 	}
 	
+	public static boolean checkJSONOriginalrequestJSONFormatAtributte(JSONObject event){
+		try {
+			if (event.has("originalrequest"))
+				event.getJSONObject("originalrequest");
+			return true;
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			return false;
+		}
+	}
+	
 	
 	
 }

@@ -24,7 +24,7 @@ import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndFeedImpl;
 import com.sun.syndication.io.FeedException;
 import com.sun.syndication.io.SyndFeedOutput;
-//Used for testing purposes.
+
 public class TestRSSGeneration {
 
 	/**
@@ -42,7 +42,7 @@ public class TestRSSGeneration {
 		try {
 			SyndEntry entry;
 			SyndContent description;
-			JSONArray results = new JSONArray(RestClient.doPost("http://localhost:8888/rest/getEvents", "{ \"query\": \"select * from event where context='chikul13'\", \"pag\": \"1\"}"));
+			JSONArray results = new JSONArray(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event where context='chikul13'\", \"pag\": \"1\"}"));
 			System.out.println(results.toString());
 			for (int i=0; i<results.length();i++){
 				JSONObject json = results.getJSONObject(i);

@@ -10,7 +10,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.sql.Timestamp;
 import java.util.logging.Logger;
 
 import org.apache.http.HttpEntity;
@@ -27,6 +29,9 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.protocol.HTTP;
 import org.be.kuleuven.hci.stepup.servlets.AddTweetServlet;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class RestClient {
 	public static final int HTTP_OK = 200;
@@ -74,6 +79,35 @@ public class RestClient {
 	    	log.severe(e.toString());
 	    }
 		return "";
+	}
+	
+	public static String doGetAuth(final String urlString) throws UnsupportedEncodingException{
+		URL url;
+		try {
+			url = new URL (urlString);//actions/runId/199236
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty("Authorization","GoogleLogin auth=GoogleLogin auth=ya29.AHES6ZQTnWaRBnIdhWaejfpEyt1Ym5dpKnTXO5CKTmE4YiI");
+			BufferedReader r = new BufferedReader(
+					new InputStreamReader(
+					    conn.getInputStream()
+					)
+				    );
+			String line = r.readLine();
+			String final_object = line;
+			while (line != null) {
+			    System.out.println(line);
+			    line = r.readLine();
+			    final_object+=line;
+			}
+			return final_object;		
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+		return null;
 	}
 
 	/*public static String doPost(final String url, final String POSTText)

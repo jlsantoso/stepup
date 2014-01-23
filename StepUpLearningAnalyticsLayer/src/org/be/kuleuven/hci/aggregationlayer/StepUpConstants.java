@@ -11,6 +11,7 @@ public class StepUpConstants {
 	public static final String BADGES = "awarded";
 	//WeSPOT requirement
 	public static final String PHASE1 = "Hypothesis";
+	//public static final String PHASE1 = "1";
 	public static final String PHASE1_S1 = "Reflection";
 	public static final String PHASE1_S2 = "Ethics";
 	public static final String PHASE1_S3 = "Empirical meaning";
@@ -21,6 +22,7 @@ public class StepUpConstants {
 	public static final String PHASE1_S8 = "Field of research";
 	public static final String PHASE1_S9 = "Content";
 	public static final String PHASE2 = "Operasionalisation";
+	//public static final String PHASE2 = "2";
 	public static final String PHASE2_S1 = "Reflection";
 	public static final String PHASE2_S2 = "Indicators";
 	public static final String PHASE2_S3 = "Predictions";
@@ -29,6 +31,7 @@ public class StepUpConstants {
 	public static final String PHASE2_S6 = "Methodology";
 	public static final String PHASE2_S7 = "Ethics";	
 	public static final String PHASE3 = "Data Collection";
+	//public static final String PHASE3 = "3";
 	public static final String PHASE3_S1 = "Reflection";
 	public static final String PHASE3_S2 = "Information foraging";
 	public static final String PHASE3_S3 = "Context";
@@ -40,6 +43,7 @@ public class StepUpConstants {
 	public static final String PHASE3_S9 = "Data security";
 	public static final String PHASE3_S10 = "Documentation";	
 	public static final String PHASE4 = "Data Analysis";
+	//public static final String PHASE4 = "4";
 	public static final String PHASE4_S1 = "Reflection";
 	public static final String PHASE4_S2 = "Quantitative analysis";
 	public static final String PHASE4_S3 = "Qualitative analysis";
@@ -47,6 +51,7 @@ public class StepUpConstants {
 	public static final String PHASE4_S5 = "Visualisation";
 	public static final String PHASE4_S6 = "Noise reduction";
 	public static final String PHASE5 = "Interpretation";
+	//public static final String PHASE5 = "Interpretation";
 	public static final String PHASE5_S1 = "Reflection";
 	public static final String PHASE5_S2 = "Embedding";
 	public static final String PHASE5_S3 = "Confirmation";
@@ -55,6 +60,7 @@ public class StepUpConstants {
 	public static final String PHASE5_S6 = "Relevance";
 	public static final String PHASE5_S7 = "Significance";
 	public static final String PHASE6 = "Communication";
+	//public static final String PHASE6 = "6";
 	public static final String PHASE6_S1 = "Reflection";
 	public static final String PHASE6_S2 = "Writing up";
 	public static final String PHASE6_S3 = "Strategy";

@@ -27,12 +27,12 @@ public class InitWeSPOTCourse {
 	 * @throws UnsupportedEncodingException 
 	 * @throws JSONException 
 	 */
-	public static Course wespot() throws UnsupportedEncodingException, JSONException{
+	public static Course wespot(String name) throws UnsupportedEncodingException, JSONException{
 		Course course = new Course();
 		int blogs = 9;
-		course.setName("wespotdata");
+		course.setName(name);
 		Calendar startCourse = Calendar.getInstance();
-		startCourse.set(2013, 4, 14, 00, 00, 00);
+		startCourse.set(2013, 8, 14, 00, 00, 00);
 		course.setStartCourse(startCourse.getTime());
 		int numberOfWeeks = course.getWeeks().size();
 		course.addPhase(createPhase1(numberOfWeeks));
@@ -41,18 +41,20 @@ public class InitWeSPOTCourse {
 		course.addPhase(createPhase4(numberOfWeeks));
 		course.addPhase(createPhase5(numberOfWeeks));
 		course.addPhase(createPhase6(numberOfWeeks));
-		String result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select distinct username from event where context like '%elgg%'\", \"pag\": \"0\"}");
+		String result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select distinct lower(username) as username from event where context like '%course___"+name.replaceAll("wespot","")+"%'\", \"pag\": \"0\"}");
+		System.out.println("students: "+result);
 		JSONArray results = new JSONArray(result);
 		for (int i=0; i<results.length();i++){
-			Student s = new Student();
+			Student s = new Student();			 
 			s.setUsername(results.getJSONObject(i).getString("username"));
+			//if (s.getUsername().compareTo("facebook_682307588")==0) System.out.println("******************************************ENCONTRADO***********************");
 			s.addPhase(createPhase1(numberOfWeeks));
 			s.addPhase(createPhase2(numberOfWeeks));
 			s.addPhase(createPhase3(numberOfWeeks));
 			s.addPhase(createPhase4(numberOfWeeks));
 			s.addPhase(createPhase5(numberOfWeeks));
 			s.addPhase(createPhase6(numberOfWeeks));		
-			System.out.println(s.getActivity().size());
+			//System.out.println(s.getActivity().size());
 			course.addStudent(s);
 		}	
 		return course;

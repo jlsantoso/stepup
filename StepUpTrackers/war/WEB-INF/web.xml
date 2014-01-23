@@ -8,6 +8,14 @@
 		<url-pattern>/cron/addtweet</url-pattern>
 	</servlet-mapping>
 	<servlet>
+		<servlet-name>AddElggServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddElggServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddElggServlet</servlet-name>
+		<url-pattern>/cron/addelgg</url-pattern>
+	</servlet-mapping>
+	<servlet>
 		<servlet-name>UpdateUsernameServlet</servlet-name>
 		<servlet-class>org.be.kuleuven.hci.stepup.servlets.UpdateUsernameServlet</servlet-class>
 	</servlet>
@@ -19,6 +27,14 @@
 		<servlet-name>AddDiigoServlet</servlet-name>
 		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddDiigoServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>AddARLearn</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddARLearn</servlet-class>
+	</servlet>	
+	<servlet-mapping>
+		<servlet-name>AddARLearn</servlet-name>
+		<url-pattern>/cron/addarlearn</url-pattern>
+	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>AddDiigoServlet</servlet-name>
 		<url-pattern>/cron/adddiigo</url-pattern>
@@ -30,6 +46,14 @@
 	<servlet-mapping>
 		<servlet-name>AddRSSServlet</servlet-name>
 		<url-pattern>/cron/addrss</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AddRSSNoMatchedNamesServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddRSSNoMatchedNamesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddRSSNoMatchedNamesServlet</servlet-name>
+		<url-pattern>/cron/addrssnomatchednames</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>ClearCacheServlet</servlet-name>

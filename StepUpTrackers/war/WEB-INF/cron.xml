@@ -6,7 +6,7 @@
 		<schedule>every 20 minutes</schedule>
 	</cron>	
 	<cron>
-		<url>/cron/addrss</url>
+		<url>/cron/addrssnomatchednames</url>
 		<description>RssFeed Fetcher</description>
 		<schedule>every 15 minutes</schedule>
 	</cron>
@@ -19,6 +19,16 @@
 		<url>/cron/updateusernames</url>
 		<description>Update Names Fetcher</description>
 		<schedule>every 2 minutes</schedule>
+	</cron>
+	<cron>
+		<url>/cron/addelgg</url>
+		<description>Update ElGG USer data</description>
+		<schedule>every 2 minutes</schedule>
+	</cron>
+	<cron>
+		<url>/cron/addarlearn</url>
+		<description>Update ARLearn data</description>
+		<schedule>every 5 minutes</schedule>
 	</cron>
 	<!--  cron>
 		<url>/cron/clearcache</url>

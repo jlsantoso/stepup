@@ -7,9 +7,11 @@ import java.util.logging.Level;
 import org.be.kuleuven.hci.aggregationlayer.model.utils.RestClient;
 import org.be.kuleuven.hci.aggregationlayer.modelwespot.Course;
 
+import com.google.appengine.api.datastore.EntityTranslator;
 import com.google.appengine.api.memcache.ErrorHandlers;
 import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
+import com.googlecode.objectify.cmd.Query;
 
 
 
@@ -19,23 +21,34 @@ public class PersistanceLayer {
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    syncCache.put(name, course);
-	    OfyService.getOfyService().ofy().save().entity(course).now(); 	    
+	    OfyService.getOfyService();
+		//EntityTranslator.convertToPb(course);
+	    OfyService.ofy().save().entity(course).now(); 	    
+	}
+	
+	public static void deleteCourses(){
+		List<Course> courses = OfyService.getOfyService().ofy().load().type(Course.class).list();
+    	OfyService.getOfyService().ofy().delete().entities(courses);
 	}
 	
 	public static Course getCourse(String name){
 		System.out.println("access getCourse");
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
-	    Course course;
+	    Course course = new Course();
 	    if (syncCache.get(name)!=null){
 	    	System.out.println("access cache");
 	    	course = (Course) syncCache.get(name);	  
 	    	
 	    }else{
-	    	System.out.println("access db");
+	    	System.out.println("access db:"+name);
 	    	List<Course> courses = OfyService.getOfyService().ofy().load().type(Course.class).list();
 	    	System.out.println(courses.size());
-	    	course = courses.get(courses.size()-1);
+	    	for (Course c: courses){
+	    		syncCache.put(c.getName(), c);
+	    		if (c.getName().compareTo(name)==0) course = c;
+	    	}
+	    	//course = courses.get(courses.size()-1);
 	    	
 	    }
 	    System.out.println("El curso es: "+course.getName());

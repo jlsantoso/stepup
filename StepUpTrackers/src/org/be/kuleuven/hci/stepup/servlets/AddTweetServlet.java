@@ -125,7 +125,7 @@ public class AddTweetServlet extends HttpServlet {
 	        	event.setContext(hashtag);
 	        	if (s.getInReplyToScreenName()!=null) event.setTarget(s.getInReplyToScreenName());
 	        	event.setOriginalRequest(new JSONObject(DataObjectFactory.getRawJSON(s)));
-	        	ActivityStream as = new ActivityStream();
+	        	/*ActivityStream as = new ActivityStream();
 	        	as.setActor(s.getUser().getScreenName().toLowerCase(), s.getUser().getProfileImageURL().toString());
 	        	as.setVerb(StepUpConstants.TWITTER);
 	        	as.setObject("http://twitter.com/"+s.getUser().getScreenName()+"/status/"+s.getId(), s.getText());
@@ -142,15 +142,15 @@ public class AddTweetServlet extends HttpServlet {
 	        		as.setTarget(string, "Tweet", usernames);
 	        	}
 	        	System.out.println(as.getActivityStream().toString());
-	        	log.warning(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));
+	        	log.warning(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));*/
 	        	EventGoogleDataStore.insertEvent(event);
 			}catch (JSONException e) {
 				// TODO Auto-generated catch block
 				log.severe(e.toString());
-			} catch (UnsupportedEncodingException e) {
+			} /*catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			} */
 		}
 	}
 

@@ -18,9 +18,10 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Serialize;
 @Entity
+@Index
 public class Course implements Serializable {
 	@Id Long id;
-	@Index String name;
+	String name;
 	Date startcourse;
 	Date endcourse;
 	@Serialize ArrayList<Integer> weeks;
@@ -145,8 +146,11 @@ public class Course implements Serializable {
 		}
 		if (getWeekPosition(e.getStartTime())<0) e.setStartTime(this.startcourse);
 		JSONObject context = new JSONObject(e.getContext());
-		System.out.println(getWeekPosition(e.getStartTime()));
+		//System.out.println(getWeekPosition(e.getStartTime()));
 		//System.out.println(phasePosition.get(context.get("phase")));
-		s.addActivityPhase(phasePosition.get(context.get("phase")), phases.get(phasePosition.get(context.get("phase"))).getPositionSubPhase(context.getString("subphase")), getWeekPosition(e.getStartTime()));
+		if (context.getString("phase").compareTo("1")!=0)
+			s.addActivityPhase(phasePosition.get(context.get("phase")), phases.get(phasePosition.get(context.get("phase"))).getPositionSubPhase(context.getString("subphase")), getWeekPosition(e.getStartTime()));
+		else 
+			s.addActivityPhase(Integer.parseInt(context.getString("phase"))-1, 0, getWeekPosition(e.getStartTime()));
 	}	
 }

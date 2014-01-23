@@ -16,21 +16,13 @@
 		<url-pattern>/cron/initwespot</url-pattern>
 	</servlet-mapping>
 	<servlet>
-		<servlet-name>TwitterSignIn</servlet-name>
-		<servlet-class>org.be.kuleuven.hci.auth.SigninServlet</servlet-class>
+		<servlet-name>DeleteCourses</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.aggregationlayer.DeleteCourses</servlet-class>
 	</servlet>
 	<servlet-mapping>
-		<servlet-name>TwitterSignIn</servlet-name>
-		<url-pattern>/auth/twitter</url-pattern>
+		<servlet-name>DeleteCourses</servlet-name>
+		<url-pattern>/cron/delete</url-pattern>
 	</servlet-mapping>
-	<servlet>
-		<servlet-name>TwitterCallback</servlet-name>
-		<servlet-class>org.be.kuleuven.hci.auth.CallbackServlet</servlet-class>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>TwitterCallback</servlet-name>
-		<url-pattern>/auth/callback</url-pattern>
-	</servlet-mapping>	
 	<servlet>
 	    <servlet-name>LearningAnalyticsServices</servlet-name>
 	    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
@@ -45,26 +37,19 @@
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
 	<welcome-file-list>
-		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>dashboard/dashboardwespot.jsp</welcome-file>
 	</welcome-file-list>
-	<filter>
-    <filter-name>CasSingleSignOutFilter</filter-name>
-    <filter-class>org.jasig.cas.client.session.SingleSignOutFilter</filter-class>
-    <init-param>
-      <param-name>artifactParameterName</param-name>
-      <param-value>ticket</param-value>
-    </init-param>
-  </filter>
   <filter>
     <filter-name>CASAuthenticationFilter</filter-name>
     <filter-class>org.jasig.cas.client.authentication.AuthenticationFilter</filter-class>
     <init-param>
       <param-name>casServerLoginUrl</param-name>
-      <param-value>http://cas-no-ssl.wespot.it.fmi.uni-sofia.bg:7070/cas//login</param-value>
+      <param-value>http://cas-no-ssl.wespot.it.fmi.uni-sofia.bg:7070/cas/login</param-value>
     </init-param>
     <init-param>
       <param-name>serverName</param-name>
-      <param-value>http://localhost:8888</param-value>
+      <param-value>http://stepup-ws.appspot.com</param-value>
+      <!--param-value>http://localhost:8888</param-value-->
     </init-param>
   </filter>
   <filter>
@@ -76,7 +61,8 @@
     </init-param>
     <init-param>
       <param-name>serverName</param-name>
-      <param-value>http://localhost:8888</param-value>
+      <param-value>http://stepup-ws.appspot.com</param-value>
+      <!--param-value>http://localhost:8888</param-value-->
     </init-param>
     <init-param>
       <param-name>redirectAfterValidation</param-name>
@@ -84,11 +70,11 @@
     </init-param>
     <init-param>
       <param-name>proxyReceptorUrl</param-name>
-      <param-value>/protected/proxy-receptinator</param-value>
+      <param-value>/dashboard/proxy-receptinator</param-value>
     </init-param>
     <init-param>
       <param-name>proxyCallbackUrl</param-name>
-      <param-value>http://localhost:8888/cas-client-1/protected/proxy-receptinator</param-value>
+      <param-value>http://stepup-ws.appspot.com/dashboard/proxy-receptinator</param-value>
     </init-param>
     <init-param>
       <param-name>proxyGrantingTicketStorageClass</param-name>
@@ -98,30 +84,22 @@
       <param-name>acceptAnyProxy</param-name>
       <param-value>true</param-value>
     </init-param>
-    <init-param>
-      <param-name>tolerance</param-name>
-      <param-value>300000</param-value>
-    </init-param>
   </filter>
   <filter>
     <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
     <filter-class>org.jasig.cas.client.util.HttpServletRequestWrapperFilter</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name>CasSingleSignOutFilter</filter-name>
-    <url-pattern>/protected/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
     <filter-name>CASValidationFilter</filter-name>
-    <url-pattern>/protected/*</url-pattern>
+    <url-pattern>/dashboard/*</url-pattern>
   </filter-mapping>
   <filter-mapping>
     <filter-name>CASAuthenticationFilter</filter-name>
-    <url-pattern>/protected/*</url-pattern>
+    <url-pattern>/dashboard/*</url-pattern>
   </filter-mapping>
   <filter-mapping>
     <filter-name>CAS HttpServletRequest Wrapper Filter</filter-name>
-    <url-pattern>/*</url-pattern>
+    <url-pattern>/dashboard/*</url-pattern>
   </filter-mapping>
   <listener>
     <listener-class>org.jasig.cas.client.session.SingleSignOutHttpSessionListener</listener-class>

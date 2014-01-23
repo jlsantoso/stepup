@@ -19,6 +19,9 @@ import org.be.kuleuven.hci.stepup.controller.EventController;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.json.JSONObject;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
+
 import com.sun.jersey.spi.resource.Singleton;
 
 @Singleton
@@ -26,10 +29,15 @@ import com.sun.jersey.spi.resource.Singleton;
 
 //Trackers use this service to push events.
 public class PushEvent {
+	
+	static final Logger logger = Logger.getLogger(PushEvent.class);
+	
 	@POST 
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getData(String json) {
+		BasicConfigurator.configure();
+		logger.warn(json);
 		//System.out.println("Object: "+json);
 		return EventController.insertEvent(json);
 	} 

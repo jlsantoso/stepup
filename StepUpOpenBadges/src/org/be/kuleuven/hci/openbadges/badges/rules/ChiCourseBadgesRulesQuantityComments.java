@@ -80,7 +80,7 @@ public class ChiCourseBadgesRulesQuantityComments {
 					if (!PersistanceLayer.existBadge(badge)){
 						System.out.println(badge.getDescription());
 						PersistanceLayer.saveBadge(badge);
-						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+usernames[i]+" \n Do you wanna check the last awarded badges? Check them out at http://chi13course.appspot.com/#awarded", twitterEmailNotification.get(usernames[i]));
+						Mail.sendmail("You have just earned a new Badge! ", "You have earned a new badge:" + (new JSONObject(badge.getDescription())).getJSONObject("badge").getString("description")+ "Check it out at http://navi-hci.appspot.com/badgeboard?username="+usernames[i], twitterEmailNotification.get(usernames[i]));
 						PersistanceLayer.sendBadgeAsEvent(usernames[i], badge.getDescription());
 					}					
 				}		

@@ -3,7 +3,16 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER/App Engine (1)"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/asm-3.3.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-bundle-1.17.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-client-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-core-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-json-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-server-1.7.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/twitter4j-core-3.0.3.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/slf4j-api-1.7.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/slf4j-api-1.7.5.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/slf4j-simple-1.7.5.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/twitter4j-core-2.2.6.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
