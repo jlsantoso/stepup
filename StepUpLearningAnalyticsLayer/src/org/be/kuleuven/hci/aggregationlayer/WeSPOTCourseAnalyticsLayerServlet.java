@@ -30,7 +30,7 @@ public class WeSPOTCourseAnalyticsLayerServlet extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 		PersistanceLayer.deleteCourses();
-		String inquiries_URL = "http://wespot.kmi.open.ac.uk/services/api/rest/json/?method=site.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8";
+		String inquiries_URL = "http://wespot.kmi.open.ac.uk/services/api/rest/json/?method=site.inquiries&api_key=";
 		String result_inquiries = RestClient.doGet(inquiries_URL);		
 		try {
 			JSONObject inquiries = new JSONObject(result_inquiries);
