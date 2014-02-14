@@ -7,12 +7,9 @@
 	<title>Get a badge!</title>
   </head>
   <body>
-  <%
-  String username = request.getParameter("username");
-  String badgeID = request.getParameter("badgeID");
-  
-  %> 
-  <body onLoad="OpenBadges.issue('http://openbadges-hci.appspot.com/rest/getBadge/<%=username.substring(0, username.indexOf("."))%>/<%=badgeID%>')">
-  
-  </body>
+    <form action="<%= blobstoreService.createUploadUrl("/upload") %>" method="post" enctype="multipart/form-data">
+        <input type="file" name="myFile">
+        <input type="submit" value="Submit">
+    </form>
+</body>
 </html>
