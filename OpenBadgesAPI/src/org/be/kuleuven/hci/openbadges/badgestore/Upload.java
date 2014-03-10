@@ -1,6 +1,7 @@
 package org.be.kuleuven.hci.openbadges.badgestore;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -26,8 +27,8 @@ public class Upload extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res)
         throws ServletException, IOException {
 
-        Map<String, BlobKey> blobs = blobstoreService.getUploadedBlobs(req);
-        BlobKey blobKey = blobs.get("myFile");
+        Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
+        BlobKey blobKey = blobs.get("myFile").get(0);
        
         if (blobKey == null) {
             res.sendRedirect("/");
@@ -59,8 +60,9 @@ public class Upload extends HttpServlet {
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-            
+			}            
         }
+        //req.getRequestDispatcher("/menu.jsp?context="+req.getParameter("context")).forward(req, res);
+        res.sendRedirect("/menu.jsp?context="+req.getParameter("context"));
     }
 }

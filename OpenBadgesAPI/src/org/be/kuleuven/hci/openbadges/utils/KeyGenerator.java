@@ -12,5 +12,10 @@ public final class KeyGenerator
   {
     return new BigInteger(130, random).toString(32);
   }
+  
+  public static void main(String[] args) {
+	  KeyGenerator k = new KeyGenerator();
+	  System.out.println(k.nextKeyId());
+  }
 
 }

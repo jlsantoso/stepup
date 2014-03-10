@@ -1,4 +1,11 @@
-<!-- Indices written at Sat, 8 Feb 2014 15:17:03 CET -->
+<!-- Indices written at Mon, 3 Mar 2014 16:47:39 CET -->
 
-<datastore-indexes/>
+<datastore-indexes>
 
+    <!-- Used 1 time in query history -->
+    <datastore-index kind="AwardedBadge" ancestor="false" source="auto">
+        <property name="context" direction="asc"/>
+        <property name="starttime" direction="asc"/>
+    </datastore-index>
+
+</datastore-indexes>

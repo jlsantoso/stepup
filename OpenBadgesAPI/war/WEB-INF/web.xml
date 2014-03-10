@@ -3,9 +3,17 @@
 		<servlet-name>OpenBadgesAPI</servlet-name>
 		<servlet-class>org.be.kuleuven.hci.openbadges.OpenBadgesAPIServlet</servlet-class>
 	</servlet>
+	<servlet>
+		<servlet-name>AwardBadgeServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.openbadges.AwardBadgeServlet</servlet-class>
+	</servlet>
 	<servlet-mapping>
 		<servlet-name>OpenBadgesAPI</servlet-name>
 		<url-pattern>/openbadgesapi</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>AwardBadgeServlet</servlet-name>
+		<url-pattern>/awardbadges</url-pattern>
 	</servlet-mapping>
 	<servlet>
   <servlet-name>SystemServiceServlet</servlet-name>

@@ -18,13 +18,11 @@
 	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-appengine-1.10.1-beta.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/google-oauth-client-servlet-1.10.1-beta.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-11.0.1.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jdo-api-3.0.1.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jdo2-api-2.3-eb.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-bundle-1.17.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-client-1.7.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-core-1.7.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-json-1.7.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/jersey-server-1.7.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/asm-3.3.1.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
