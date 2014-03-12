@@ -3,14 +3,18 @@ package org.be.kuleuven.hci.stepup.utils;
 public class StepUpConstants {
 	
 	//Used also in other modules such as the learning analytics aggregation layer and the trackers.
+	
+	public static final String KEY_AUTH = "qpcbokmh8adm3qksooqcbp8q3n";
 
 	public static final String URLPUSHEVENT = "http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/pushEvent";
+	
 	public static final String IMGPATH = "/img/badges/";
 	public static final String DIIGOVERB = "bookmarked";
 	public static final String BLOGPOST= "posted";
 	public static final String BLOGCOMMENT = "commented";
 	public static final String TWITTER = "tweeted";
 	public static final String BADGES = "awarded";
+	
 	//WeSPOT requirement
 	public static final String PHASE1 = "Hypothesis";
 	public static final String PHASE1_S1 = "Reflection";

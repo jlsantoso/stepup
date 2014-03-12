@@ -68,8 +68,12 @@ public class Testing {
 		//result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event where context like '%reinforcement%' and username='google_116743449349920850150'\", \"pag\": \"0\"}");
 		//System.out.println(result);
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event where context like '%9215%' AND event_id='177233'\", \"pag\": \"0\"}"));
-		String result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents/26368", "{\"pag\": \"0\"}");
-		System.out.println(result);
+		//String result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents/26368", "{\"pag\": \"0\"}");
+		//System.out.println(result);
+		//System.out.println(RestClient.doPost("http://localhost:8081/wespot-dev-ws/rest/api/events", "{ \"username\": \"jlsantos\", \"verb\": \"test\", \"object\": \"twitter\",\"starttime\": \"2012-12-12 00:22:24 +0100\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select originalrequest from event where event_id='179850'\", \"pag\": \"0\"}"));
+		//String content = "";
+		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/chikul14/verb/tweeted", "{ \"pag\": \"0\"}"));
 	}
 
 }
