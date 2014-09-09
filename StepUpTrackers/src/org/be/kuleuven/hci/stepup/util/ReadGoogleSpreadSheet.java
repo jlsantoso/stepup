@@ -74,14 +74,14 @@ public class ReadGoogleSpreadSheet {
 		        twitterEmailNotification.put(twitter,emailforstepupnotifications);
 	    	}
 	      }
-	      syncCache.put("diigofeeds", diigofeeds);
+	      //syncCache.put("diigofeeds", diigofeeds);
 	      syncCache.put("blogsfeed", blogsfeeds);
-	      syncCache.put("matchingusernames", matchingusernames);
+	      /*syncCache.put("matchingusernames", matchingusernames);
 	      syncCache.put("membersGroup", membersGroup);
 	      syncCache.put("twitterEmailNotification", twitterEmailNotification);
 	      syncCache.put("twitterOpenBadges", twitterOpenBadges);
 	      syncCache.put("twitterusernames", twitterusernames);
-	      syncCache.put("urlsBlogs", urlsBlogs);
+	      syncCache.put("urlsBlogs", urlsBlogs);*/
 	    } catch (IOException e) {
 	      e.printStackTrace();
 	    } catch (ServiceException e) {

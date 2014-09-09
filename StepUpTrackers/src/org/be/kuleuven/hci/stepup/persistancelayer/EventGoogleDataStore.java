@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,7 +42,7 @@ public class EventGoogleDataStore {
 	
 	public static void insertEvent(Event event){
 		//System.out.println("[VERB]"+event.getVerb());
-	    if (event.getVerb().compareTo(StepUpConstants.TWITTER)==0) updateLastTwitterId(event);
+	    if (event.getVerb().compareTo(StepUpConstants.TWITTER)==0||event.getVerb().compareTo(StepUpConstants.RETWEET)==0) updateLastTwitterId(event);
 	    if (event.getVerb().compareTo(StepUpConstants.BLOGCOMMENT)==0||event.getVerb().compareTo(StepUpConstants.BLOGPOST)==0) updateLastUpdateRss(event.getStartTime());
 	    if (event.getVerb().compareTo(StepUpConstants.DIIGOVERB)==0) updateLastUpdateDiigo(event.getStartTime());
 	    event.setTimeStamp(Calendar.getInstance().getTime());
@@ -50,18 +51,19 @@ public class EventGoogleDataStore {
 	    String exception = "";
 		try {
 			eventToString = JSONandEvent.transformFromEvemtToJson(event).toString();
-			//System.out.println("Event:"+eventToString);
+			System.out.println("Event:"+eventToString);
 			result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/pushEvent",eventToString);
 			System.out.println("Result:"+result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			log.severe(e.toString());
 			exception += e.toString();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			exception += e.toString();
+			log.severe(e.toString());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			exception += e.toString();
+			log.severe(e.toString());
 		}
 		if (result.contains("200")) event.setInserted(true);
 		else{
@@ -128,7 +130,11 @@ public class EventGoogleDataStore {
 			MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 		    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 		    if (syncCache.get("lastTwitterId")==null){
-		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-object").filter("verb", StepUpConstants.TWITTER).first().get();
+		    	ArrayList<String> verbs = new ArrayList<String>();
+		    	verbs.add(StepUpConstants.TWITTER);
+		    	verbs.add(StepUpConstants.RETWEET);
+		    	
+		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-object").filter("verb in", verbs).first().get();
 		    	if (event==null){
 		    		syncCache.put("lastTwitterId","119719744281640960");
 		    		return "119719744281640960";
@@ -149,25 +155,28 @@ public class EventGoogleDataStore {
 	public static Date getLastUpdateRss(){
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    log.warning("Access from EvetnGoogleDataStore");
 	    try{
 		    if (syncCache.get("lastUpdateRss")==null){
-		    	log.info("No access to the cache");
+		    	log.warning("No access to the cache");
 		    	System.out.println("No access to the cache");
 		    	ArrayList<String> verbs = new ArrayList<String>();
 		    	verbs.add(StepUpConstants.BLOGCOMMENT);
 		    	verbs.add(StepUpConstants.BLOGPOST);
 		    	Event event = OfyService.getOfyService().ofy().load().type(Event.class).order("-starttime").filter("verb in", verbs).first().get();
 		    	if (event==null){
-		    		log.info("No RSS feed in the database");
+		    		log.warning("No RSS feed in the database");
 		    		System.out.println("No RSS feed in the database");
 		    		Calendar lastUpdate = Calendar.getInstance();
 		    		lastUpdate.add(Calendar.DAY_OF_MONTH, -90);
 		    		syncCache.put("lastUpdateRss", lastUpdate.getTime());
 		    		return lastUpdate.getTime();
 		    	}
+		    	log.warning("Last Event:"+event.getObject());
 		    	syncCache.put("lastUpdateRss", event.getStartTime());
 		    	return event.getStartTime();
 		    }else{
+		    	log.warning("Cache access");
 		    	return ((Date)syncCache.get("lastUpdateRss"));
 		    }
 	    }catch(Exception e){
@@ -178,6 +187,33 @@ public class EventGoogleDataStore {
     		syncCache.put("lastUpdateRss", lastUpdate.getTime());
     		return lastUpdate.getTime();
 	    }
+	}
+	
+	public static void updatedFalseValues (String context){
+		Iterator<Event> events = OfyService.getOfyService().ofy().load().type(Event.class).filter("context", context).filter("inserted", false).iterator();
+		int count=0;
+		while (events.hasNext()){
+			Event e = events.next();
+			log.warning("Non-in the database:"+e.getOriginalRequestString());
+			insertEvent(e);
+			count++;
+			if(count==2) break;
+		}
+		log.warning("Finished");
+	}
+	
+	public static void updatedObjectValues(String object){
+		Iterator<Event> events = OfyService.getOfyService().ofy().load().type(Event.class).filter("object", object).iterator();
+		int count=0;
+		while (events.hasNext()){
+			Event e = events.next();
+			log.warning("Non-in the database:"+e.getOriginalRequestString());
+			e.setContext("prueba15");
+			insertEvent(e);
+			count++;
+			if(count==2) break;
+		}
+		log.warning("Finished");
 	}
 	
 	public static Date getLastUpdateARLearn(){

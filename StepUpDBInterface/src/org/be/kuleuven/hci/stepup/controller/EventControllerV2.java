@@ -102,25 +102,25 @@ public class EventControllerV2 {
 		return "{\"status\":\"200\", \"error\":\"\"}";	
 	}
 	
-	public static String getStudentsIds(String course , String from, String to, String pag){
+	public static JSONArray getStudentsIds(String course , String from, String to, String pag){
 		String query = "select distinct lower(username) as username from event where context like \'%"+course+"%'";
 		query+=addTimeRestrictionToQuery(from, to);
 		return EventPostgreSQL.getOpenDB(query, pag);
 	}
 	
-	public static String getEventsPerStudentsIdsAndCourse(String course, String student, String from, String to, String pag){
+	public static JSONArray getEventsPerStudentsIdsAndCourse(String course, String student, String from, String to, String pag){
 		String query = "select * from event where context like \'%"+course+"%' and lower(username)='"+student.toLowerCase()+"'";
 		query+=addTimeRestrictionToQuery(from, to);
 		return EventPostgreSQL.getOpenDB(query, pag);
 	}
 	
-	public static String getEventsPerCourseIds(String course, String from, String to, String pag){
+	public static JSONArray getEventsPerCourseIds(String course, String from, String to, String pag){
 		String query = "select * from event where context like \'%"+course+"%'";
 		query+=addTimeRestrictionToQuery(from, to);
 		return EventPostgreSQL.getOpenDB(query, pag);
 	}
 	
-	public static String getEventsPerCourseIdsAndVerbs(String course, String verb, String from, String to, String pag){
+	public static JSONArray getEventsPerCourseIdsAndVerbs(String course, String verb, String from, String to, String pag){
 		String query = "select * from event where context like \'%"+course+"%' and verb='"+verb+"'";
 		query+=addTimeRestrictionToQuery(from, to);
 		return EventPostgreSQL.getOpenDB(query, pag);

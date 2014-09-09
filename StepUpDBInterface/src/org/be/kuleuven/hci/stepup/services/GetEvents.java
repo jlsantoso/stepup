@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.be.kuleuven.hci.stepup.controller.EventController;
 import org.be.kuleuven.hci.stepup.model.Event;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.jersey.spi.resource.Singleton;
@@ -28,23 +30,27 @@ public class GetEvents {
 	@POST 
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getData(String json) {	
+	public JSONArray getData(String json) throws JSONException {	
 		return EventController.getEvents(json);
 	} 
 	
 	@POST @Path("/{inquiryid}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String getEventsByInquiryId(@PathParam("inquiryid") String inquiryid, String json) {	
-		String result = EventController.getEventsByInquiryId(inquiryid, json);
-		if (result.contains("\"subphase\":\"ARLearn\""))
+	public String getEventsByInquiryId(@PathParam("inquiryid") String inquiryid, String json) throws JSONException {	
+		JSONArray result = EventController.getEventsByInquiryId(inquiryid, json);
+		/*if (result.contains("\"subphase\":\"ARLearn\"")){
 			result = result.replaceAll("\\\\\"", "\"").replaceAll("\"\\{", "{").replaceAll("}\"", "}");
-		else{
+			JSONArray result_array = new JSONArray(result);
+			result = result_array.toString();
+		}else{
 			result = result.replaceAll("\\\\\\\\\\\\", "\\\\\\\\");
-			result = result.replaceAll("\\\\\"", "\"").replaceAll("\"\\{", "{").replaceAll("}\"", "}");
-		}
+			result = result.replaceAll("\\\\\"", "\"").replaceAll("\"\\{\\\"", "{\\\"").replaceAll("}\"", "}");
+			JSONArray result_array = new JSONArray(result);
+			result = result_array.toString();
+		}*/        
 			
-		return result;
+		return result.toString();
 	} 
 }
 

@@ -18,6 +18,7 @@ import org.be.kuleuven.hci.stepup.controller.EventController;
 import org.be.kuleuven.hci.stepup.controller.EventControllerV2;
 import org.be.kuleuven.hci.stepup.utils.StepUpConstants;
 import org.be.kuleuven.hci.stepup.utils.UnauthorizedException;
+import org.json.JSONArray;
 
 import com.sun.jersey.spi.resource.Singleton;
 
@@ -69,7 +70,7 @@ public class API {
 	public String getStudents(@DefaultValue("0") @HeaderParam("Authorization") String authorization, @PathParam("course") String course, @DefaultValue("") @QueryParam("from") String from, @DefaultValue("") @QueryParam("to") String to, @DefaultValue("0") @QueryParam("pag") String pag){
 		if (!checkAuthorizationKey(authorization)) throw new UnauthorizedException();
 		log.info("Authorized Get Students By Course identifier");
-		return cleanMessage(EventControllerV2.getStudentsIds(course, from, to, pag));		
+		return EventControllerV2.getStudentsIds(course, from, to, pag).toString();		
 	}
 	
 	@GET 
@@ -78,7 +79,7 @@ public class API {
 	public String getEvents(@DefaultValue("0") @HeaderParam("Authorization") String authorization, @PathParam("course") String course, @DefaultValue("") @QueryParam("from") String from, @DefaultValue("") @QueryParam("to") String to, @DefaultValue("0") @QueryParam("pag") String pag){
 		if (!checkAuthorizationKey(authorization)) throw new UnauthorizedException();
 		log.info("Authorized Get Events By Course identifier");
-		return cleanMessage(EventControllerV2.getEventsPerCourseIds(course, from, to, pag));		
+		return EventControllerV2.getEventsPerCourseIds(course, from, to, pag).toString();		
 	}
 	
 	@GET 
@@ -87,7 +88,7 @@ public class API {
 	public String getEvents(@DefaultValue("0") @HeaderParam("Authorization") String authorization, @PathParam("course") String course, @PathParam("student") String student, @DefaultValue("") @QueryParam("from") String from, @DefaultValue("") @QueryParam("to") String to, @DefaultValue("0") @QueryParam("pag") String pag){
 		if (!checkAuthorizationKey(authorization)) throw new UnauthorizedException();
 		log.info("Authorized Get Events By Course and Student identifier");
-		return cleanMessage(EventControllerV2.getEventsPerStudentsIdsAndCourse(course, student, from, to, pag));		
+		return EventControllerV2.getEventsPerStudentsIdsAndCourse(course, student, from, to, pag).toString();		
 	}
 	
 	@GET 
@@ -96,7 +97,7 @@ public class API {
 	public String getEventsByVerb(@DefaultValue("0") @HeaderParam("Authorization") String authorization, @PathParam("course") String course, @PathParam("verb") String verb, @DefaultValue("") @QueryParam("from") String from, @DefaultValue("") @QueryParam("to") String to, @DefaultValue("0") @QueryParam("pag") String pag){
 		if (!checkAuthorizationKey(authorization)) throw new UnauthorizedException();
 		log.info("Authorized Get Events By Course and Student identifier");
-		return cleanMessage(EventControllerV2.getEventsPerCourseIdsAndVerbs(course, verb, from, to, pag));		
+		return EventControllerV2.getEventsPerCourseIdsAndVerbs(course, verb, from, to, pag).toString();		
 	}
 
 }

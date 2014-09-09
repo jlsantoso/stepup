@@ -8,6 +8,7 @@ import java.util.Date;
 import org.be.kuleuven.hci.stepup.model.Event;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mortbay.log.Log;
 
 public class JSONandEvent{
 	
@@ -37,7 +38,10 @@ public class JSONandEvent{
 		if (event.getContext()!=null) eventTransformed.put("context", event.getContext());
 		if (event.getTarget()!=null) eventTransformed.put("target", event.getTarget());
 		if (event.getLocation()!=null) eventTransformed.put("location", event.getLocation());
-		eventTransformed.put("originalrequest", event.getOriginalRequest());
+		if (event.getOriginalRequestString()!=null)
+			eventTransformed.put("originalrequest", new JSONObject(event.getOriginalRequestString()));
+		else 
+			eventTransformed.put("originalrequest", event.getOriginalRequest());
 		return eventTransformed;
 	}
 }

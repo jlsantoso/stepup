@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?><web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+	UpdateObjectValuesServlet
+	<servlet>
+		<servlet-name>UpdateObjectValuesServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.UpdateObjectValuesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateObjectValuesServlet</servlet-name>
+		<url-pattern>/cron/updateobjects</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>UpdateFalseValuesServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.UpdateFalseValuesServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>UpdateFalseValuesServlet</servlet-name>
+		<url-pattern>/cron/updatefalse</url-pattern>
+	</servlet-mapping>
 	<servlet>
 		<servlet-name>AddTweetServlet</servlet-name>
 		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddTweetServlet</servlet-class>
@@ -41,11 +58,19 @@
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>AddRSSServlet</servlet-name>
-		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddWordPressServlet</servlet-class>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddRSSServlet</servlet-class>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>AddRSSServlet</servlet-name>
 		<url-pattern>/cron/addrss</url-pattern>
+	</servlet-mapping>
+	<servlet>
+		<servlet-name>AddWordpressServlet</servlet-name>
+		<servlet-class>org.be.kuleuven.hci.stepup.servlets.AddWordPressServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AddWordpressServlet</servlet-name>
+		<url-pattern>/cron/addwordpress</url-pattern>
 	</servlet-mapping>
 	<servlet>
 		<servlet-name>AddRSSNoMatchedNamesServlet</servlet-name>

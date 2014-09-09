@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.be.kuleuven.hci.openbadges.model.Badge;
 import org.be.kuleuven.hci.openbadges.model.Issuer;
@@ -62,6 +63,10 @@ public class Upload extends HttpServlet {
 				e.printStackTrace();
 			}            
         }
+      //if request is not from HttpServletRequest, you should do a typecast before
+        HttpSession session = req.getSession(false);
+        //save message in session
+        session.setAttribute("inquiryserver", session.getAttribute("inquiryserver"));
         //req.getRequestDispatcher("/menu.jsp?context="+req.getParameter("context")).forward(req, res);
         res.sendRedirect("/menu.jsp?context="+req.getParameter("context"));
     }

@@ -18,6 +18,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.be.kuleuven.hci.stepup.controller.EventController;
 import org.be.kuleuven.hci.stepup.model.Event;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.jersey.spi.resource.Singleton;
@@ -34,9 +36,9 @@ public class GetBadgesGeneric {
 			@PathParam("useridentifier") String useridentifier, 
 			@DefaultValue("2012-12-12 00:22:24 +0100") @QueryParam("from") String from, 
 			@DefaultValue("2015-12-12 00:22:24 +0100") @QueryParam("until") String until, 
-			@DefaultValue("0") @QueryParam("pag") int pag) {
+			@DefaultValue("0") @QueryParam("pag") int pag) throws JSONException {
 		System.out.println(useridentifier+"-"+from+"-"+until+"-"+pag);
-		return EventController.getBadges(useridentifier, from, until, pag);
+		return EventController.getBadges(useridentifier, from, until, pag).toString();
 	} 
 
 }

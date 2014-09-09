@@ -21,9 +21,9 @@ public class TestUploadBadges {
 			//String appkey = appkeyjson.getJSONArray("appkeys").getString(0);
 			String appkey = "hhvm2g2fgf9m7tgv3ucl5hdml7";
 			System.out.println("key:"+appkey);
-			//String badgeResult = RestClient.doPost("http://openbadgesapi.appspot.com/rest/badges/createbadge/"+appkey+"/inquiryidentifier", badge);
+			String badgeResult = RestClient.doPost("http://openbadgesapi.appspot.com/rest/badges/createbadge/"+appkey+"/inquiryidentifier", badge);
 			//String badgeId = new JSONObject(badgeResult).getString("id");
-			//System.out.println(badgeResult);
+			System.out.println("result"+badgeResult);
 			String badgeId = "40001";
 			//System.out.println("badgeId:"+badgeId);
 			//System.out.println(RestClient.doGet("http://openbadgesapi.appspot.com/rest/badges/getbadgesdefinition?id="+badgeId+"&keyapp="+appkey));
@@ -31,7 +31,7 @@ public class TestUploadBadges {
 			//System.out.println("Badge: "+RestClient.doPost("http://openbadgesapi.appspot.com/rest/badges/awardbadge/"+appkey+"/"+badgeId, recipient));
 			//String award_id = "50001";
 			//System.out.println("Awarded Badges: "+RestClient.doGet("http://openbadgesapi.appspot.com/rest/badges/getawardedbadges?keyapp=hhvm2g2fgf9m7tgv3ucl5hdml7&id=50001"));
-			System.out.println(RestClient.doPost("http://openbadgesapi.appspot.com/rest/badges/appkey/testing",""));
+			//System.out.println(RestClient.doPost("http://openbadgesapi.appspot.com/rest/badges/appkey/testing",""));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

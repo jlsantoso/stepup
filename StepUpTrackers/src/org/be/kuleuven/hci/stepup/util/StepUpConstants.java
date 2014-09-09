@@ -8,6 +8,7 @@ public class StepUpConstants {
 	public static final String BLOGPOST= "posted";
 	public static final String BLOGCOMMENT = "commented";
 	public static final String TWITTER = "tweeted";
+	public static final String RETWEET = "retweeted";
 	//WeSPOT requirement
 		public static final String PHASE1 = "1";
 		public static final String PHASE1_S1 = "Reflection";

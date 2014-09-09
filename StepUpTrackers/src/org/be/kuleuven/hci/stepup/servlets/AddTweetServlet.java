@@ -21,6 +21,7 @@ import org.be.kuleuven.hci.stepup.persistancelayer.EventGoogleDataStore;
 import org.be.kuleuven.hci.stepup.persistancelayer.RestClient;
 import org.be.kuleuven.hci.stepup.util.DateManager;
 import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheet;
+import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheetChi14;
 import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.be.kuleuven.hci.stepup.util.TwitterSearch;
 import org.joda.time.DateTime;
@@ -65,7 +66,7 @@ public class AddTweetServlet extends HttpServlet {
 		//log.warning("Ids"+lastId+"-"+since_id);
 		System.out.println("Ids"+lastId+"-"+since_id);
 		Twitter twitter = new TwitterFactory().getInstance();
-		createTweetEntitiesfromHastTag("chikul13", since_id);
+		createTweetEntitiesfromHastTag("chikul14", since_id);
 		
 	}
 	
@@ -75,7 +76,7 @@ public class AddTweetServlet extends HttpServlet {
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    if (syncCache.get("twitterusernames")==null){
-			ReadGoogleSpreadSheet.read();
+	    	ReadGoogleSpreadSheetChi14.read();
 		}
 	    Hashtable<String,String> twitterusernames = (Hashtable<String,String>)syncCache.get("twitterusernames");
 		
@@ -119,31 +120,17 @@ public class AddTweetServlet extends HttpServlet {
 			try{
 				Event event = new Event();
 	        	event.setUsername(s.getUser().getScreenName().toLowerCase());
-	        	event.setVerb("tweeted");
+	        	if (s.getRetweetedStatus()!=null)
+	        		event.setVerb("retweeted");
+	        	else
+	        		event.setVerb("tweeted");
 	        	event.setStartTime(s.getCreatedAt());
 	        	event.setObject(String.valueOf(s.getId()));
 	        	event.setContext(hashtag);
 	        	if (s.getInReplyToScreenName()!=null) event.setTarget(s.getInReplyToScreenName());
-	        	event.setOriginalRequest(new JSONObject(DataObjectFactory.getRawJSON(s)));
-	        	/*ActivityStream as = new ActivityStream();
-	        	as.setActor(s.getUser().getScreenName().toLowerCase(), s.getUser().getProfileImageURL().toString());
-	        	as.setVerb(StepUpConstants.TWITTER);
-	        	as.setObject("http://twitter.com/"+s.getUser().getScreenName()+"/status/"+s.getId(), s.getText());
-	        	as.setPublishedDate(s.getCreatedAt());
-	        	if (s.getInReplyToStatusId()>-1) as.setTarget("http://twitter.com/"+s.getInReplyToScreenName()+"/status/"+s.getInReplyToStatusId(), "Tweet", "Tweet");
-	        	else if (s.getUserMentionEntities()!=null){
-	        		UserMentionEntity[] users = s.getUserMentionEntities();
-	        		String string = "";
-	        		String usernames = "";
-	        		for (UserMentionEntity u :users){
-	        			string+="http://twitter.com/"+u.getScreenName()+";";
-	        			usernames+=u.getScreenName();		        			
-	        		}
-	        		as.setTarget(string, "Tweet", usernames);
-	        	}
-	        	System.out.println(as.getActivityStream().toString());
-	        	log.warning(RestClient.doPost("http://chi13course.appspot.com/api/activities/add", as.getActivityStream().toString()));*/
+	        	event.setOriginalRequest(new JSONObject(DataObjectFactory.getRawJSON(s).replaceAll("\\P{Print}", "")));
 	        	EventGoogleDataStore.insertEvent(event);
+
 			}catch (JSONException e) {
 				// TODO Auto-generated catch block
 				log.severe(e.toString());

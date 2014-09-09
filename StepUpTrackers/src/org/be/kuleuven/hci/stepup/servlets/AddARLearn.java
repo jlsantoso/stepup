@@ -68,25 +68,27 @@ public class AddARLearn extends HttpServlet {
 			Enumeration e = runIdsInquiryId.keys();
 			while (e.hasMoreElements()){
 				String runId = (String)e.nextElement();
-				getUserDataFromARLearnActions(actions, lastUpdate, Integer.parseInt(runId), runIdsInquiryId.get(runId));
-				getUserDataFromARLearnResponses(response, lastUpdate, Integer.parseInt(runId), runIdsInquiryId.get(runId));
+				if (runIdsInquiryId.containsKey(runId)){
+					getUserDataFromARLearnActions(actions, lastUpdate, Long.parseLong(runId), runIdsInquiryId.get(runId));
+					getUserDataFromARLearnResponses(response, lastUpdate, Long.parseLong(runId), runIdsInquiryId.get(runId));
+				}
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe("ERROR doGet: "+e.toString());
 		}		
 	}
 	
 	private Hashtable<String,String> getARLearnRuns(String urlElgg) throws UnsupportedEncodingException, JSONException{
 		Hashtable<String,String> runIdsInquiryId = new Hashtable<String,String>();
-		String final_object = RestClient.doGet("http://wespot.kmi.open.ac.uk/services/api/rest/json/?method=site.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&minutes=4448");
+		String final_object = RestClient.doGet("http://inquiry.wespot.net//services/api/rest/json/?method=site.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&minutes=4448");
 		JSONObject json = new JSONObject(final_object);
 		JSONArray inquiries = json.getJSONArray("result");
 		ArrayList<Integer> listRuns = new ArrayList<Integer>();
 		for (int i=0; i<inquiries.length();i++){
 			System.out.println(inquiries.getJSONObject(i));
-			String final_object2 = RestClient.doGet("http://wespot.kmi.open.ac.uk/services/api/rest/json/?method=inquiry.arlearnrun&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+inquiries.getJSONObject(i).getInt("inquiryId"));
-			System.out.println("http://wespot.kmi.open.ac.uk/services/api/rest/json/?method=inquiry.arlearnrun&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+inquiries.getJSONObject(i).getInt("inquiryId"));
+			String final_object2 = RestClient.doGet("http://inquiry.wespot.net/services/api/rest/json/?method=inquiry.arlearnrun&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+inquiries.getJSONObject(i).getInt("inquiryId"));
+			System.out.println("http://inquiry.wespot.net/services/api/rest/json/?method=inquiry.arlearnrun&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+inquiries.getJSONObject(i).getInt("inquiryId"));
 			JSONObject jsonRun = new JSONObject(final_object2);
 			System.out.println(jsonRun);
 			if (jsonRun.getInt("status")==0){
@@ -94,13 +96,10 @@ public class AddARLearn extends HttpServlet {
 				listRuns.add(jsonRun.getInt("result"));
 			}
 		}
-		
-		//listRuns.add(3639020);
-		//return listRuns;
 		return runIdsInquiryId;
 	}
 
-	private void getUserDataFromARLearnActions(String urlString, Date lastUpdate, int runId, String inquiry){
+	private void getUserDataFromARLearnActions(String urlString, Date lastUpdate, long runId, String inquiry){
 
 		URL url;
 		try {
@@ -125,11 +124,10 @@ public class AddARLearn extends HttpServlet {
 		
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe("ERROR getUserDataFromARLearnActions (IOException): "+e.toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe("ERROR getUserDataFromARLearnActions (JSONException): "+e.toString());
 		} 
 	}
 	
@@ -141,7 +139,7 @@ public class AddARLearn extends HttpServlet {
 		return username;
 	}
 		
-	private void getUserDataFromARLearnResponses(String urlString, Date lastUpdate, int runId, String inquiry){
+	private void getUserDataFromARLearnResponses(String urlString, Date lastUpdate, long runId, String inquiry){
 		
 		URL url;
 		try {
@@ -165,11 +163,10 @@ public class AddARLearn extends HttpServlet {
 		
 		
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe("ERROR getUserDataFromARLearnResponses (IOException): "+e.toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.severe("ERROR getUserDataFromARLearnResponses (JSONException): "+e.toString());
 		} 
 	}
 	

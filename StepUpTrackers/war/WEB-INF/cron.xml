@@ -1,30 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <cronentries>
 	<cron>
+		<url>/cron/updatefalse</url>
+		<description>Update false events</description>
+		<schedule>every 60 minutes</schedule>
+	</cron>	
+	<cron>
 		<url>/cron/addtweet</url>
 		<description>Tweet Fetcher</description>
 		<schedule>every 20 minutes</schedule>
 	</cron>	
 	<cron>
-		<url>/cron/addrssnomatchednames</url>
+		<url>/cron/addrss</url>
 		<description>RssFeed Fetcher</description>
 		<schedule>every 15 minutes</schedule>
 	</cron>
-	<cron>
-		<url>/cron/adddiigo</url>
-		<description>DiigoFeed Fetcher</description>
-		<schedule>every 15 minutes</schedule>
-	</cron>
-	<cron>
-		<url>/cron/updateusernames</url>
-		<description>Update Names Fetcher</description>
-		<schedule>every 2 minutes</schedule>
-	</cron>
-	<cron>
+	<!--cron>
 		<url>/cron/addelgg</url>
 		<description>Update ElGG USer data</description>
 		<schedule>every 2 minutes</schedule>
-	</cron>
+	</cron -->
 	<cron>
 		<url>/cron/addarlearn</url>
 		<description>Update ARLearn data</description>

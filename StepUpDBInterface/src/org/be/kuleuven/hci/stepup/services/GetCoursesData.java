@@ -16,6 +16,8 @@ import javax.ws.rs.core.MediaType;
 
 import org.be.kuleuven.hci.stepup.controller.EventController;
 import org.be.kuleuven.hci.stepup.model.Event;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.sun.jersey.spi.resource.Singleton;
@@ -27,36 +29,36 @@ public class GetCoursesData {
 	@POST 
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String getCourses(String json) {	
-		return EventController.getCourses(json);
+	public String getCourses(String json) throws JSONException {	
+		return EventController.getCourses(json).toString();
 	} 
 	
 	@POST @Path("/{course}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String getStudents(@PathParam("course") String course, String json) {	
-		return EventController.getStudents(course, json);
+	public String getStudents(@PathParam("course") String course, String json) throws JSONException {	
+		return EventController.getStudents(course, json).toString();
 	} 
 	
 	@POST @Path("/{course}/{student}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String getStudentsInfo(@PathParam("course") String course, @PathParam("student") String student, String json) {	
-		return EventController.getStudent(course, student, json);
+	public String getStudentsInfo(@PathParam("course") String course, @PathParam("student") String student, String json) throws JSONException {	
+		return EventController.getStudent(course, student, json).toString();
 	}
 	
 	@POST @Path("/{course}/verb/{verb}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String getStudentsInfoPerVerb(@PathParam("course") String course, @PathParam("verb") String verb, String json) {	
-		return EventController.getStudentPerVerb(course, verb, json);
+	public String getStudentsInfoPerVerb(@PathParam("course") String course, @PathParam("verb") String verb, String json) throws JSONException {	
+		return EventController.getStudentPerVerb(course, verb, json).toString();
 	}
 	
 	@POST @Path("/{course}/{student}/{verb}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)	
-	public String getStudentsInfo(@PathParam("course") String course, @PathParam("student") String student, @PathParam("verb") String verb, String json) {	
-		return EventController.getStudent(course, student, verb, json);
+	public String getStudentsInfo(@PathParam("course") String course, @PathParam("student") String student, @PathParam("verb") String verb, String json) throws JSONException {	
+		return EventController.getStudent(course, student, verb, json).toString();
 	}
 	
 	

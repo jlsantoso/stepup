@@ -10,12 +10,15 @@
 		<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
 </head>
 <body>
-<%JSONObject result = new JSONObject(RestClient.doGet("http://inquiry.wespot.net/services/api/rest/json/?method=inquiry.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+request.getParameter("context")));
+<div data-role="header"> 
+<a href="javascript:location.replace('/menu.jsp?context=<%=request.getParameter("context")%>&inquiryserver=<%=request.getParameter("inquiryserver")%>')" data-icon="back" class="ui-btn-left" title="Go back">Back</a>
+<h1>Users</h1>
+</div>
+<%JSONObject result = new JSONObject(RestClient.doGet("http://"+request.getParameter("inquiryserver")+"/services/api/rest/json/?method=inquiry.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+request.getParameter("context")));
 JSONArray users_list = result.getJSONArray("result");
 JSONArray badges_array = new JSONArray(PersistanceLayerAwardedBadge.getAwardedBadgeByContext(request.getParameter("context"), "1354615295762", ""));
 %>
 <%
-	
     
     for (int i=0;i<users_list.length();i++){
     	JSONObject user = users_list.getJSONObject(i);

@@ -52,7 +52,9 @@ public class AwardBadgeServlet extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		req.getRequestDispatcher("/menu.jsp?context="+req.getParameter("context")).forward(req, resp);
+		//req.getRequestDispatcher("/menu.jsp?context="+req.getParameter("context")+"&inquiryserver="+req.getParameter("inquiryserver")).forward(req, resp);
+		
+		resp.sendRedirect("/menu.jsp?context="+req.getParameter("context")+"&inquiryserver="+req.getParameter("inquiryserver"));
 	}
 	
 	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException{

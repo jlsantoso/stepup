@@ -11,7 +11,7 @@ public class TestDateFormat {
 	 */
 	public static void main(String[] args)  {
 		// TODO Auto-generated method stub
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+		/*SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 		
 		try {
 			format.parse("2012-03-01T13:34:04+02:00");
@@ -19,7 +19,8 @@ public class TestDateFormat {
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
+		Long.parseLong("5582743043833856");
 	}
 
 }

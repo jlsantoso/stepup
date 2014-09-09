@@ -24,6 +24,10 @@
   </init-param>
  </servlet>
  <servlet>
+    <servlet-name>UploadWeSPOT</servlet-name>
+    <servlet-class>org.be.kuleuven.hci.openbadges.badgestore.UploadWeSPOT</servlet-class>
+  </servlet>  
+ <servlet>
     <servlet-name>Upload</servlet-name>
     <servlet-class>org.be.kuleuven.hci.openbadges.badgestore.Upload</servlet-class>
   </servlet>  
@@ -31,6 +35,10 @@
     <servlet-name>Serve</servlet-name>
     <servlet-class>org.be.kuleuven.hci.openbadges.badgestore.Serve</servlet-class>
   </servlet> 
+  <servlet-mapping>
+    <servlet-name>UploadWeSPOT</servlet-name>
+    <url-pattern>/uploadwespot</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Upload</servlet-name>
     <url-pattern>/upload</url-pattern>

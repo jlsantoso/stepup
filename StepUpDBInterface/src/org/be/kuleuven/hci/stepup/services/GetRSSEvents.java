@@ -58,18 +58,18 @@ public class GetRSSEvents {
 		try {
 			SyndEntry entry;
 			SyndContent description;
-			JSONArray results = new JSONArray(EventPostgreSQL.getOpenDB("select * from event where context like '%"+context+"%' order by starttime DESC", "0"));
+			JSONArray results = EventController.getEventsByInquiryId(context,  "{ \"pag\": \"0\"}");
 			for (int i=0; i<results.length();i++){
 				JSONObject json = results.getJSONObject(i);
 				entry = new SyndEntryImpl();
 				entry.setTitle("The student "+json.getString("username")+" "+json.getString("verb"));
 				entry.setAuthor(json.getString("username"));
-				entry.setLink("http://twitter.com/"+json.getString("username")+"/statuses/"+json.getString("object"));
+				entry.setLink(json.getString("object"));
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZZ");
 				entry.setPublishedDate(formatter.parse(json.getString("starttime")+"00"));
 				description = new SyndContentImpl();
 				description.setType("text/html");
-				description.setValue("http://twitter.com/"+json.getString("username")+"/statuses/"+json.getString("object"));
+				description.setValue(json.getString("object"));
 				entry.setDescription(description);
 				entries.add(entry);
 			}

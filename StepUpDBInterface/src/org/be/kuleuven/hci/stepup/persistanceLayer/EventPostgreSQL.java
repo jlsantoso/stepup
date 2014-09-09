@@ -151,6 +151,7 @@ public class EventPostgreSQL{
 		
 	}
 	
+	//If it gives a problem, check next function
 	public static String getOpenDB(String query) {
 		try {
 			InitialContext cxt = new InitialContext();
@@ -210,15 +211,15 @@ public class EventPostgreSQL{
 		} 	
 	}
 	
-	public static String getOpenDB(String query, String pagination) {
+	public static JSONArray getOpenDB(String query, String pagination) {
 		try {
 			InitialContext cxt = new InitialContext();
 			if ( cxt == null ) {
-			   throw new Exception("Uh oh -- no context!");
+			   throw new SQLException("Uh oh -- no context!");
 			}
 			DataSource ds = (DataSource) cxt.lookup( "java:/comp/env/jdbc/postgres" );
 			if ( ds == null ) {
-			   throw new Exception("Data source not found!");
+			   throw new SQLException("Data source not found!");
 			}
 			Connection conn = ds.getConnection();
 			if(conn != null) 
@@ -230,31 +231,34 @@ public class EventPostgreSQL{
 				JSONArray events = new JSONArray();
 				ResultSetMetaData md = rs.getMetaData();
 				int columns = md.getColumnCount();
-				while (rs.next()){
-					
+				while (rs.next()){					
 					JSONObject jsonEvent = new JSONObject();
-					for (int i=1;i<=columns;i++){
-						jsonEvent.put(md.getColumnLabel(i), rs.getString(i));
+					try{
+						for (int i=1;i<=columns;i++){
+							String content = rs.getString(i);
+							if (content!=null){							
+									if (content.contains("{")&&content.contains("}")){
+										if (content.contains("arlearn"))
+											jsonEvent.put(md.getColumnLabel(i), new JSONObject(content.replaceAll("\\\\\"", "\"").replaceAll("\"\\{", "{").replaceAll("}\"", "}")));
+										else jsonEvent.put(md.getColumnLabel(i), new JSONObject(content));
+									}else jsonEvent.put(md.getColumnLabel(i), content);
+							}						
+						}
+						events.put(jsonEvent);
+					}catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						//return null;
 					}
-					events.put(jsonEvent);
 				}
 				rs.close();
 				stmt.close();
 				conn.close();
-				return events.toString();
+				return events;
 			}
 			return null;
 		    //return timestampmax;
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} //load the driver
-		catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} catch (JSONException e) {
+		}	catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
@@ -262,11 +266,7 @@ public class EventPostgreSQL{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} 	
+		}  	
 	}
 	
 	

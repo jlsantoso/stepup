@@ -133,6 +133,38 @@ public class API {
 		}
 	} 
 	
+	@POST 
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/award")
+	public String awardBadgeJSONComplete(@HeaderParam("Authorization") String authorization, String json) {	
+		AuthorizedKey authorizedKey = PersistanceLayerAuthorizedKey.isAuthorizedIP(authorization);
+		if (authorizedKey == null) throw new UnauthorizedException(); 
+		JSONObject result = new JSONObject();
+		JSONObject data;
+		try {
+			data = new JSONObject(json);
+			if (data.has("recipient")&&data.has("evidence")){
+				AwardedBadge awardedBadge = new AwardedBadge();
+				awardedBadge.setContext(data.getString("context"));
+				awardedBadge.setBadgeId("null");
+				awardedBadge.setusername(data.getString("recipient"));
+				awardedBadge.setStarttime(Calendar.getInstance().getTime());				
+				awardedBadge.setEventsRelated(new Text(data.getString("evidence")));			
+				awardedBadge.setAwardedJSONBadge(new Text(data.toString()));
+				awardedBadge.setNameApp(authorizedKey.getName());
+
+				String id = PersistanceLayerAwardedBadge.saveAwardedBadge(awardedBadge);
+				result.put("award_id", id);
+			}else
+				throw new JSONException("Incorrect JSON. Example: "+JSONExamples.awardBadgeExample());
+			return result.toString();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			return result.toString();
+		}
+	} 
+	
 	@GET 
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/context/{context}")

@@ -44,19 +44,19 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return "\"status\":\"500\", \"error\":\"JSON is not properly defined\"}";  
 		}
 		return "{\"status\":\"200\", \"error\":\"\"}";	
 	}
 	
 	//This function allows whatever kind of query you can do to the database.	
-	public static String getEvents(String json){
+	public static JSONArray getEvents(String json) throws JSONException{
 		try {
 			JSONObject query = new JSONObject(json);
 			if (query.has("query")&&query.has("pag")){
 				return EventPostgreSQL.getOpenDB(query.getString("query"), query.getString("pag"));
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]"); 
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -64,7 +64,7 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		}
 	}
 	
@@ -72,7 +72,7 @@ public class EventController {
 	// From here onwards, are specific queries that give support to the REST services 
 	//implemented at package org.be.kuleuven.hci.stepup.services;
 	//Some of them are specific for one course. This is something that should change.
-	public static String getCourses(String json){
+	public static JSONArray getCourses(String json) throws JSONException{
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
@@ -90,7 +90,7 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
 			}
 			
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -98,11 +98,11 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		}
 	}
 	
-	public static String getStudents(String course ,String json){
+	public static JSONArray getStudents(String course ,String json) throws JSONException{
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
@@ -120,7 +120,7 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
 			}
 			
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]"); 
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -128,7 +128,7 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]"); 
 		}
 	}
 	
@@ -138,7 +138,7 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query);
 	}
 	
-	public static String getStudent(String course , String username, String json){
+	public static JSONArray getStudent(String course , String username, String json) throws JSONException{
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
@@ -156,7 +156,7 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
 			}
 			
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]"); 
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -164,11 +164,11 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		}
 	}
 	
-	public static String getStudentPerVerb(String course , String verb, String json){
+	public static JSONArray getStudentPerVerb(String course , String verb, String json) throws JSONException{
 		
 		try {
 			JSONObject additional_info = new JSONObject(json);
@@ -187,7 +187,7 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
 			}
 			
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -195,11 +195,11 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		}
 	}
 	
-	public static String getStudent(String course , String username, String verb, String json){
+	public static JSONArray getStudent(String course , String username, String verb, String json) throws JSONException{
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
@@ -217,7 +217,7 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
 			}
 			
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -225,7 +225,7 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 		}
 	}
 
@@ -264,7 +264,7 @@ public class EventController {
 		return null;
 	}
 
-	public static String getBadges(String useridentifier, String from, String until, int pag) {
+	public static JSONArray getBadges(String useridentifier, String from, String until, int pag) throws JSONException {
 		if (pag>=0){
 				String query = "select * from event where context like '%reinforcement%' and username='"+useridentifier+"'";
 				if (from!=null||until!=null){
@@ -280,11 +280,11 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query, Integer.toString(pag));
 			}
 			
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]");  
 
 	}
 
-	public static String getEventsByInquiryId(String inquiryid, String json) {
+	public static JSONArray getEventsByInquiryId(String inquiryid, String json) throws JSONException {
 		try {
 			JSONObject additional_info = new JSONObject(json);
 			if (additional_info.has("pag")){
@@ -302,7 +302,7 @@ public class EventController {
 				return EventPostgreSQL.getOpenDB(query, additional_info.getString("pag"));
 			}
 			
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]"); 
 		} catch (JSONException e) {
 			try {
 				new SendMail("[StepUp][Database] Problem @ org.be.kuleuven.hci.stepup.controller.EventController", "JSONObject\n"+json+"\n==============Exception==========\n"+e.toString()).send();
@@ -310,7 +310,7 @@ public class EventController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			return "{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}"; 
+			return new JSONArray("[{\"status\":\"500\", \"error\":\"JSON is not properly defined\"}]"); 
 		} 
 	}	
 	

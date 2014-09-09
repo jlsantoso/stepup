@@ -4,5 +4,6 @@ gaeDatanucleusVersion=
 gaeDeployDialogSettings=
 gaeHrdEnabled=true
 gaeIsEclipseDefaultInstPath=false
+gaeLaunchAppInBrowser=true
 googleCloudSqlEnabled=false
 localDevMySqlEnabled=true

@@ -73,7 +73,32 @@ public class Testing {
 		//System.out.println(RestClient.doPost("http://localhost:8081/wespot-dev-ws/rest/api/events", "{ \"username\": \"jlsantos\", \"verb\": \"test\", \"object\": \"twitter\",\"starttime\": \"2012-12-12 00:22:24 +0100\"}"));
 		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select originalrequest from event where event_id='179850'\", \"pag\": \"0\"}"));
 		//String content = "";
-		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/chikul14/verb/tweeted", "{ \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getCourses/chikul14/verb/tweeted", "{ \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents/6816", "{ \"pag\": \"0\"}").toString());
+		/*try {
+			System.out.println(new JSONArray(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents/2232", "{ \"pag\": \"0\"}")).length());
+			System.out.println(new JSONArray(RestClient.doPost("http://localhost:8081/wespot-dev-ws/rest/getEvents/2232", "{ \"pag\": \"0\"}")).length());
+			JSONArray array = new JSONArray(RestClient.doPost("http://localhost:8081/wespot-dev-ws/rest/getEvents/2232", "{ \"pag\": \"0\"}"));
+			//JSONArray array2 = new JSONArray(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents/6816", "{ \"pag\": \"0\"}"));
+			for (int i=0; i<array.length();i++){
+				JSONObject object = array.getJSONObject(i);
+				//JSONObject object2 = array2.getJSONObject(i);
+				if (!object.has("originalrequest")) System.out.println(object.toString());
+				
+				/*if (object.toString().compareTo(object2.toString())==0){
+					System.out.println("-"+object.toString());
+					System.out.println(object2.toString());
+				}*/
+			/*}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents", "{ \"query\": \"select * from event where  (context like '%course\":\"26368\",\"phase\":\"1%' or context like '%course\":\"43219\",\"phase\":1%') order by starttime DESC\", \"pag\": \"0\"}"));
+		//System.out.println(RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/getEvents/6816", "{ \"pag\": \"0\"}").toString());
+		
+		
+		
 	}
 
 }
