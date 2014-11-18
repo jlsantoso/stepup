@@ -27,7 +27,8 @@ public class TestWeSPOTBadgeCreation {
 			System.out.println(ainquiries.getJSONObject(i).getString("inquiryId"));
 			System.out.println(RestClient.doPostAuth("http://openbadges-wespot.appspot.com/rest/badges/wespot/"+ainquiries.getJSONObject(i).getString("inquiryId"), "", "m4llklqcc0i2mk3usfucqdfcg5"));
 		}*/
-		System.out.println(RestClient.doPostAuth("http://openbadges-wespot.appspot.com/rest/badges/wespot/26368", "", "m4llklqcc0i2mk3usfucqdfcg5"));
+		System.out.println(RestClient.doPostAuth("http://openbadges-wespot.appspot.com/rest/badges/wespot/43219", "", "m4llklqcc0i2mk3usfucqdfcg5"));
+		//ystem.out.println(RestClient.doPostAuth("http://openbadges-wespot.appspot.com/rest/badges/context/43219", "", "m4llklqcc0i2mk3usfucqdfcg5"));
 	}
 
 }

@@ -37,6 +37,12 @@
 		var height = 0;
 		var manualrows = 0;
 		var manualbadges_total = 0; 
+		var manual_images = 0;
+        var manual_icon = 0;
+        var manual_number= 0;
+        var manual_images_row = 0;
+        var manual_icon_row = 0;
+        var manual_number_row= 0;
 		var shift_manual = 0;
 		var shift_automatic = 0;
 		updateManualBadgesValues();
