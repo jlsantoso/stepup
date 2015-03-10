@@ -6,46 +6,59 @@
 <head>
 
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
-		<script src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="http://jlsantos.tel.unir.net/d3/css/styles.css"/>
-			<script src="js/utils.js"></script>
-	<script src="js/svg.js"></script>
-	<link rel="stylesheet" href="css/styletable.css" type="text/css" media="screen"/>
-	<link rel="stylesheet" href="css/jquery.mobile-1.4.2.css"> 
-		
-    	<script language="javascript" type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://jlsantos.tel.unir.net/d3/css/styles.css"/>
+<link rel="stylesheet" href="css/styletable.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="css/jquery.mobile-1.4.2.css"> 
+<script language="javascript" type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+<script language="javascript" type="text/javascript" src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+<script language="javascript" type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+<script language="javascript" type="text/javascript" src="js/utils.js"></script>
+<script language="javascript" type="text/javascript" src="js/svg.js"></script>
 </head>
 <body>
+
 <div id="header" data-role="header"> 
-<h1>Badges</h1>
-<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
-<select id="inquiry" name="inquiry" > <option>Choose one inquiry...</option></select>
+<%if (request.getParameter("admin")!=null) {%>
+	<a href="javascript:location.replace('/menu.jsp?context=<%=request.getParameter("context")%>&inquiryserver=<%=request.getParameter("inquiryserver")%>&userid=<%=request.getParameter("userid")%>')" data-icon="back" class="ui-btn-left" title="Go back">Back</a>
+<%}%>
+	<h1>Badges</h1>
+<%if (request.getParameter("admin")==null) {%>
+	<div data-role="controlgroup" data-type="horizontal" class="ui-btn-right">
+		<select id="inquiry" name="inquiry" > <option>Choose one inquiry...</option></select>
+	</div>
+<%}%>
 </div>
-</div>
+
 <div data-role="body"> 
 		<p/>
 <script>
+
+	<%
+	String[] parts = request.getParameter("userid").toLowerCase().split("_");
+	String inquiriesEnrolled = RestClient.doGet("http://"+request.getParameter("inquiryserver")+"/services/api/rest/json/?method=user.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&oauthId="+parts[1]+"&oauthProvider="+parts[0]);
+	%>
+	var user = "<%=request.getParameter("userid")%>";
+	trackData(user, "access", "student_interface", "<%=request.getParameter("context")%>", "badges", "");//request.getParameter("context")
+	
+	var inquiry_enrolled = <%=inquiriesEnrolled%>
+<%if (request.getParameter("admin")==null) {%>
+	for (var i = 0; i < inquiry_enrolled.result.length; i++) {
+		if (inquiry_enrolled.result[i].inquiryId=='<%=request.getParameter("context")%>'){
+			$('#inquiry').append('<option value="'+inquiry_enrolled.result[i].inquiryId+'" selected>"'+inquiry_enrolled.result[i].title+'"</option>');
+		}else{
+			$('#inquiry').append('<option value="'+inquiry_enrolled.result[i].inquiryId+'">"'+inquiry_enrolled.result[i].title+'"</option>');
+		}
+	}
+	
+	$("#inquiry").bind( "change", function(event, ui) {
+		var inquiry=$("#inquiry").val();
+		location.replace('/listAwardedBadgesPerUser.jsp?context='+inquiry+'&inquiryserver=<%=request.getParameter("inquiryserver")%>&userid=<%=request.getParameter("userid")%>');
+		});
+<%}%>
+
 	var badges_array = <%=PersistanceLayerBadge.getbadgeByContext(request.getParameter("context"), "")%>;
 	var user_elgg = '<%=request.getParameter("userid").toLowerCase()%>';
 	if (badges_array.length>0){
-		<%
-		String[] parts = request.getParameter("userid").toLowerCase().split("_");
-		String inquiriesEnrolled = RestClient.doGet("http://"+request.getParameter("inquiryserver")+"/services/api/rest/json/?method=user.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&oauthId="+parts[1]+"&oauthProvider="+parts[0]);
-		%>
-		var inquiry_enrolled = <%=inquiriesEnrolled%>
-		for (var i = 0; i < inquiry_enrolled.result.length; i++) {
-			if (inquiry_enrolled.result[i].inquiryId=='<%=request.getParameter("context")%>'){
-				$('#inquiry').append('<option value="'+inquiry_enrolled.result[i].inquiryId+'" selected>"'+inquiry_enrolled.result[i].title+'"</option>');
-			}else{
-				$('#inquiry').append('<option value="'+inquiry_enrolled.result[i].inquiryId+'">"'+inquiry_enrolled.result[i].title+'"</option>');
-			}
-		}
-		
-		$("#inquiry").bind( "change", function(event, ui) {
-			var inquiry=$("#inquiry").val();
-			location.replace('/listAwardedBadgesPerUser.jsp?context='+inquiry+'&inquiryserver=<%=request.getParameter("inquiryserver")%>&userid=<%=request.getParameter("userid")%>');
-			});
 		var badges_awarded_array = <%=PersistanceLayerAwardedBadge.getAwardedBadgeByContext(request.getParameter("context"),"1354615295762", "")%>;
 		var users = <%=RestClient.doGet("http://"+request.getParameter("inquiryserver")+"/services/api/rest/json/?method=inquiry.users&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+request.getParameter("context"))%>;
 		var users_array = users.result;
