@@ -109,6 +109,30 @@ public class RestClient {
 		} 
 		return null;
 	}
+	
+	public static String doPostAuth(final String urlString, final String POSTText) throws UnsupportedEncodingException{
+		String message = URLEncoder.encode(POSTText, "UTF-8");
+		BufferedReader rd  = null;
+	    StringBuilder sb = null;
+	    String line = null;
+	    try {
+	        URL url = new URL(urlString);
+	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	        connection.setRequestProperty("Content-Type", "application/json");
+	        connection.setRequestProperty("Authorization","9IywPIjfdlE7gh9T2vj523BTqu2YRkVe");
+	        connection.setDoOutput(true);
+	        connection.setRequestMethod("POST");
+	        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+	        writer.write(POSTText);
+	        writer.close();	        
+	        return read(connection.getInputStream());
+	    } catch (MalformedURLException e) {
+	        log.severe(e.toString());
+	    } catch (IOException e) {
+	    	log.severe(e.toString());
+	    }
+		return "";
+	}
 
 	/*public static String doPost(final String url, final String POSTText)
 			throws URISyntaxException, HttpException, IOException {

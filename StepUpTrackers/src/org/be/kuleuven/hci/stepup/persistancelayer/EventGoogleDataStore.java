@@ -52,7 +52,7 @@ public class EventGoogleDataStore {
 		try {
 			eventToString = JSONandEvent.transformFromEvemtToJson(event).toString();
 			System.out.println("Event:"+eventToString);
-			result = RestClient.doPost("http://ariadne.cs.kuleuven.be/wespot-dev-ws/rest/pushEvent",eventToString);
+			result = RestClient.doPostAuth("http://ariadne.cs.kuleuven.be/wespot-ws/event",eventToString);
 			System.out.println("Result:"+result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -65,10 +65,11 @@ public class EventGoogleDataStore {
 			// TODO Auto-generated catch block
 			log.severe(e.toString());
 		}
-		if (result.contains("200")) event.setInserted(true);
+		if (result.contains("Success")) event.setInserted(true);
 		else{
 			event.setInserted(false);
-			Mail.sendmail("Problem pushing event", "<br/>"+result+"<br/>"+eventToString);
+			log.severe("Problem pushing event:"+result+eventToString);
+			//Mail.sendmail("Problem pushing event", "<br/>"+result+"<br/>"+eventToString);
 		}
 		OfyService.getOfyService().ofy().save().entity(event); 
 	}
@@ -202,6 +203,34 @@ public class EventGoogleDataStore {
 		log.warning("Finished");
 	}
 	
+	public static void updatedFalseValues (){
+		Iterator<Event> events = OfyService.getOfyService().ofy().load().type(Event.class).filter("inserted", false).iterator();
+		int count=0;
+		while (events.hasNext()){
+			Event e = events.next();
+			log.warning("Non-in the database:"+e.getOriginalRequestString());
+			OfyService.getOfyService().ofy().delete().entities(e);
+			insertEvent(e);
+			count++;
+		}
+		log.warning("Finished");
+	}
+	
+	public static void removeValues (){
+		Calendar remover = Calendar.getInstance();
+		remover.set(Calendar.DAY_OF_MONTH, 18);
+		remover.set(Calendar.MONTH, 0);
+		remover.set(Calendar.YEAR, 2015);
+		Iterator<Event> events = OfyService.getOfyService().ofy().load().type(Event.class).filter("starttime <", remover.getTime()).iterator();
+		//log.warning(remover.getTime().toString());
+		while (events.hasNext()){
+			Event e = events.next();
+			//log.warning(e.getObject());
+			OfyService.getOfyService().ofy().delete().entities(e);
+		}
+		log.warning("Finished");
+	}
+	
 	public static void updatedObjectValues(String object){
 		Iterator<Event> events = OfyService.getOfyService().ofy().load().type(Event.class).filter("object", object).iterator();
 		int count=0;
@@ -220,7 +249,7 @@ public class EventGoogleDataStore {
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    try{
-		    //if (syncCache.get("lastUpdateARLearn")==null){
+		    if (syncCache.get("lastUpdateARLearn")==null){
 		    	log.info("No access to the cache");
 		    	System.out.println("No access to the cache");
 		    	ArrayList<String> verbs = new ArrayList<String>();
@@ -240,9 +269,9 @@ public class EventGoogleDataStore {
 		    	Date lastUpdateARLearn = new Date(event.getStartTime().getTime()+1000);
 		    	syncCache.put("lastUpdateARLearn", lastUpdateARLearn);
 		    	return lastUpdateARLearn;
-		    //}else{
-		    	//return ((Date)syncCache.get("lastUpdateARLearn"));
-		    //}
+		    }else{
+		    	return new Date(((Date)syncCache.get("lastUpdateARLearn")).getTime()+10);
+		    }
 	    }catch(Exception e){
 	    	log.warning(e.toString());
 	    	System.out.println(e.toString());
@@ -288,6 +317,16 @@ public class EventGoogleDataStore {
 	    if (syncCache.get("lastUpdateDiigo")!=null){
 	    	if (((Date)syncCache.get("lastUpdateDiigo")).compareTo(lastUpdateDiigo)<0){
 	    		syncCache.put("lastUpdateDiigo",lastUpdateDiigo);
+	    	}
+	    }
+	}
+	
+	public static void updateLastUpdateARLearn(Date lastUpdateARLearn){
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
+	    if (syncCache.get("lastUpdateARLearn")!=null){
+	    	if (((Date)syncCache.get("lastUpdateARLearn")).compareTo(lastUpdateARLearn)<0){
+	    		syncCache.put("lastUpdateARLearn",lastUpdateARLearn);
 	    	}
 	    }
 	}

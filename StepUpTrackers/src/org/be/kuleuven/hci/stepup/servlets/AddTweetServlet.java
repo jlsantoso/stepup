@@ -21,7 +21,7 @@ import org.be.kuleuven.hci.stepup.persistancelayer.EventGoogleDataStore;
 import org.be.kuleuven.hci.stepup.persistancelayer.RestClient;
 import org.be.kuleuven.hci.stepup.util.DateManager;
 import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheet;
-import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheetChi14;
+import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheetChikul13;
 import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.be.kuleuven.hci.stepup.util.TwitterSearch;
 import org.joda.time.DateTime;
@@ -76,7 +76,7 @@ public class AddTweetServlet extends HttpServlet {
 		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 	    syncCache.setErrorHandler(ErrorHandlers.getConsistentLogAndContinue(Level.INFO));
 	    if (syncCache.get("twitterusernames")==null){
-	    	ReadGoogleSpreadSheetChi14.read();
+	    	ReadGoogleSpreadSheetChikul13.read();
 		}
 	    Hashtable<String,String> twitterusernames = (Hashtable<String,String>)syncCache.get("twitterusernames");
 		

@@ -58,9 +58,10 @@ public class AddARLearn extends HttpServlet {
 		String elggRunsIds = "http://streetlearn.appspot.com/rest/response/runId/";
 		String actions = "http://streetlearn.appspot.com/rest/actions/runId/";
 		String response = "http://streetlearn.appspot.com/rest/response/runId/";
-		Date lastUpdate = EventGoogleDataStore.getLastUpdateARLearn(); //Still to finish
+		Date lastUpdate = EventGoogleDataStore.getLastUpdateARLearn(); 
 		//lastUpdate = new Date(date);
-		System.out.println(lastUpdate);
+		log.severe("Last collected info: "+lastUpdate.toString());
+		log.warning("Querying using the following long:"+lastUpdate.getTime());
 		ArrayList<Integer> runsARLearn = new ArrayList<Integer>();
 		Hashtable<String,String> runIdsInquiryId = new Hashtable<String,String>();
 		try {
@@ -82,47 +83,48 @@ public class AddARLearn extends HttpServlet {
 	private Hashtable<String,String> getARLearnRuns(String urlElgg) throws UnsupportedEncodingException, JSONException{
 		Hashtable<String,String> runIdsInquiryId = new Hashtable<String,String>();
 		String final_object = RestClient.doGet("http://inquiry.wespot.net//services/api/rest/json/?method=site.inquiries&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&minutes=4448");
-		JSONObject json = new JSONObject(final_object);
-		JSONArray inquiries = json.getJSONArray("result");
-		ArrayList<Integer> listRuns = new ArrayList<Integer>();
-		for (int i=0; i<inquiries.length();i++){
-			System.out.println(inquiries.getJSONObject(i));
-			String final_object2 = RestClient.doGet("http://inquiry.wespot.net/services/api/rest/json/?method=inquiry.arlearnrun&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+inquiries.getJSONObject(i).getInt("inquiryId"));
-			System.out.println("http://inquiry.wespot.net/services/api/rest/json/?method=inquiry.arlearnrun&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+inquiries.getJSONObject(i).getInt("inquiryId"));
-			JSONObject jsonRun = new JSONObject(final_object2);
-			System.out.println(jsonRun);
-			if (jsonRun.getInt("status")==0){
-				runIdsInquiryId.put(jsonRun.getString("result"), inquiries.getJSONObject(i).getString("inquiryId"));
-				listRuns.add(jsonRun.getInt("result"));
+		if (final_object!=null&&final_object.length()>0){
+			JSONObject json = new JSONObject(final_object);
+			JSONArray inquiries = json.getJSONArray("result");
+			ArrayList<Integer> listRuns = new ArrayList<Integer>();
+			for (int i=0; i<inquiries.length();i++){
+				String final_object2 = RestClient.doGet("http://inquiry.wespot.net/services/api/rest/json/?method=inquiry.arlearnrun&api_key=27936b77bcb9bb67df2965c6518f37a77a7ab9f8&inquiryId="+inquiries.getJSONObject(i).getInt("inquiryId"));
+				if (final_object2!=null&&final_object2.length()>0){
+					JSONObject jsonRun = new JSONObject(final_object2);
+					if (jsonRun.getInt("status")==0){
+						runIdsInquiryId.put(jsonRun.getString("result"), inquiries.getJSONObject(i).getString("inquiryId"));
+						listRuns.add(jsonRun.getInt("result"));
+					}
+				}
 			}
 		}
 		return runIdsInquiryId;
 	}
 
 	private void getUserDataFromARLearnActions(String urlString, Date lastUpdate, long runId, String inquiry){
-
 		URL url;
 		try {
-			String final_object = RestClient.doGetAuth(urlString+runId+"?from="+lastUpdate.getTime());
-			//System.out.println(final_object);
-			JSONObject json = new JSONObject(final_object);
-			JSONArray jsonActions = json.getJSONArray("actions");
-			for (int i=0;i<jsonActions.length();i++){
-				JSONObject action = jsonActions.getJSONObject(i);
-				String username = modifyUsername(action.getString("userEmail"));
-				
-				Event event = new Event();
-				event.setUsername(username);
-				event.setStartTime(new Date(action.getLong("timestamp")));
-				event.setContext("{\"course\":\""+inquiry+"\",\"phase\":\""+StepUpConstants.PHASE3+"\",\"subphase\":\""+StepUpConstants.PHASE3_S2+"\"}");
-				event.setObject(action.getString("generalItemId"));
-				event.setVerb(action.getString("action"));
-				event.setOriginalRequest(action);
-				//System.out.println(JSONandEvent.transformFromEvemtToJson(event));
-				EventGoogleDataStore.insertEvent(event);
-			}
-		
-		
+			String final_object = RestClient.doGetAuth(urlString+runId+"?from="+(lastUpdate.getTime()+10));
+			if (final_object!=null&&final_object.length()>0){
+				JSONObject json = new JSONObject(final_object);
+				JSONArray jsonActions = json.getJSONArray("actions");
+				for (int i=0;i<jsonActions.length();i++){
+					JSONObject action = jsonActions.getJSONObject(i);
+					String username = modifyUsername(action.getString("userEmail"));
+					
+					Event event = new Event();
+					event.setUsername(username);
+					log.warning("URL:"+urlString+runId+"?from="+(lastUpdate.getTime()));
+					log.warning("Long Time of action: "+action.getLong("timestamp"));
+					event.setStartTime(new Date(action.getLong("timestamp")));
+					EventGoogleDataStore.updateLastUpdateARLearn(event.getStartTime());
+					event.setContext("{\"course\":\""+inquiry+"\",\"phase\":\""+StepUpConstants.PHASE3+"\",\"subphase\":\""+StepUpConstants.PHASE3_S2+"\"}");
+					event.setObject(action.getString("generalItemId"));
+					event.setVerb(action.getString("action"));
+					event.setOriginalRequest(action);
+					EventGoogleDataStore.insertEvent(event);
+				}
+			}		
 		} catch (IOException e) {
 			log.severe("ERROR getUserDataFromARLearnActions (IOException): "+e.toString());
 		} catch (JSONException e) {
@@ -136,6 +138,7 @@ public class AddARLearn extends HttpServlet {
 		username = username.replace("2:", "google_");
 		username = username.replace("3:", "linkedin_");
 		username = username.replace("4:", "twitter_");
+		username = username.replace("5:", "wespot_");
 		return username;
 	}
 		
@@ -143,25 +146,29 @@ public class AddARLearn extends HttpServlet {
 		
 		URL url;
 		try {
-			String final_object = RestClient.doGetAuth(urlString+runId+"?from="+lastUpdate.getTime());
-			//System.out.println(final_object);
-			JSONObject json = new JSONObject(final_object);
-			JSONArray jsonActions = json.getJSONArray("responses");
-			for (int i=0;i<jsonActions.length();i++){
-				JSONObject action = jsonActions.getJSONObject(i);
-				String username = modifyUsername(action.getString("userEmail"));
-				Event event = new Event();
-				event.setUsername(username);
-				event.setStartTime(new Date(action.getLong("timestamp")));
-				event.setObject(action.getString("generalItemId"));
-				event.setVerb("response");
-				event.setContext("{\"course\":\""+inquiry+"\",\"phase\":\""+StepUpConstants.PHASE3+"\",\"subphase\":\""+StepUpConstants.PHASE3_S2+"\"}");
-				event.setOriginalRequest(action);
-				//System.out.println(JSONandEvent.transformFromEvemtToJson(event));
-				EventGoogleDataStore.insertEvent(event);
-			}
-		
-		
+			String final_object = RestClient.doGetAuth(urlString+runId+"?from="+(lastUpdate.getTime()+10));
+			if (final_object!=null&&final_object.length()>0){
+				JSONObject json = new JSONObject(final_object);
+				JSONArray jsonActions = json.getJSONArray("responses");
+				for (int i=0;i<jsonActions.length();i++){
+					JSONObject action = jsonActions.getJSONObject(i);
+					JSONObject responseValue = new JSONObject(action.getString("responseValue"));
+					action.remove("responseValue");
+					action.put("responseValue", responseValue);
+					String username = modifyUsername(action.getString("userEmail"));
+					Event event = new Event();
+					event.setUsername(username);
+					log.warning("URL:"+urlString+runId+"?from="+(lastUpdate.getTime()));
+					log.warning("Long Time of action: "+action.getLong("timestamp"));
+					event.setStartTime(new Date(action.getLong("lastModificationDate")));
+					EventGoogleDataStore.updateLastUpdateARLearn(event.getStartTime());
+					event.setObject(action.getString("generalItemId"));
+					event.setVerb("response");
+					event.setContext("{\"course\":\""+inquiry+"\",\"phase\":\""+StepUpConstants.PHASE3+"\",\"subphase\":\""+StepUpConstants.PHASE3_S2+"\"}");
+					event.setOriginalRequest(action);
+					EventGoogleDataStore.insertEvent(event);
+				}
+			}		
 		} catch (IOException e) {
 			log.severe("ERROR getUserDataFromARLearnResponses (IOException): "+e.toString());
 		} catch (JSONException e) {

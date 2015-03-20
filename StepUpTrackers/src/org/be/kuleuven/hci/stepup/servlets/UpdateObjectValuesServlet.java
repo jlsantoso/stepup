@@ -22,7 +22,7 @@ import org.be.kuleuven.hci.stepup.model.RssFeeds;
 import org.be.kuleuven.hci.stepup.persistancelayer.EventGoogleDataStore;
 import org.be.kuleuven.hci.stepup.persistancelayer.RestClient;
 import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheet;
-import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheetChi14;
+import org.be.kuleuven.hci.stepup.util.ReadGoogleSpreadSheetChikul13;
 import org.be.kuleuven.hci.stepup.util.StepUpConstants;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;

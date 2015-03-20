@@ -35,7 +35,16 @@ public class JSONandEvent{
 		eventTransformed.put("object", event.getObject());
 		eventTransformed.put("starttime", formatter.format(event.getStartTime()).toString());
 		if (event.getEndTime()!=null) eventTransformed.put("endtime", formatter.format(event.getEndTime()).toString());;
-		if (event.getContext()!=null) eventTransformed.put("context", event.getContext());
+		if (event.getContext()!=null){
+			if (event.getContext().contains("{"))
+				try{
+					eventTransformed.put("context", new JSONObject(event.getContext()));
+				}catch(JSONException e){
+					eventTransformed.put("context", event.getContext());
+				}
+			else
+				eventTransformed.put("context", event.getContext());
+		}
 		if (event.getTarget()!=null) eventTransformed.put("target", event.getTarget());
 		if (event.getLocation()!=null) eventTransformed.put("location", event.getLocation());
 		if (event.getOriginalRequestString()!=null)
