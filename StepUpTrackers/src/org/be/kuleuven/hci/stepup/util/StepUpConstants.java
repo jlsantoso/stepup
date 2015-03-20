@@ -30,7 +30,7 @@ public class StepUpConstants {
 		public static final String PHASE2_S7 = "Ethics";	
 		public static final String PHASE3 = "3";
 		public static final String PHASE3_S1 = "Reflection";
-		public static final String PHASE3_S2 = "ARLearn";
+		public static final String PHASE3_S2 = "data_collection";
 		public static final String PHASE3_S3 = "Context";
 		public static final String PHASE3_S4 = "Systematic observation";
 		public static final String PHASE3_S5 = "Experimentation";
